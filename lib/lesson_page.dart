@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class LessonPage extends StatefulWidget {
@@ -21,7 +23,27 @@ class _LessonPageState extends State<LessonPage> {
           ),
         ), 
 
-        body: Text("This is Lesson Page"),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Photosynthesis",
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+            ),
+            Text('Science - Chapter 4'),
+            Text('What is Photosynthesis?',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+            ),
+            Text('Photosynthesis is the process throught with vla bla asdf sfjnsdf snfjsdn sfjnsf m sdjfnksdf kfsdfjnks sfdnkdnks sdhf sdfnks sjfnkd their own food!'),
+            Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Photosynthesis_en.svg/1200px-Photosynthesis_en.svg.png')
+          ],
+        )
+        ,
     );
   }
 }
