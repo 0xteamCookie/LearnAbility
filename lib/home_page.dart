@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
-import 'lesson_page.dart';
+import 'Lesson/lessons_page.dart';
+import 'Quiz/quizzes_page.dart';
+import 'accessibility_page.dart';
+import 'ai_assistant_page.dart';
+import 'feed_page.dart';
+import 'generate_content_page.dart';
+import 'my_materials_page.dart';
+import 'settings_page.dart';
+import 'stats_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,10 +18,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      key: _scaffoldKey,
+      
       //TOP APPBAR
         appBar: AppBar(
           backgroundColor: Colors.blue,
@@ -23,72 +35,227 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
           ),
 
-          //BACK BUTTON
+          //NAVIGATION BAR BUTTON
           actions: [
           IconButton(
             icon: const Icon(
-              Icons.arrow_forward,
+              Icons.menu,
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const LessonPage(),
-              ));
-            },
+              // Open the drawer programmatically
+              _scaffoldKey.currentState?.openEndDrawer();
+            }
           ),
         ],
-        ),
-          
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                
-                //WELCOME TEXT
-                Text(
-                  "Welcome Back!",
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black
-                  ),
+      ),
+      
+      // NAVIGATION MENU
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // HEADER
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'LearnAbility',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
                 ),
-                
-                Text(
-                  "Continue your Learning Journey",
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[700],
-                  )
-                ),
-                SizedBox(height:30),
+              ),
+            ),
             
-                //LESSON PAGE NAVIGATION BUTTON
-                ElevatedButton(
-                  onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LessonPage(),
-                    ));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.symmetric(horizontal:20.0, vertical: 12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    "Continue Learning",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
+
+            ListTile(
+              leading: Icon(Icons.bar_chart),
+              title: Text('My Stats'),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StatsPage()),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: Icon(Icons.accessibility),
+              title: Text('Accessibility'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
+            SizedBox(height: 22),
+
+            //LEARNING TOOLS
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                'Tools',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.quiz),
+              title: Text('Quiz'),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QuizzesPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.generating_tokens),
+              title: Text('Generate content'),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GenerateContentPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.assistant),
+              title: Text('AI Assistant'),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AiAssistantPage()),
+                );
+              },
+            ),
+            SizedBox(height: 22),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                'Study Materials',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.book),
+              title: Text('My Materials'),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyMaterialsPage()),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: Icon(Icons.dynamic_feed),
+              title: Text('Feed'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FeedPage()),
+                );
+              },
+            ),
+            SizedBox(height: 35),
+
+            ListTile(
+              leading: Icon(
+                color: Colors.red,
+                Icons.logout),
+              title: Text('Logout',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:[
+              
+              //WELCOME TEXT
+              Text(
+                "Welcome Back!",
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                ),
+              ),
+              
+              Text(
+                "Continue your Learning Journey",
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
+                )
+              ),
+              SizedBox(height:30),
+          
+              //LESSON PAGE NAVIGATION BUTTON
+              ElevatedButton(
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const LessonsPage(),
+                  ));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: EdgeInsets.symmetric(horizontal:20.0, vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                SizedBox(height: 20),
+                child: Text(
+                  "Continue Learning",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
 
                 //STATISTICS GRID
                 GridView.count(
