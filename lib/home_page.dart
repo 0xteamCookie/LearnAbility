@@ -41,94 +41,145 @@ class _HomePageState extends State<HomePage> {
           
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:[
-              
-              //WELCOME TEXT
-              Text(
-                "Welcome Back!",
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black
-                ),
-              ),
-              
-              Text(
-                "Continue your Learning Journey",
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[700],
-                )
-              ),
-              SizedBox(height:30),
-          
-              //LESSON PAGE NAVIGATION BUTTON
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const LessonPage(),
-                  ));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(horizontal:20.0, vertical: 12.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  "Continue Learning",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              //STATISTICS GRID
-              GridView.count(
-                shrinkWrap: true,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:[
                 
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  childAspectRatio: 4/2,
+                //WELCOME TEXT
+                Text(
+                  "Welcome Back!",
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                  ),
+                ),
+                
+                Text(
+                  "Continue your Learning Journey",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[700],
+                  )
+                ),
+                SizedBox(height:30),
+            
+                //LESSON PAGE NAVIGATION BUTTON
+                ElevatedButton(
+                  onPressed: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LessonPage(),
+                    ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(horizontal:20.0, vertical: 12.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    "Continue Learning",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+
+                //STATISTICS GRID
+                GridView.count(
+                  shrinkWrap: true,
+                  
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio: 4/2,
+                    children: [
+                      _buildStatCard("Study Streak", "7", " days"),
+                      _buildStatCard("Completed Lessons", "24", " lessons"),
+                      _buildStatCard("Weekly Progress", "12.5", " hours"),
+                      _buildStatCard("Quiz Average", "85", " %"),
+                    ],
+                  ),
+
+                //SUBJECT OPTIONS
+                Text(
+                  "Subjects to choose from:",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[700],
+                  )
+                ),
+                SizedBox(height:20),
+                Wrap(
+                  spacing: 20.0,
+                  runSpacing: 20.0,
                   children: [
-                    _buildStatCard("Study Streak", "7", " days"),
-                    _buildStatCard("Completed Lessons", "24", " lessons"),
-                    _buildStatCard("Weekly Progress", "12.5", " hours"),
-                    _buildStatCard("Quiz Average", "85", " %"),
+                    _buildSubjectButton("Maths"),
+                    _buildSubjectButton("Physics"),
+                    _buildSubjectButton("Chemistry"),
+                    _buildSubjectButton("Computer"),
+                    _buildSubjectButton("English"),
+                    _buildSubjectButton("Biology"),
+
                   ],
                 ),
+                SizedBox(height: 30),
 
-              //SUBJECT OPTIONS
-              Text(
-                "Subjects to choose from:",
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[700],
-                )
-              ),
-              SizedBox(height:20),
-              Wrap(
-                spacing: 20.0,
-                runSpacing: 20.0,
-                children: [
-                  _buildSubjectButton("Maths"),
-                  _buildSubjectButton("Physics"),
-                  _buildSubjectButton("Chemistry"),
-                  _buildSubjectButton("Computer"),
-                  _buildSubjectButton("English"),
-                  _buildSubjectButton("Biology"),
+                //SHOW LESSONS IN PROGRESS
+                Text(
+                  "Continue Learning",
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                  ),
+                ),
+                Text(
+                  "Pick up where you left off",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[700],
+                  )
+                ),
+                SizedBox(height:20),
 
-                ],
-              )
-            ],
+                _buildLessonCard(
+                  subject: 'Science',
+                  category: 'Biology',
+                  title: 'Introduction to Photosynthesis',
+                  lastAccessed: '2 hours ago',
+                ),
+                SizedBox(height: 16.0),
+
+                _buildLessonCard(
+                  subject: 'English',
+                  category: 'Writing',
+                  title: 'Essay Structure and Planning',
+                  lastAccessed: 'Yesterday',
+                ),
+                SizedBox(height: 16.0),
+
+                TextButton(
+                  onPressed: () {
+                    // Navigate to view all lessons
+                  },
+                  child: Text(
+                    'View All Lessons →',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -206,6 +257,79 @@ class _HomePageState extends State<HomePage> {
         )
       ),
     );
+  }
+
+  Widget _buildLessonCard({
+    required String subject,
+    required String category,
+    required String title,
+    required String lastAccessed,
+  }){
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              subject,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14.0,
+              ),
+            ),
+            SizedBox(height: 8.0),
+
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            Text(
+              category,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14.0,
+              ),
+            ),
+            SizedBox(height: 16.0),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Last accessed: $lastAccessed',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14.0,
+                  ),
+                ),
+
+                TextButton(
+                  onPressed: () {
+                    // Continue action
+                  },
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+          ],
+        ), 
+      ],
+    ),
+  ),
+  );
   }
 
 }
