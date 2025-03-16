@@ -12,12 +12,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      //TOP APPBAR
         appBar: AppBar(
           backgroundColor: Colors.blue,
+
+          //APP NAME
           title: Text(
             "LearnAbility",
               style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
           ),
+
+          //BACK BUTTON
           actions: [
           IconButton(
             icon: const Icon(
@@ -38,6 +44,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:[
+              
+              //WELCOME TEXT
               Text(
                 "Welcome Back!",
                 style: TextStyle(
@@ -55,8 +63,9 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.grey[700],
                 )
               ),
-              SizedBox(height:20),
+              SizedBox(height:30),
           
+              //LESSON PAGE NAVIGATION BUTTON
               ElevatedButton(
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
@@ -78,22 +87,46 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 20),
 
-              //Statistics Grid
-              Expanded(
-                child: GridView.count(
+              //STATISTICS GRID
+              GridView.count(
+                shrinkWrap: true,
+                
                   crossAxisCount: 2,
                   mainAxisSpacing: 15,
                   crossAxisSpacing: 15,
-                  childAspectRatio: 3/2,
+                  childAspectRatio: 4/2,
                   children: [
-                    _buildStatCard("Study Streak", "7", "days"),
-                     _buildStatCard("Completed Lessons", "24", "lessons"),
-                  _buildStatCard("Weekly Progress", "12.5", "hours"),
-                  _buildStatCard("Quiz Average", "85", "%"),
+                    _buildStatCard("Study Streak", "7", " days"),
+                    _buildStatCard("Completed Lessons", "24", " lessons"),
+                    _buildStatCard("Weekly Progress", "12.5", " hours"),
+                    _buildStatCard("Quiz Average", "85", " %"),
                   ],
+                ),
+
+              //SUBJECT OPTIONS
+              Text(
+                "Subjects to choose from:",
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
                 )
+              ),
+              SizedBox(height:20),
+              Wrap(
+                spacing: 20.0,
+                runSpacing: 20.0,
+                children: [
+                  _buildSubjectButton("Maths"),
+                  _buildSubjectButton("Physics"),
+                  _buildSubjectButton("Chemistry"),
+                  _buildSubjectButton("Computer"),
+                  _buildSubjectButton("English"),
+                  _buildSubjectButton("Biology"),
+
+                ],
               )
             ],
           ),
@@ -101,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       );
   }
 
-  //Statcard Widget
+  //STATCARD WIDGET TEMPLATE
   Widget _buildStatCard(String title, String value, String subtitle){
     return Container(
       decoration: BoxDecoration(
@@ -115,7 +148,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      padding: EdgeInsets.all(15.0),
+      padding: EdgeInsets.all(13.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -127,7 +160,7 @@ class _HomePageState extends State<HomePage> {
               fontSize: 16.0,
             ),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 5.0),
           Row(
             children: [
               Text(
@@ -135,15 +168,15 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
-                  fontSize: 28.0,
+                  fontSize: 21.0,
                 ),
               ),
-              SizedBox(width: 5.0),
+
               Text(
                 subtitle,
                 style: TextStyle(
                   color: Colors.grey[700],
-                  fontSize: 14.0
+                  fontSize: 15.0
                 ),
               )
           ],)
@@ -151,4 +184,28 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  //SUBJECT BUTTON WIDGET TEMPLATE
+  Widget _buildSubjectButton(String subject){
+    return ElevatedButton(
+      onPressed: (){},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.lightBlue[100],
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical:12.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        elevation: 5,
+        shadowColor: Colors.grey.withValues(alpha: 0.5),
+      ),
+      child: Text(
+        subject,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16.0,
+        )
+      ),
+    );
+  }
+
 }
