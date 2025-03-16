@@ -259,6 +259,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //LESSON CARD WIDGET TEMPLATE
   Widget _buildLessonCard({
     required String subject,
     required String category,
