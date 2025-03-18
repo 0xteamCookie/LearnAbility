@@ -36,6 +36,8 @@ class _VideosPageState extends State<VideosPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
+
+        //AAP NAME
         title: const Text(
           "LearnAbility",
           style: TextStyle(color: Colors.white),
@@ -127,7 +129,6 @@ class _VideosPageState extends State<VideosPage> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Image with error handling
         ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
           child: Image.network(
