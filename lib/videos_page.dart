@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
 
-class FeedPage extends StatefulWidget {
-  const FeedPage({super.key});
+class VideosPage extends StatefulWidget {
+  const VideosPage({super.key});
 
   @override
-  State<FeedPage> createState() => _FeedPageState();
+  State<VideosPage> createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> {
+class _FeedPageState extends State<VideosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +21,7 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ),
 
-      body: Text("This is Feed page"),
+      body: Text("This is Videos page"),
     );
   }
 }

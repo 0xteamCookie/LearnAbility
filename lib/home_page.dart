@@ -3,7 +3,8 @@ import 'Lesson/lessons_page.dart';
 import 'Quiz/quizzes_page.dart';
 import 'accessibility_page.dart';
 import 'ai_assistant_page.dart';
-import 'feed_page.dart';
+import 'videos_page.dart';
+import 'articles_page.dart';
 import 'generate_content_page.dart';
 import 'my_materials_page.dart';
 import 'settings_page.dart';
@@ -176,13 +177,24 @@ class _HomePageState extends State<HomePage> {
             ),
 
             ListTile(
-              leading: Icon(Icons.dynamic_feed),
-              title: Text('Feed'),
+              leading: Icon(Icons.movie),
+              title: Text('Videos'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FeedPage()),
+                  MaterialPageRoute(builder: (context) => VideosPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.description),
+              title: Text('Articles'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ArticlesPage()),
                 );
               },
             ),
