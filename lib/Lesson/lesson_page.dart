@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
+final Logger logger = Logger();
 
 class LessonPage extends StatefulWidget {
   const LessonPage({super.key});
@@ -8,7 +11,7 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonPageState extends State<LessonPage> {
-  int _currentPage = 0; // Tracks the current page of the learning content
+  int _currentPage = 0;
   String? _selectedAnswer;
   bool _isAnswerSubmitted = false;
 
@@ -84,10 +87,10 @@ class _LessonPageState extends State<LessonPage> {
       // Check if the selected answer is correct
       if (_selectedAnswer == correctOption) {
         // Correct answer
-        print("Correct!");
+        logger.d("Correct!");
       } else {
         // Incorrect answer
-        print("Incorrect!");
+        logger.d("Incorrect!");
       }
     });
   }
@@ -350,7 +353,7 @@ class _LessonPageState extends State<LessonPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          print("Opening: $url");
+          logger.d("Opening: $url");
         },
         child: Text(
           url,
