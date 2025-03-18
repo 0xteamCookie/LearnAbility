@@ -119,7 +119,7 @@ class _LessonsPageState extends State<LessonsPage> {
                 title: lesson.title,
                 subtitle: lesson.subtitle,
                 duration: lesson.duration,
-              )).toList(),
+              )),
             ],
           ),
         ),
