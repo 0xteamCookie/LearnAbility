@@ -4,10 +4,10 @@ class ArticlesPage extends StatefulWidget {
   const ArticlesPage({super.key});
 
   @override
-  State<ArticlesPage> createState() => _FeedPageState();
+  State<ArticlesPage> createState() => _ArticlesPageState();
 }
 
-class _FeedPageState extends State<ArticlesPage> {
+class _ArticlesPageState extends State<ArticlesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

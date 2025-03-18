@@ -4,10 +4,10 @@ class VideosPage extends StatefulWidget {
   const VideosPage({super.key});
 
   @override
-  State<VideosPage> createState() => _FeedPageState();
+  State<VideosPage> createState() => _VideosPageState();
 }
 
-class _FeedPageState extends State<VideosPage> {
+class _VideosPageState extends State<VideosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
