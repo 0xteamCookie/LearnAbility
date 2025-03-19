@@ -30,7 +30,6 @@ class _VideosPageState extends State<VideosPage> {
       }
     ]
   };
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

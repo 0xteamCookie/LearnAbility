@@ -30,7 +30,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
       }
     ]
   };
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
