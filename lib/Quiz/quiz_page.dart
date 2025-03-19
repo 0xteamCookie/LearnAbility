@@ -13,7 +13,7 @@ class _QuizPageState extends State<QuizPage> {
   String? _selectedAnswer;
   bool _isAnswerSubmitted = false;
   int _score = 0; // Track the user's score
-  List<String?> _userAnswers = []; // Track user's answers for each question
+  final List<String?> _userAnswers = []; // Track user's answers for each question
 
   final Logger logger = Logger();
 
