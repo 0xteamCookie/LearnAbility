@@ -230,9 +230,9 @@ class _HomePageState extends State<HomePage> {
               
               //WELCOME TEXT
               Text(
-                "${settings.speechRate}",
+                "Welcome Katty!",
                 style: TextStyle(
-                  fontSize: 32.0,
+                  fontSize: 13 + settings.fontSize,
                   fontWeight: FontWeight.bold,
                   color: Colors.black
                 ),
