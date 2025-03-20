@@ -9,6 +9,8 @@ import 'generate_content_page.dart';
 import 'my_materials_page.dart';
 import 'settings_page.dart';
 import 'stats_page.dart';
+import 'package:provider/provider.dart';
+import 'accessibility_model.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -23,6 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
       key: _scaffoldKey,
       
@@ -227,7 +230,7 @@ class _HomePageState extends State<HomePage> {
               
               //WELCOME TEXT
               Text(
-                "Welcome Back!",
+                "${settings.speechRate}",
                 style: TextStyle(
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,

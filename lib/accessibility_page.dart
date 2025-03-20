@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:my_first_app/accessibility_model.dart";
+import "package:provider/provider.dart";
 
 class AccessibilityPage extends StatefulWidget {
   const AccessibilityPage({super.key});
@@ -8,13 +10,6 @@ class AccessibilityPage extends StatefulWidget {
 }
 
 class _AccessibilityPageState extends State<AccessibilityPage> {
-  double _fontSize = 16.0;
-  bool _openDyslexic = false;
-  double _speechRate = 0.5;
-  bool _wordPrediction = false;
-  bool _visualTimers = false;
-  bool _breakReminders = false;
-  int _selectedColorIndex = 0;
 
   final List<Color> _colorThemes = [
     Colors.red,
@@ -26,6 +21,15 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    double fontSize = settings.fontSize;
+    bool openDyslexic = false;
+    double speechRate = 0.5;
+    bool wordPrediction = false;
+    bool visualTimers = false;
+    bool breakReminders = false;
+    int selectedColorIndex = 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -55,16 +59,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             SizedBox(height: 10),
             Text("Font Size"),
             Slider(
-              value: _fontSize,
+              value: fontSize,
               min: 12,
               max: 24,
               activeColor: Colors.blue,
               divisions: 12,
-              label: _fontSize.round().toString() + "px",
+              label: '${fontSize.round()}px',
               onChanged: (double value) {
-                setState(() {
-                  _fontSize = value;
-                });
+                settings.setFontSize(value);
               },
             ),
             SizedBox(height: 20),
@@ -79,7 +81,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedColorIndex = _colorThemes.indexOf(color);
+                      selectedColorIndex = _colorThemes.indexOf(color);
                     });
                   },
                   child: Container(
@@ -88,7 +90,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     decoration: BoxDecoration(
                       color: color,
                       shape: BoxShape.circle,
-                      border: _selectedColorIndex == _colorThemes.indexOf(color)
+                      border: selectedColorIndex == _colorThemes.indexOf(color)
                           ? Border.all(color: Colors.black, width: 2)
                           : null,
                     ),
@@ -99,14 +101,12 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             SizedBox(height: 20),
             Text("Speech Rate"),
             Slider(
-              value: _speechRate,
+              value: speechRate,
               min: 0,
               max: 1,
               activeColor: Colors.blue,
               onChanged: (double value) {
-                setState(() {
-                  _speechRate = value;
-                });
+                settings.setSpeechRate(value);
               },
             ),
             Row(
@@ -122,12 +122,10 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 Text("Word Prediction"),
                 Spacer(),
                 Switch(
-                  value: _wordPrediction,
+                  value: wordPrediction,
                   activeColor: const Color.fromARGB(255, 29, 106, 237),
                   onChanged: (bool value) {
-                    setState(() {
-                      _wordPrediction = value;
-                    });
+                    settings.setWordPrediction(value);
                   },
                 ),
               ],
@@ -137,12 +135,10 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 Text("Dyslexia friendly font"),
                 Spacer(),
                 Switch(
-                  value: _openDyslexic,
+                  value: openDyslexic,
                   activeColor: const Color.fromARGB(255, 29, 106, 237),
                   onChanged: (bool value) {
-                    setState(() {
-                      _openDyslexic = value;
-                    });
+                    settings.setDyslexic(value);
                   },
                 ),
               ],
@@ -158,12 +154,10 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 Text("Visual Timers"),
                 Spacer(),
                 Switch(
-                  value: _visualTimers,
+                  value: visualTimers,
                   activeColor: const Color.fromARGB(255, 29, 106, 237),
                   onChanged: (bool value) {
-                    setState(() {
-                      _visualTimers = value;
-                    });
+                    settings.setVisualTimers(value);
                   },
                 ),
               ],
@@ -173,12 +167,10 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 Text("Break Reminders"),
                 Spacer(),
                 Switch(
-                  value: _breakReminders,
+                  value: breakReminders,
                   activeColor: const Color.fromARGB(255, 29, 106, 237),
                   onChanged: (bool value) {
-                    setState(() {
-                      _breakReminders = value;
-                    });
+                    settings.setBreakReminders(value);
                   },
                 ),
               ],

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:my_first_app/accessibility_model.dart';
 import 'home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (context) => AccessibilitySettings(),
+    child:const  MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
