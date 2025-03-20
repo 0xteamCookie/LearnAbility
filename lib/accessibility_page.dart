@@ -30,6 +30,23 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     bool breakReminders = false;
     int selectedColorIndex = 0;
 
+    String displaySliderValue(double fontSize){
+      switch(fontSize){
+        case 15.0:
+          return "1x";
+        case 12.5:
+          return "0.5x";
+        case 10.0:
+          return "0.25x";
+        case 17.5:
+          return "1.5x";
+        case 20.0:
+          return "2x";
+        default:
+          return "x";
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -60,11 +77,12 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Text("Font Size"),
             Slider(
               value: fontSize,
-              min: 12,
-              max: 24,
+              min: 10,
+              max: 20,
               activeColor: Colors.blue,
-              divisions: 12,
-              label: '${fontSize.round()}px',
+              divisions: 4,
+              label: displaySliderValue(fontSize),
+              // label: '$fontSize',
               onChanged: (double value) {
                 settings.setFontSize(value);
               },
