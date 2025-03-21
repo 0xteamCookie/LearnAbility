@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AccessibilitySettings extends ChangeNotifier {
-  double _fontSize = 16.0;
+  double _fontSize = 1.0;
   bool _openDyslexic = false;
   double _speechRate = 0.5;
   bool _wordPrediction = false;

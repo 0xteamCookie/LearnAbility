@@ -22,13 +22,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+
     double fontSize = settings.fontSize;
-    bool openDyslexic = false;
-    double speechRate = 0.5;
-    bool wordPrediction = false;
-    bool visualTimers = false;
-    bool breakReminders = false;
-    int selectedColorIndex = 0;
+    bool openDyslexic = settings.openDyslexic;
+    double speechRate = settings.speechRate;
+    bool wordPrediction = settings.wordPrediction;
+    bool visualTimers = settings.visualTimers;
+    bool breakReminders = settings.breakReminders;
+    int selectedColorIndex = settings.selectedColorIndex;
 
     String displaySliderValue(double fontSize){
       switch(fontSize){
@@ -77,12 +78,11 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Text("Font Size"),
             Slider(
               value: fontSize,
-              min: 10,
-              max: 20,
+              min: 0.5,
+              max: 1.5,
               activeColor: Colors.blue,
-              divisions: 4,
+              divisions: 6,
               label: displaySliderValue(fontSize),
-              // label: '$fontSize',
               onChanged: (double value) {
                 settings.setFontSize(value);
               },
@@ -90,7 +90,10 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             SizedBox(height: 20),
             Text(
               "Color Theme",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20, 
+                fontWeight: FontWeight.bold
+              ),
             ),
             SizedBox(height: 10),
             Row(
@@ -98,9 +101,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               children: _colorThemes.map((color) {
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      selectedColorIndex = _colorThemes.indexOf(color);
-                    });
+                    settings.setColorIndex(_colorThemes.indexOf(color));
                   },
                   child: Container(
                     width: 40,
@@ -122,6 +123,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               value: speechRate,
               min: 0,
               max: 1,
+              label: displaySliderValue(speechRate),
               activeColor: Colors.blue,
               onChanged: (double value) {
                 settings.setSpeechRate(value);

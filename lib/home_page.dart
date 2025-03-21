@@ -47,7 +47,6 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             onPressed: () {
-              // Open the drawer programmatically
               _scaffoldKey.currentState?.openEndDrawer();
             }
           ),
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 'LearnAbility',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 24 + settings.fontSize,
                 ),
               ),
             ),
@@ -118,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 'Tools',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16 + settings.fontSize,
                 ),
               ),
             ),
@@ -163,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                 'Study Materials',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16 + settings.fontSize,
                 ),
               ),
             ),
@@ -232,7 +231,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 "Welcome Katty!",
                 style: TextStyle(
-                  fontSize: 13 + settings.fontSize,
+                  fontSize: 32 * settings.fontSize,
                   fontWeight: FontWeight.bold,
                   color: Colors.black
                 ),
@@ -241,7 +240,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 "Continue your Learning Journey",
                 style: TextStyle(
-                  fontSize: 24.0,
+                  fontSize: 24.0 * settings.fontSize,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[700],
                 )
@@ -266,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                   "Continue Learning",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16.0,
+                    fontSize: 16.0 * settings.fontSize,
                   ),
                 ),
               ),
@@ -274,7 +273,7 @@ class _HomePageState extends State<HomePage> {
 
                 //STATISTICS GRID
                 GridView.count(
-                  shrinkWrap: true,
+                  shrinkWrap: false,
                   
                     crossAxisCount: 2,
                     mainAxisSpacing: 15,
@@ -292,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   "Subjects to choose from:",
                   style: TextStyle(
-                    fontSize: 24.0,
+                    fontSize: 24.0 * settings.fontSize,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[700],
                   )
@@ -317,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   "Continue Learning",
                   style: TextStyle(
-                    fontSize: 32.0,
+                    fontSize: 32.0 * settings.fontSize,
                     fontWeight: FontWeight.bold,
                     color: Colors.black
                   ),
@@ -325,7 +324,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   "Pick up where you left off",
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 20.0 * settings.fontSize,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[700],
                   )
@@ -356,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                     'View All Lessons →',
                     style: TextStyle(
                       color: Colors.blue,
-                      fontSize: 16.0,
+                      fontSize: 16.0 * settings.fontSize,
                     ),
                   ),
                 ),
@@ -369,6 +368,8 @@ class _HomePageState extends State<HomePage> {
 
   //STATCARD WIDGET TEMPLATE
   Widget _buildStatCard(String title, String value, String subtitle){
+    final settings = Provider.of<AccessibilitySettings>(context);
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
@@ -390,7 +391,7 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 16.0,
+              fontSize: 16.0 * settings.fontSize,
             ),
           ),
           SizedBox(height: 5.0),
@@ -401,7 +402,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
-                  fontSize: 21.0,
+                  fontSize: 21.0 * settings.fontSize,
                 ),
               ),
 
@@ -409,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                 subtitle,
                 style: TextStyle(
                   color: Colors.grey[700],
-                  fontSize: 15.0
+                  fontSize: 15.0 * settings.fontSize,
                 ),
               )
           ],)
@@ -420,6 +421,8 @@ class _HomePageState extends State<HomePage> {
 
   //SUBJECT BUTTON WIDGET TEMPLATE
   Widget _buildSubjectButton(String subject){
+    final settings = Provider.of<AccessibilitySettings>(context);
+    
     return ElevatedButton(
       onPressed: (){},
       style: ElevatedButton.styleFrom(
@@ -435,7 +438,7 @@ class _HomePageState extends State<HomePage> {
         subject,
         style: TextStyle(
           color: Colors.black,
-          fontSize: 16.0,
+          fontSize: 16.0 * settings.fontSize,
         )
       ),
     );
@@ -448,6 +451,9 @@ class _HomePageState extends State<HomePage> {
     required String title,
     required String lastAccessed,
   }){
+
+    final settings = Provider.of<AccessibilitySettings>(context);
+    
     return Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(
@@ -462,7 +468,7 @@ class _HomePageState extends State<HomePage> {
               subject,
               style: TextStyle(
                 color: Colors.grey[600],
-                fontSize: 14.0,
+                fontSize: 14.0 * settings.fontSize,
               ),
             ),
             SizedBox(height: 8.0),
@@ -470,7 +476,7 @@ class _HomePageState extends State<HomePage> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 20.0 * settings.fontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -479,7 +485,7 @@ class _HomePageState extends State<HomePage> {
               category,
               style: TextStyle(
                 color: Colors.grey[600],
-                fontSize: 14.0,
+                fontSize: 14.0 * settings.fontSize,
               ),
             ),
             SizedBox(height: 16.0),
@@ -491,7 +497,7 @@ class _HomePageState extends State<HomePage> {
                   'Last accessed: $lastAccessed',
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 14.0,
+                    fontSize: 14.0 * settings.fontSize,
                   ),
                 ),
 
@@ -503,7 +509,7 @@ class _HomePageState extends State<HomePage> {
                     'Continue',
                     style: TextStyle(
                       color: Colors.blue,
-                      fontSize: 16.0,
+                      fontSize: 16.0 * settings.fontSize,
                     ),
                   ),
                 ),
