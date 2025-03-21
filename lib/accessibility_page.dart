@@ -33,16 +33,16 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
 
     String displaySliderValue(double fontSize){
       switch(fontSize){
-        case 15.0:
+        case 1.0:
           return "1x";
-        case 12.5:
+        case 0.5:
           return "0.5x";
-        case 10.0:
-          return "0.25x";
-        case 17.5:
+        case 0.75:
+          return "0.75x";
+        case 1.25:
+          return "1.25x";
+        case 1.5:
           return "1.5x";
-        case 20.0:
-          return "2x";
         default:
           return "x";
       }
@@ -81,7 +81,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               min: 0.5,
               max: 1.5,
               activeColor: Colors.blue,
-              divisions: 6,
+              divisions: 4,
               label: displaySliderValue(fontSize),
               onChanged: (double value) {
                 settings.setFontSize(value);

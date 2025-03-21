@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 'LearnAbility',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24 + settings.fontSize,
+                  fontSize: 24 * settings.fontSize,
                 ),
               ),
             ),
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 'Tools',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16 + settings.fontSize,
+                  fontSize: 16 * settings.fontSize,
                 ),
               ),
             ),
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                 'Study Materials',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16 + settings.fontSize,
+                  fontSize: 16 * settings.fontSize,
                 ),
               ),
             ),
@@ -273,19 +273,19 @@ class _HomePageState extends State<HomePage> {
 
                 //STATISTICS GRID
                 GridView.count(
-                  shrinkWrap: false,
-                  
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 15,
-                    crossAxisSpacing: 15,
-                    childAspectRatio: 4/2,
-                    children: [
-                      _buildStatCard("Study Streak", "7", " days"),
-                      _buildStatCard("Completed Lessons", "24", " lessons"),
-                      _buildStatCard("Weekly Progress", "12.5", " hours"),
-                      _buildStatCard("Quiz Average", "85", " %"),
-                    ],
-                  ),
+                  shrinkWrap: true, // Add this
+                  physics: NeverScrollableScrollPhysics(), // Add this
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
+                  childAspectRatio: 4 / 2,
+                  children: [
+                    _buildStatCard("Study Streak", "7", " days"),
+                    _buildStatCard("Completed Lessons", "24", " lessons"),
+                    _buildStatCard("Weekly Progress", "12.5", " hours"),
+                    _buildStatCard("Quiz Average", "85", " %"),
+                  ],
+                ),
 
                 //SUBJECT OPTIONS
                 Text(
