@@ -27,6 +27,13 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    // Function to determine font family
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -34,7 +41,8 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
           "LearnAbility",
           style: TextStyle(
             color: const Color.fromRGBO(255, 255, 255, 1),
-            fontSize: 24 * settings.fontSize, // Updated
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
           ),
         ),
       ),
@@ -57,14 +65,17 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
           userAvatarNameColors: [Colors.blue],
           receivedMessageBodyTextStyle: TextStyle(
             color: Colors.black,
-            fontSize: 16 * settings.fontSize, // Updated
+            fontSize: 16 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
           ),
           sentMessageBodyTextStyle: TextStyle(
             color: Colors.white,
-            fontSize: 16 * settings.fontSize, // Updated
+            fontSize: 16 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
           ),
           inputTextStyle: TextStyle(
-            fontSize: 16 * settings.fontSize, // Updated
+            fontSize: 16 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
           ),
         ),
       ),

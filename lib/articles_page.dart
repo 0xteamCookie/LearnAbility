@@ -36,6 +36,12 @@ class _ArticlesPageState extends State<ArticlesPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -45,7 +51,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
           "LearnAbility",
           style: TextStyle(
             color: const Color.fromRGBO(255, 255, 255, 1),
-            fontSize: 24 * settings.fontSize, // Updated
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
           ),
         ),
       ),
@@ -59,8 +66,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
               Text(
                 "All Articles",
                 style: TextStyle(
-                  fontSize: 28 * settings.fontSize, // Updated
+                  fontSize: 28 * settings.fontSize,
                   fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
               const SizedBox(height: 4),
@@ -68,8 +76,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
               Text(
                 "Explore the latest content",
                 style: TextStyle(
-                  fontSize: 16 * settings.fontSize, // Updated
+                  fontSize: 16 * settings.fontSize,
                   color: Colors.grey,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
               const SizedBox(height: 20),
@@ -77,10 +86,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
               Wrap(
                 spacing: 8.0,
                 children: [
-                  _buildCategoryChip("Science", settings.fontSize),
-                  _buildCategoryChip("Mathematics", settings.fontSize),
-                  _buildCategoryChip("History", settings.fontSize),
-                  _buildCategoryChip("Technology", settings.fontSize),
+                  _buildCategoryChip("Science", settings.fontSize, fontFamily()),
+                  _buildCategoryChip("Mathematics", settings.fontSize, fontFamily()),
+                  _buildCategoryChip("History", settings.fontSize, fontFamily()),
+                  _buildCategoryChip("Technology", settings.fontSize, fontFamily()),
                 ],
               ),
               const SizedBox(height: 24),
@@ -88,8 +97,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
               Text(
                 "Featured Articles",
                 style: TextStyle(
-                  fontSize: 20 * settings.fontSize, // Updated
+                  fontSize: 20 * settings.fontSize,
                   fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
               const SizedBox(height: 8),
@@ -100,7 +110,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   heading: article["heading"],
                   creator: article["creator"],
                   duration: article["duration"],
-                  fontSize: settings.fontSize, // Pass fontSize
+                  fontSize: settings.fontSize,
+                  fontFamily: fontFamily(), // Pass fontFamily
                 ),
             ],
           ),
@@ -109,12 +120,13 @@ class _ArticlesPageState extends State<ArticlesPage> {
     );
   }
 
-  Widget _buildCategoryChip(String label, double fontSize) {
+  Widget _buildCategoryChip(String label, double fontSize, String fontFamily) {
     return Chip(
       label: Text(
         label,
         style: TextStyle(
-          fontSize: 14 * fontSize, // Updated
+          fontSize: 14 * fontSize,
+          fontFamily: fontFamily, // Added fontFamily
         ),
       ),
       backgroundColor: Colors.blue[50],
@@ -129,7 +141,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
     required String heading,
     required String creator,
     required String duration,
-    required double fontSize, // Added fontSize parameter
+    required double fontSize,
+    required String fontFamily, // Added fontFamily parameter
   }) {
     return Card(
       elevation: 4.0,
@@ -154,7 +167,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   color: Colors.grey[300],
                   child: Icon(
                     Icons.article,
-                    size: 50 * fontSize, // Updated
+                    size: 50 * fontSize,
                     color: Colors.grey,
                   ),
                 );
@@ -169,28 +182,31 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 Text(
                   heading,
                   style: TextStyle(
-                    fontSize: 18 * fontSize, // Updated
+                    fontSize: 18 * fontSize,
                     fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Added fontFamily
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   creator,
                   style: TextStyle(
-                    fontSize: 14 * fontSize, // Updated
+                    fontSize: 14 * fontSize,
                     color: Colors.grey,
+                    fontFamily: fontFamily, // Added fontFamily
                   ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.timer, size: 16 * fontSize), // Updated
+                    Icon(Icons.timer, size: 16 * fontSize),
                     const SizedBox(width: 4),
                     Text(
                       duration,
                       style: TextStyle(
-                        fontSize: 14 * fontSize, // Updated
+                        fontSize: 14 * fontSize,
                         color: Colors.grey,
+                        fontFamily: fontFamily, // Added fontFamily
                       ),
                     ),
                     const Spacer(),
@@ -201,7 +217,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
                       child: Text(
                         "Read Article",
                         style: TextStyle(
-                          fontSize: 14 * fontSize, // Updated
+                          fontSize: 14 * fontSize,
+                          fontFamily: fontFamily, // Added fontFamily
                         ),
                       ),
                     ),

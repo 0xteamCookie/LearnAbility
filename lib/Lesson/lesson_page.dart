@@ -102,6 +102,12 @@ class _LessonPageState extends State<LessonPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     final learningContent = _lessonData["learningContent"] as List;
     final quiz = _lessonData["quiz"] as Map<String, dynamic>;
     final webResources = _lessonData["webResources"] as List;
@@ -118,6 +124,7 @@ class _LessonPageState extends State<LessonPage> {
           style: TextStyle(
             color: Colors.white,
             fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(),
           ),
         ),
         iconTheme: const IconThemeData(
@@ -136,6 +143,7 @@ class _LessonPageState extends State<LessonPage> {
                   fontSize: 32 * settings.fontSize,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
+                  fontFamily: fontFamily(),
                 ),
               ),
               const SizedBox(height: 8),
@@ -144,6 +152,7 @@ class _LessonPageState extends State<LessonPage> {
                 style: TextStyle(
                   fontSize: 18 * settings.fontSize,
                   color: Colors.grey,
+                  fontFamily: fontFamily(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -173,6 +182,7 @@ class _LessonPageState extends State<LessonPage> {
                             fontWeight: FontWeight.bold,
                             fontSize: 24 * settings.fontSize,
                             color: Colors.blue,
+                            fontFamily: fontFamily(),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -187,6 +197,7 @@ class _LessonPageState extends State<LessonPage> {
                                   style: TextStyle(
                                     fontSize: 16 * settings.fontSize,
                                     height: 1.5,
+                                    fontFamily: fontFamily(),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -215,6 +226,7 @@ class _LessonPageState extends State<LessonPage> {
                               style: TextStyle(
                                 fontSize: 16 * settings.fontSize,
                                 color: Colors.grey,
+                                fontFamily: fontFamily(),
                               ),
                             ),
                             IconButton(
@@ -247,6 +259,7 @@ class _LessonPageState extends State<LessonPage> {
                           fontSize: 24 * settings.fontSize,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
+                          fontFamily: fontFamily(),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -255,6 +268,7 @@ class _LessonPageState extends State<LessonPage> {
                         style: TextStyle(
                           fontSize: 18 * settings.fontSize,
                           height: 1.5,
+                          fontFamily: fontFamily(),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -264,6 +278,7 @@ class _LessonPageState extends State<LessonPage> {
                             option["text"],
                             option["isCorrect"],
                             settings.fontSize,
+                            fontFamily(),
                           );
                         }).toList(),
                       ),
@@ -280,6 +295,7 @@ class _LessonPageState extends State<LessonPage> {
                             style: TextStyle(
                               fontSize: 16 * settings.fontSize,
                               color: Colors.white,
+                              fontFamily: fontFamily(),
                             ),
                           ),
                         ),
@@ -295,6 +311,7 @@ class _LessonPageState extends State<LessonPage> {
                               fontSize: 16 * settings.fontSize,
                               color: _selectedAnswer == correctOption ? Colors.green : Colors.red,
                               fontWeight: FontWeight.bold,
+                              fontFamily: fontFamily(),
                             ),
                           ),
                         ),
@@ -320,11 +337,12 @@ class _LessonPageState extends State<LessonPage> {
                           fontSize: 24 * settings.fontSize,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
+                          fontFamily: fontFamily(),
                         ),
                       ),
                       const SizedBox(height: 8),
                       ...webResources.map((url) {
-                        return _buildWebResourceLink(url, settings.fontSize);
+                        return _buildWebResourceLink(url, settings.fontSize, fontFamily());
                       }),
                     ],
                   ),
@@ -337,12 +355,13 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  Widget _buildMCQOption(String option, bool isCorrect, double fontSize) {
+  Widget _buildMCQOption(String option, bool isCorrect, double fontSize, String fontFamily) {
     return RadioListTile<String>(
       title: Text(
         option,
         style: TextStyle(
           fontSize: 16 * fontSize,
+          fontFamily: fontFamily,
         ),
       ),
       value: option, // Use the option text as the unique value
@@ -357,7 +376,7 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  Widget _buildWebResourceLink(String url, double fontSize) {
+  Widget _buildWebResourceLink(String url, double fontSize, String fontFamily) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
@@ -370,6 +389,7 @@ class _LessonPageState extends State<LessonPage> {
             color: Colors.blue,
             decoration: TextDecoration.underline,
             fontSize: 16 * fontSize,
+            fontFamily: fontFamily,
           ),
         ),
       ),

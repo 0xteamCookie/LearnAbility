@@ -67,13 +67,22 @@ class _SettingPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
+          ),
         ),
       ),
       body: ListView(
@@ -84,6 +93,7 @@ class _SettingPageState extends State<SettingsPage> {
             style: TextStyle(
               fontSize: 28 * settings.fontSize,
               fontWeight: FontWeight.bold,
+              fontFamily: fontFamily(), // Added fontFamily
             ),
           ),
           SizedBox(height: 16),
@@ -92,28 +102,35 @@ class _SettingPageState extends State<SettingsPage> {
             style: TextStyle(
               fontSize: 22 * settings.fontSize,
               fontWeight: FontWeight.bold,
+              fontFamily: fontFamily(), // Added fontFamily
             ),
           ),
           SizedBox(height: 16),
 
-          for (var setting in _privacySettings) _buildPrivacySettingsCard(setting, settings),
+          for (var setting in _privacySettings)
+            _buildPrivacySettingsCard(setting, settings, fontFamily()),
           SizedBox(height: 24),
           Text(
             'Notification Settings',
             style: TextStyle(
               fontSize: 22 * settings.fontSize,
               fontWeight: FontWeight.bold,
+              fontFamily: fontFamily(), // Added fontFamily
             ),
           ),
           SizedBox(height: 16),
 
-          for (var setting in _notificationSettings) _buildNotificationSettingsCard(setting, settings),
+          for (var setting in _notificationSettings)
+            _buildNotificationSettingsCard(setting, settings, fontFamily()),
           SizedBox(height: 24),
           ElevatedButton(
             onPressed: _saveChanges,
             child: Text(
               'Save Changes',
-              style: TextStyle(fontSize: 16 * settings.fontSize),
+              style: TextStyle(
+                fontSize: 16 * settings.fontSize,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
           ),
         ],
@@ -121,17 +138,27 @@ class _SettingPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildPrivacySettingsCard(Map<String, dynamic> setting, AccessibilitySettings settings) {
+  Widget _buildPrivacySettingsCard(
+    Map<String, dynamic> setting,
+    AccessibilitySettings settings,
+    String fontFamily, // Added fontFamily parameter
+  ) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: SwitchListTile(
         title: Text(
           setting["title"],
-          style: TextStyle(fontSize: 14 * settings.fontSize),
+          style: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily, // Added fontFamily
+          ),
         ),
         subtitle: Text(
           setting["subtitle"],
-          style: TextStyle(fontSize: 14 * settings.fontSize),
+          style: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily, // Added fontFamily
+          ),
         ),
         value: setting["value"],
         onChanged: (value) {
@@ -142,17 +169,27 @@ class _SettingPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildNotificationSettingsCard(Map<String, dynamic> setting, AccessibilitySettings settings) {
+  Widget _buildNotificationSettingsCard(
+    Map<String, dynamic> setting,
+    AccessibilitySettings settings,
+    String fontFamily, // Added fontFamily parameter
+  ) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: SwitchListTile(
         title: Text(
           setting["title"],
-          style: TextStyle(fontSize: 14 * settings.fontSize),
+          style: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily, // Added fontFamily
+          ),
         ),
         subtitle: Text(
           setting["subtitle"],
-          style: TextStyle(fontSize: 14 * settings.fontSize),
+          style: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily, // Added fontFamily
+          ),
         ),
         value: setting["value"],
         onChanged: (value) {

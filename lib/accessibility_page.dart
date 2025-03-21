@@ -10,7 +10,6 @@ class AccessibilityPage extends StatefulWidget {
 }
 
 class _AccessibilityPageState extends State<AccessibilityPage> {
-
   final List<Color> _colorThemes = [
     Colors.red,
     Colors.blue,
@@ -22,6 +21,11 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     double fontSize = settings.fontSize;
     bool openDyslexic = settings.openDyslexic;
@@ -53,7 +57,8 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
           "LearnAbility",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 22 * fontSize, // Dynamically adjusting font size
+            fontSize: 22 * fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
           ),
         ),
       ),
@@ -66,15 +71,17 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Text(
               "Accessibility Settings",
               style: TextStyle(
-                fontSize: 24 * fontSize, // Dynamically adjusting font size
+                fontSize: 24 * fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             Text(
               "Customize your learning experience",
               style: TextStyle(
-                fontSize: 16 * fontSize, // Dynamically adjusting font size
+                fontSize: 16 * fontSize,
                 color: Colors.grey,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             SizedBox(height: 20),
@@ -83,12 +90,19 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Text(
               "Text & Display",
               style: TextStyle(
-                fontSize: 20 * fontSize, // Dynamically adjusting font size
+                fontSize: 20 * fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             SizedBox(height: 10),
-            Text("Font Size"),
+            Text(
+              "Font Size",
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
+            ),
             Slider(
               value: fontSize,
               min: 0.5,
@@ -106,8 +120,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Text(
               "Color Theme",
               style: TextStyle(
-                fontSize: 20 * fontSize, // Dynamically adjusting font size
+                fontSize: 20 * fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             SizedBox(height: 10),
@@ -135,7 +150,13 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             SizedBox(height: 20),
 
             // Speech Rate Section
-            Text("Speech Rate"),
+            Text(
+              "Speech Rate",
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
+            ),
             Slider(
               value: speechRate,
               min: 0,
@@ -149,8 +170,20 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Slow", style: TextStyle(fontSize: 14 * fontSize)),
-                Text("Fast", style: TextStyle(fontSize: 14 * fontSize)),
+                Text(
+                  "Slow",
+                  style: TextStyle(
+                    fontSize: 14 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
+                Text(
+                  "Fast",
+                  style: TextStyle(
+                    fontSize: 14 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 20),
@@ -158,7 +191,13 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             // Word Prediction Section
             Row(
               children: [
-                Text("Word Prediction", style: TextStyle(fontSize: 16 * fontSize)),
+                Text(
+                  "Word Prediction",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: wordPrediction,
@@ -173,7 +212,13 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             // Dyslexia friendly font Section
             Row(
               children: [
-                Text("Dyslexia friendly font", style: TextStyle(fontSize: 16 * fontSize)),
+                Text(
+                  "Dyslexia friendly font",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: openDyslexic,
@@ -190,8 +235,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Text(
               "Focus & Timers",
               style: TextStyle(
-                fontSize: 20 * fontSize, // Dynamically adjusting font size
+                fontSize: 20 * fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             SizedBox(height: 10),
@@ -199,7 +245,13 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             // Visual Timers Section
             Row(
               children: [
-                Text("Visual Timers", style: TextStyle(fontSize: 16 * fontSize)),
+                Text(
+                  "Visual Timers",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: visualTimers,
@@ -214,7 +266,13 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             // Break Reminders Section
             Row(
               children: [
-                Text("Break Reminders", style: TextStyle(fontSize: 16 * fontSize)),
+                Text(
+                  "Break Reminders",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: breakReminders,

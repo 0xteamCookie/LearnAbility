@@ -90,6 +90,12 @@ class _LessonsPageState extends State<LessonsPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -97,7 +103,8 @@ class _LessonsPageState extends State<LessonsPage> {
           "LearnAbility",
           style: TextStyle(
             color: const Color.fromRGBO(255, 255, 255, 1),
-            fontSize: 24 * settings.fontSize, // Updated
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
           ),
         ),
         actions: [
@@ -123,8 +130,9 @@ class _LessonsPageState extends State<LessonsPage> {
               Text(
                 "Lessons",
                 style: TextStyle(
-                  fontSize: 24 * settings.fontSize, // Updated
+                  fontSize: 24 * settings.fontSize,
                   fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
               SizedBox(height: 16),
@@ -133,7 +141,8 @@ class _LessonsPageState extends State<LessonsPage> {
                 title: lesson.title,
                 subtitle: lesson.subtitle,
                 duration: lesson.duration,
-                fontSize: settings.fontSize, // Pass fontSize to the card
+                fontSize: settings.fontSize,
+                fontFamily: fontFamily(), // Pass fontFamily to the card
               )),
             ],
           ),
@@ -147,7 +156,8 @@ class _LessonsPageState extends State<LessonsPage> {
     required String title,
     required String subtitle,
     required String duration,
-    required double fontSize, // Added fontSize parameter
+    required double fontSize,
+    required String fontFamily, // Added fontFamily parameter
   }) {
     return Card(
       elevation: 4,
@@ -168,8 +178,9 @@ class _LessonsPageState extends State<LessonsPage> {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 18 * fontSize, // Updated
+                    fontSize: 18 * fontSize,
                     fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Added fontFamily
                   ),
                 ),
                 SizedBox(height: 8),
@@ -177,19 +188,21 @@ class _LessonsPageState extends State<LessonsPage> {
                   subtitle,
                   style: TextStyle(
                     color: const Color.fromARGB(255, 100, 99, 99),
-                    fontSize: 16 * fontSize, // Updated
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily, // Added fontFamily
                   ),
                 ),
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 16 * fontSize, color: const Color.fromARGB(255, 89, 150, 255)), // Updated
+                    Icon(Icons.access_time, size: 16 * fontSize, color: const Color.fromARGB(255, 89, 150, 255)),
                     SizedBox(width: 4),
                     Text(
                       duration,
                       style: TextStyle(
                         color: const Color.fromARGB(255, 57, 108, 250),
-                        fontSize: 16 * fontSize, // Updated
+                        fontSize: 16 * fontSize,
+                        fontFamily: fontFamily, // Added fontFamily
                       ),
                     ),
                   ],
@@ -208,7 +221,8 @@ class _LessonsPageState extends State<LessonsPage> {
                       "Start Lesson",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16 * fontSize, // Updated
+                        fontSize: 16 * fontSize,
+                        fontFamily: fontFamily, // Added fontFamily
                       ),
                     ),
                   ),

@@ -13,13 +13,22 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white, fontSize: 22 * settings.fontSize),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
+          ),
         ),
       ),
       body: Padding(
@@ -33,6 +42,7 @@ class _StatsPageState extends State<StatsPage> {
               style: TextStyle(
                 fontSize: 24 * settings.fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             const SizedBox(height: 8),
@@ -42,6 +52,7 @@ class _StatsPageState extends State<StatsPage> {
               style: TextStyle(
                 fontSize: 16 * settings.fontSize,
                 color: Colors.grey,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             const SizedBox(height: 24),
@@ -59,6 +70,7 @@ class _StatsPageState extends State<StatsPage> {
                       style: TextStyle(
                         fontSize: 18 * settings.fontSize,
                         color: Colors.grey,
+                        fontFamily: fontFamily(), // Added fontFamily
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -70,6 +82,7 @@ class _StatsPageState extends State<StatsPage> {
                           style: TextStyle(
                             fontSize: 32 * settings.fontSize,
                             fontWeight: FontWeight.bold,
+                            fontFamily: fontFamily(), // Added fontFamily
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -83,6 +96,7 @@ class _StatsPageState extends State<StatsPage> {
                       style: TextStyle(
                         fontSize: 18 * settings.fontSize,
                         color: Colors.grey,
+                        fontFamily: fontFamily(), // Added fontFamily
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -92,6 +106,7 @@ class _StatsPageState extends State<StatsPage> {
                       style: TextStyle(
                         fontSize: 14 * settings.fontSize,
                         color: Colors.grey,
+                        fontFamily: fontFamily(), // Added fontFamily
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -110,6 +125,7 @@ class _StatsPageState extends State<StatsPage> {
                           style: TextStyle(
                             fontSize: 16 * settings.fontSize,
                             color: Colors.grey,
+                            fontFamily: fontFamily(), // Added fontFamily
                           ),
                         ),
                         // Goal Text
@@ -118,6 +134,7 @@ class _StatsPageState extends State<StatsPage> {
                           style: TextStyle(
                             fontSize: 16 * settings.fontSize,
                             color: Colors.grey,
+                            fontFamily: fontFamily(), // Added fontFamily
                           ),
                         ),
                       ],
@@ -134,11 +151,11 @@ class _StatsPageState extends State<StatsPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    _buildSubjectProgress("Science", 0.45, settings),
+                    _buildSubjectProgress("Science", 0.45, settings, fontFamily()),
                     const SizedBox(height: 16),
-                    _buildSubjectProgress("English", 0.65, settings),
+                    _buildSubjectProgress("English", 0.65, settings, fontFamily()),
                     const SizedBox(height: 16),
-                    _buildSubjectProgress("History", 0.30, settings),
+                    _buildSubjectProgress("History", 0.30, settings, fontFamily()),
                   ],
                 ),
               ),
@@ -150,7 +167,12 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   // Subject Progress Card Widget Template
-  Widget _buildSubjectProgress(String subject, double progress, AccessibilitySettings settings) {
+  Widget _buildSubjectProgress(
+    String subject,
+    double progress,
+    AccessibilitySettings settings,
+    String fontFamily, // Added fontFamily parameter
+  ) {
     return Column(
       children: [
         Row(
@@ -165,6 +187,7 @@ class _StatsPageState extends State<StatsPage> {
                   style: TextStyle(
                     fontSize: 18 * settings.fontSize,
                     fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Added fontFamily
                   ),
                 ),
               ],
@@ -175,6 +198,7 @@ class _StatsPageState extends State<StatsPage> {
               style: TextStyle(
                 fontSize: 18 * settings.fontSize,
                 color: Colors.grey,
+                fontFamily: fontFamily, // Added fontFamily
               ),
             ),
           ],

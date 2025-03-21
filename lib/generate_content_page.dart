@@ -42,10 +42,20 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
       context: context,
       builder: (BuildContext context) {
         final settings = Provider.of<AccessibilitySettings>(context);
+        final bool isDyslexic = settings.openDyslexic;
+
+        // Function to determine font family
+        String fontFamily() {
+          return isDyslexic ? "OpenDyslexic" : "Roboto";
+        }
+
         return AlertDialog(
           title: Text(
             "Upload Files",
-            style: TextStyle(fontSize: 20 * settings.fontSize), // Updated
+            style: TextStyle(
+              fontSize: 20 * settings.fontSize,
+              fontFamily: fontFamily(), // Added font family
+            ),
           ),
           content: SizedBox(
             height: 400,
@@ -56,71 +66,102 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                 children: [
                   Text(
                     "Upload files to your learning materials library.",
-                    style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
                     "Subject (Optional)",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize, // Updated
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
                     ),
                   ),
                   TextField(
                     controller: subjectController,
                     decoration: InputDecoration(
                       hintText: "Enter subject",
-                      hintStyle: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(), // Added font family
+                      ),
                     ),
-                    style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
                     "Topic (Optional)",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize, // Updated
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
                     ),
                   ),
                   TextField(
                     controller: topicController,
                     decoration: InputDecoration(
                       hintText: "Enter topic",
-                      hintStyle: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(), // Added font family
+                      ),
                     ),
-                    style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
                     "Description (Optional)",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize, // Updated
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
                     ),
                   ),
                   TextField(
                     controller: descriptionController,
                     decoration: InputDecoration(
                       hintText: "Enter a description for these files",
-                      hintStyle: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(), // Added font family
+                      ),
                     ),
-                    style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
                     "Tags (Optional)",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize, // Updated
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
                     ),
                   ),
                   TextField(
                     controller: tagsController,
                     decoration: InputDecoration(
                       hintText: "Add tags",
-                      hintStyle: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(), // Added font family
+                      ),
                     ),
-                    style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added font family
+                    ),
                   ),
                 ],
               ),
@@ -133,7 +174,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
               },
               child: Text(
                 "Cancel",
-                style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily(), // Added font family
+                ),
               ),
             ),
             TextButton(
@@ -162,7 +206,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                     SnackBar(
                       content: Text(
                         "No file selected",
-                        style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize,
+                          fontFamily: fontFamily(), // Added font family
+                        ),
                       ),
                     ),
                   );
@@ -170,7 +217,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
               },
               child: Text(
                 "Upload",
-                style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily(), // Added font family
+                ),
               ),
             ),
           ],
@@ -182,23 +232,39 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
   // Confirmation before deleting
   void _confirmDelete(int index) {
     final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isDyslexic = settings.openDyslexic;
+
+    // Function to determine font family
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
           'Confirm Delete',
-          style: TextStyle(fontSize: 20 * settings.fontSize), // Updated
+          style: TextStyle(
+            fontSize: 20 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
+          ),
         ),
         content: Text(
           'Are you sure you want to delete this file?',
-          style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+          style: TextStyle(
+            fontSize: 16 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+              style: TextStyle(
+                fontSize: 16 * settings.fontSize,
+                fontFamily: fontFamily(), // Added font family
+              ),
             ),
           ),
           TextButton(
@@ -211,7 +277,8 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
             child: Text(
               'Delete',
               style: TextStyle(
-                fontSize: 16 * settings.fontSize, // Updated
+                fontSize: 16 * settings.fontSize,
+                fontFamily: fontFamily(), // Added font family
                 color: Colors.red,
               ),
             ),
@@ -224,6 +291,13 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    // Function to determine font family
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -231,7 +305,8 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
           "LearnAbility",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 24 * settings.fontSize, // Updated
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added font family
           ),
         ),
       ),
@@ -243,16 +318,18 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
             Text(
               "My Materials",
               style: TextStyle(
-                fontSize: 27 * settings.fontSize, // Updated
+                fontSize: 27 * settings.fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added font family
               ),
             ),
             SizedBox(height: 8),
             Text(
               "Upload your learning resources to generate personalized content",
               style: TextStyle(
-                fontSize: 16 * settings.fontSize, // Updated
+                fontSize: 16 * settings.fontSize,
                 color: Colors.grey,
+                fontFamily: fontFamily(), // Added font family
               ),
             ),
             SizedBox(height: 16),
@@ -262,7 +339,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                 leading: Icon(Icons.upload_file, color: Colors.blue),
                 title: Text(
                   "Upload file",
-                  style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+                  style: TextStyle(
+                    fontSize: 16 * settings.fontSize,
+                    fontFamily: fontFamily(), // Added font family
+                  ),
                 ),
                 onTap: _uploadFile,
               ),
@@ -271,8 +351,9 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
             Text(
               "Uploaded Files",
               style: TextStyle(
-                fontSize: 20 * settings.fontSize, // Updated
+                fontSize: 20 * settings.fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added font family
               ),
             ),
             SizedBox(height: 8),
@@ -281,7 +362,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                   ? Center(
                       child: Text(
                         "No files uploaded yet.",
-                        style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+                        style: TextStyle(
+                          fontSize: 16 * settings.fontSize,
+                          fontFamily: fontFamily(), // Added font family
+                        ),
                       ),
                     )
                   : ListView.builder(
@@ -317,7 +401,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                             leading: Icon(fileIcon, color: iconColor),
                             title: Text(
                               fileName,
-                              style: TextStyle(fontSize: 16 * settings.fontSize), // Updated
+                              style: TextStyle(
+                                fontSize: 16 * settings.fontSize,
+                                fontFamily: fontFamily(), // Added font family
+                              ),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,12 +412,18 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                                 if (fileData.subject.isNotEmpty)
                                   Text(
                                     "Subject: ${fileData.subject}",
-                                    style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                                    style: TextStyle(
+                                      fontSize: 14 * settings.fontSize,
+                                      fontFamily: fontFamily(), // Added font family
+                                    ),
                                   ),
                                 if (fileData.topic.isNotEmpty)
                                   Text(
                                     "Topic: ${fileData.topic}",
-                                    style: TextStyle(fontSize: 14 * settings.fontSize), // Updated
+                                    style: TextStyle(
+                                      fontSize: 14 * settings.fontSize,
+                                      fontFamily: fontFamily(), // Added font family
+                                    ),
                                   ),
                               ],
                             ),
@@ -338,7 +431,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                               icon: Icon(
                                 Icons.delete,
                                 color: Colors.red,
-                                size: 24 * settings.fontSize, // Updated
+                                size: 24 * settings.fontSize,
                               ),
                               onPressed: () => _confirmDelete(index),
                             ),

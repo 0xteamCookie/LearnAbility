@@ -26,7 +26,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final double gridHeight = settings.fontSize == 1.5 ? 1.5 : 1.7;
-
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily(){
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
     return Scaffold(
       key: _scaffoldKey,
 
@@ -37,7 +40,9 @@ class _HomePageState extends State<HomePage> {
         //APP NAME
         title: Text(
           "LearnAbility",
-          style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
+          style: TextStyle(
+            fontFamily: fontFamily(),
+            color: const Color.fromRGBO(255, 255, 255, 1)),
         ),
 
         //NAVIGATION BAR BUTTON
@@ -69,6 +74,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24 * settings.fontSize,
+                  fontFamily: fontFamily(),
                 ),
               ),
             ),
@@ -77,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.bar_chart),
               title: Text(
                 'My Stats',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -92,7 +98,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.accessibility),
               title: Text(
                 'Accessibility',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -107,7 +113,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.settings),
               title: Text(
                 'Settings',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -127,6 +133,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily(),
                 ),
               ),
             ),
@@ -134,7 +141,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.quiz),
               title: Text(
                 'Quiz',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -148,7 +155,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.generating_tokens),
               title: Text(
                 'Generate content',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -162,7 +169,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.assistant),
               title: Text(
                 'AI Assistant',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -181,6 +188,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily(),
                 ),
               ),
             ),
@@ -188,7 +196,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.book),
               title: Text(
                 'My Materials',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -203,7 +211,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.movie),
               title: Text(
                 'Videos',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -217,7 +225,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.description),
               title: Text(
                 'Articles',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -239,6 +247,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0 * settings.fontSize,
+                  fontFamily: fontFamily(),
                 ),
               ),
               onTap: () {
@@ -262,7 +271,8 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontSize: 32 * settings.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black
+                  color: Colors.black,
+                  fontFamily: fontFamily(),
                 ),
               ),
 
@@ -272,6 +282,7 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 24.0 * settings.fontSize,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[700],
+                  fontFamily: fontFamily(),
                 )
               ),
               SizedBox(height:30),
@@ -295,6 +306,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0 * settings.fontSize,
+                    fontFamily: fontFamily(),
                   ),
                 ),
               ),
@@ -323,6 +335,7 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 24.0 * settings.fontSize,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[700],
+                  fontFamily: fontFamily(),
                 )
               ),
               SizedBox(height:20),
@@ -347,7 +360,8 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontSize: 32.0 * settings.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black
+                  color: Colors.black,
+                  fontFamily: fontFamily(),
                 ),
               ),
               Text(
@@ -356,6 +370,7 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 20.0 * settings.fontSize,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[700],
+                  fontFamily: fontFamily(),
                 )
               ),
               SizedBox(height:20),
@@ -385,6 +400,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 16.0 * settings.fontSize,
+                    fontFamily: fontFamily(),
                   ),
                 ),
               ),
@@ -398,8 +414,12 @@ class _HomePageState extends State<HomePage> {
   //STATCARD WIDGET TEMPLATE
   Widget _buildStatCard(String title, String value, String subtitle){
     final settings = Provider.of<AccessibilitySettings>(context);
-    final double boxHeight = settings.fontSize == 1.5 ? 33.0 : 25.0;
+    final double boxHeight = settings.fontSize == 1.5 ? 33.0 : 20.0;
     final double padding = settings.fontSize == 1.5 ? 10.0 : 16.0;
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily(){
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
 
     return IntrinsicHeight(
@@ -427,6 +447,7 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                   fontSize: 15.0 * settings.fontSize,
                   height: 1,
+                  fontFamily: fontFamily(),
                 ),
                 overflow: TextOverflow.visible,
               ),
@@ -440,6 +461,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0 * settings.fontSize,
+                    fontFamily: fontFamily(),
                   ),
                 ),
 
@@ -449,6 +471,7 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 15.0 * settings.fontSize,
+                      fontFamily: fontFamily(),
                     ),
                     overflow: TextOverflow.visible,
                   ),
@@ -463,6 +486,10 @@ class _HomePageState extends State<HomePage> {
   //SUBJECT BUTTON WIDGET TEMPLATE
   Widget _buildSubjectButton(String subject){
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily(){
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     return ElevatedButton(
       onPressed: (){},
@@ -480,6 +507,7 @@ class _HomePageState extends State<HomePage> {
         style: TextStyle(
           color: Colors.black,
           fontSize: 16.0 * settings.fontSize,
+          fontFamily: fontFamily(),
         )
       ),
     );
@@ -494,6 +522,10 @@ class _HomePageState extends State<HomePage> {
   }){
 
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily(){
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     return Card(
       elevation: 4.0,
@@ -510,6 +542,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14.0 * settings.fontSize,
+                fontFamily: fontFamily(),
               ),
             ),
             SizedBox(height: 8.0),
@@ -519,6 +552,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 20.0 * settings.fontSize,
                 fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(),
               ),
             ),
 
@@ -527,6 +561,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14.0 * settings.fontSize,
+                fontFamily: fontFamily(),
               ),
             ),
             SizedBox(height: 16.0),
@@ -539,6 +574,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14.0 * settings.fontSize,
+                    fontFamily: fontFamily(),
                   ),
                 ),
 
@@ -551,6 +587,7 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 16.0 * settings.fontSize,
+                      fontFamily: fontFamily(),
                     ),
                   ),
                 ),

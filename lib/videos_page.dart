@@ -36,6 +36,12 @@ class _VideosPageState extends State<VideosPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    // Function to determine font family
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +51,7 @@ class _VideosPageState extends State<VideosPage> {
           style: TextStyle(
             color: Colors.white,
             fontSize: 22 * settings.fontSize, // Dynamically adjusting font size
+            fontFamily: fontFamily(), // Apply font family
           ),
         ),
       ),
@@ -60,6 +67,7 @@ class _VideosPageState extends State<VideosPage> {
                 style: TextStyle(
                   fontSize: 28 * settings.fontSize, // Dynamically adjusting font size
                   fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Apply font family
                 ),
               ),
               const SizedBox(height: 4),
@@ -70,6 +78,7 @@ class _VideosPageState extends State<VideosPage> {
                 style: TextStyle(
                   fontSize: 16 * settings.fontSize, // Dynamically adjusting font size
                   color: Colors.grey,
+                  fontFamily: fontFamily(), // Apply font family
                 ),
               ),
               const SizedBox(height: 20),
@@ -78,10 +87,10 @@ class _VideosPageState extends State<VideosPage> {
               Wrap(
                 spacing: 8.0,
                 children: [
-                  _buildCategoryChip("Science", settings),
-                  _buildCategoryChip("Mathematics", settings),
-                  _buildCategoryChip("History", settings),
-                  _buildCategoryChip("Technology", settings),
+                  _buildCategoryChip("Science", settings, fontFamily()),
+                  _buildCategoryChip("Mathematics", settings, fontFamily()),
+                  _buildCategoryChip("History", settings, fontFamily()),
+                  _buildCategoryChip("Technology", settings, fontFamily()),
                 ],
               ),
               const SizedBox(height: 24),
@@ -92,6 +101,7 @@ class _VideosPageState extends State<VideosPage> {
                 style: TextStyle(
                   fontSize: 20 * settings.fontSize, // Dynamically adjusting font size
                   fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Apply font family
                 ),
               ),
               const SizedBox(height: 8),
@@ -104,6 +114,7 @@ class _VideosPageState extends State<VideosPage> {
                   creator: video["creator"],
                   duration: video["duration"],
                   settings: settings,
+                  fontFamily: fontFamily(), // Pass font family
                 ),
             ],
           ),
@@ -113,11 +124,18 @@ class _VideosPageState extends State<VideosPage> {
   }
 
   // Category Chip Widget
-  Widget _buildCategoryChip(String label, AccessibilitySettings settings) {
+  Widget _buildCategoryChip(
+    String label,
+    AccessibilitySettings settings,
+    String fontFamily, // Pass font family
+  ) {
     return Chip(
       label: Text(
         label,
-        style: TextStyle(fontSize: 14 * settings.fontSize), // Dynamically adjusting font size
+        style: TextStyle(
+          fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
+          fontFamily: fontFamily, // Apply font family
+        ),
       ),
       backgroundColor: Colors.blue[50],
       shape: RoundedRectangleBorder(
@@ -133,6 +151,7 @@ class _VideosPageState extends State<VideosPage> {
     required String creator,
     required String duration,
     required AccessibilitySettings settings,
+    required String fontFamily, // Pass font family
   }) {
     return Card(
       elevation: 4.0,
@@ -175,6 +194,7 @@ class _VideosPageState extends State<VideosPage> {
                   style: TextStyle(
                     fontSize: 18 * settings.fontSize, // Dynamically adjusting font size
                     fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Apply font family
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -184,6 +204,7 @@ class _VideosPageState extends State<VideosPage> {
                   style: TextStyle(
                     fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
                     color: Colors.grey,
+                    fontFamily: fontFamily, // Apply font family
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -197,6 +218,7 @@ class _VideosPageState extends State<VideosPage> {
                       style: TextStyle(
                         fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
                         color: Colors.grey,
+                        fontFamily: fontFamily, // Apply font family
                       ),
                     ),
                     const Spacer(),
@@ -207,7 +229,10 @@ class _VideosPageState extends State<VideosPage> {
                       },
                       child: Text(
                         "Watch Video",
-                        style: TextStyle(fontSize: 14 * settings.fontSize), // Dynamically adjusting font size
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
+                          fontFamily: fontFamily, // Apply font family
+                        ),
                       ),
                     ),
                   ],
