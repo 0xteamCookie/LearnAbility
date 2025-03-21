@@ -25,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final double gridHeight = settings.fontSize == 1.5 ? 1.5 : 1.7;
+
     return Scaffold(
       key: _scaffoldKey,
 
@@ -305,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 15,
-                childAspectRatio: 4 / 2,
+                childAspectRatio: gridHeight,
                 children: [
                   _buildStatCard("Study Streak", "7", " days"),
                   _buildStatCard("Completed Lessons", "24", " lessons"),
@@ -396,53 +398,64 @@ class _HomePageState extends State<HomePage> {
   //STATCARD WIDGET TEMPLATE
   Widget _buildStatCard(String title, String value, String subtitle){
     final settings = Provider.of<AccessibilitySettings>(context);
+    final double boxHeight = settings.fontSize == 1.5 ? 33.0 : 25.0;
+    final double padding = settings.fontSize == 1.5 ? 10.0 : 16.0;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(13.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0 * settings.fontSize,
+
+    return IntrinsicHeight(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
             ),
-          ),
-          SizedBox(height: 5.0),
-          Row(
-            children: [
-              Text(
-                value,
+          ],
+        ),
+        padding: EdgeInsets.all(padding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Text(
+                title,
                 style: TextStyle(
-                  color: Colors.blue,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 21.0 * settings.fontSize,
-                ),
-              ),
-
-              Text(
-                subtitle,
-                style: TextStyle(
-                  color: Colors.grey[700],
                   fontSize: 15.0 * settings.fontSize,
+                  height: 1,
                 ),
-              )
-            ],
-          )
-        ],
+                overflow: TextOverflow.visible,
+              ),
+            ),
+            SizedBox(height: boxHeight),
+            Row(
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0 * settings.fontSize,
+                  ),
+                ),
+
+                Flexible(
+                  child: Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 15.0 * settings.fontSize,
+                    ),
+                    overflow: TextOverflow.visible,
+                  ),
+                )
+            ],)
+          ],
+        ),
       ),
     );
   }
