@@ -10,7 +10,6 @@ class AccessibilityPage extends StatefulWidget {
 }
 
 class _AccessibilityPageState extends State<AccessibilityPage> {
-
   final List<Color> _colorThemes = [
     Colors.red,
     Colors.blue,
@@ -22,6 +21,11 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
 
     double fontSize = settings.fontSize;
     bool openDyslexic = settings.openDyslexic;
@@ -31,21 +35,19 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     bool breakReminders = settings.breakReminders;
     int selectedColorIndex = settings.selectedColorIndex;
 
-    String displaySliderValue(double fontSize){
-      switch(fontSize){
-        case 15.0:
-          return "1x";
-        case 12.5:
-          return "0.5x";
-        case 10.0:
-          return "0.25x";
-        case 17.5:
-          return "1.5x";
-        case 20.0:
-          return "2x";
-        default:
-          return "x";
+    String displaySliderValue(double value) {
+      if (value == 1.0) {
+        return "1x";
+      } else if (value == 0.5) {
+        return "0.5x";
+      } else if (value == 0.75) {
+        return "0.75x";
+      } else if (value == 1.25) {
+        return "1.25x";
+      } else if (value == 1.5) {
+        return "1.5x";
       }
+      return "x";
     }
 
     return Scaffold(
@@ -53,7 +55,11 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
         backgroundColor: Colors.blue,
         title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22 * fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -61,38 +67,62 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header for Accessibility Settings
             Text(
               "Accessibility Settings",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24 * fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
             Text(
               "Customize your learning experience",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                color: Colors.grey,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
             SizedBox(height: 20),
+
+            // Text & Display Section
             Text(
               "Text & Display",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20 * fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
             SizedBox(height: 10),
-            Text("Font Size"),
+            Text(
+              "Font Size",
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
+            ),
             Slider(
               value: fontSize,
               min: 0.5,
               max: 1.5,
               activeColor: Colors.blue,
-              divisions: 6,
+              divisions: 4,
               label: displaySliderValue(fontSize),
               onChanged: (double value) {
                 settings.setFontSize(value);
               },
             ),
             SizedBox(height: 20),
+
+            // Color Theme Section
             Text(
               "Color Theme",
               style: TextStyle(
-                fontSize: 20, 
-                fontWeight: FontWeight.bold
+                fontSize: 20 * fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
             SizedBox(height: 10),
@@ -118,7 +148,15 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               }).toList(),
             ),
             SizedBox(height: 20),
-            Text("Speech Rate"),
+
+            // Speech Rate Section
+            Text(
+              "Speech Rate",
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
+            ),
             Slider(
               value: speechRate,
               min: 0,
@@ -132,14 +170,34 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Slow"),
-                Text("Fast"),
+                Text(
+                  "Slow",
+                  style: TextStyle(
+                    fontSize: 14 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
+                Text(
+                  "Fast",
+                  style: TextStyle(
+                    fontSize: 14 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 20),
+
+            // Word Prediction Section
             Row(
               children: [
-                Text("Word Prediction"),
+                Text(
+                  "Word Prediction",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: wordPrediction,
@@ -150,9 +208,17 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
               ],
             ),
+
+            // Dyslexia friendly font Section
             Row(
               children: [
-                Text("Dyslexia friendly font"),
+                Text(
+                  "Dyslexia friendly font",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: openDyslexic,
@@ -164,14 +230,28 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               ],
             ),
             SizedBox(height: 20),
+
+            // Focus & Timers Section
             Text(
               "Focus & Timers",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20 * fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
             SizedBox(height: 10),
+
+            // Visual Timers Section
             Row(
               children: [
-                Text("Visual Timers"),
+                Text(
+                  "Visual Timers",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: visualTimers,
@@ -182,9 +262,17 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
               ],
             ),
+
+            // Break Reminders Section
             Row(
               children: [
-                Text("Break Reminders"),
+                Text(
+                  "Break Reminders",
+                  style: TextStyle(
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
                 Spacer(),
                 Switch(
                   value: breakReminders,

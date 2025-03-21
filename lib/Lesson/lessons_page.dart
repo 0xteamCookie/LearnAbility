@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'lesson_page.dart';
+import 'package:provider/provider.dart';
+import '../accessibility_model.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: LessonsPage(),
-  ));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AccessibilitySettings(),
+      child: MaterialApp(
+        home: LessonsPage(),
+      ),
+    ),
+  );
 }
 
 class Lesson {
@@ -82,12 +89,23 @@ class _LessonsPageState extends State<LessonsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
           "LearnAbility",
-          style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
+          style: TextStyle(
+            color: const Color.fromRGBO(255, 255, 255, 1),
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
+          ),
         ),
         actions: [
           IconButton(
@@ -111,7 +129,11 @@ class _LessonsPageState extends State<LessonsPage> {
             children: [
               Text(
                 "Lessons",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
               ),
               SizedBox(height: 16),
               ...lessons.map((lesson) => _buildLessonCard(
@@ -119,6 +141,8 @@ class _LessonsPageState extends State<LessonsPage> {
                 title: lesson.title,
                 subtitle: lesson.subtitle,
                 duration: lesson.duration,
+                fontSize: settings.fontSize,
+                fontFamily: fontFamily(), // Pass fontFamily to the card
               )),
             ],
           ),
@@ -132,6 +156,8 @@ class _LessonsPageState extends State<LessonsPage> {
     required String title,
     required String subtitle,
     required String duration,
+    required double fontSize,
+    required String fontFamily, // Added fontFamily parameter
   }) {
     return Card(
       elevation: 4,
@@ -151,21 +177,33 @@ class _LessonsPageState extends State<LessonsPage> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18 * fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Added fontFamily
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
                   subtitle,
-                  style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99)),
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 100, 99, 99),
+                    fontSize: 16 * fontSize,
+                    fontFamily: fontFamily, // Added fontFamily
+                  ),
                 ),
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 16, color: const Color.fromARGB(255, 89, 150, 255)),
+                    Icon(Icons.access_time, size: 16 * fontSize, color: const Color.fromARGB(255, 89, 150, 255)),
                     SizedBox(width: 4),
                     Text(
                       duration,
-                      style: TextStyle(color: const Color.fromARGB(255, 57, 108, 250)),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 57, 108, 250),
+                        fontSize: 16 * fontSize,
+                        fontFamily: fontFamily, // Added fontFamily
+                      ),
                     ),
                   ],
                 ),
@@ -181,7 +219,11 @@ class _LessonsPageState extends State<LessonsPage> {
                     ),
                     child: Text(
                       "Start Lesson",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16 * fontSize,
+                        fontFamily: fontFamily, // Added fontFamily
+                      ),
                     ),
                   ),
                 ),

@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import '../accessibility_model.dart';
 
 final Logger logger = Logger();
 
@@ -99,6 +101,13 @@ class _LessonPageState extends State<LessonPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     final learningContent = _lessonData["learningContent"] as List;
     final quiz = _lessonData["quiz"] as Map<String, dynamic>;
     final webResources = _lessonData["webResources"] as List;
@@ -110,9 +119,13 @@ class _LessonPageState extends State<LessonPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
+        title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(),
+          ),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -126,18 +139,20 @@ class _LessonPageState extends State<LessonPage> {
             children: [
               Text(
                 _lessonData["title"],
-                style: const TextStyle(
-                  fontSize: 32,
+                style: TextStyle(
+                  fontSize: 32 * settings.fontSize,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
+                  fontFamily: fontFamily(),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 _lessonData["subtitle"],
-                style: const TextStyle(
-                  fontSize: 18,
+                style: TextStyle(
+                  fontSize: 18 * settings.fontSize,
                   color: Colors.grey,
+                  fontFamily: fontFamily(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -163,10 +178,11 @@ class _LessonPageState extends State<LessonPage> {
                         // Page Title
                         Text(
                           learningContent[_currentPage]["title"],
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 24 * settings.fontSize,
                             color: Colors.blue,
+                            fontFamily: fontFamily(),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -178,9 +194,10 @@ class _LessonPageState extends State<LessonPage> {
                               children: [
                                 Text(
                                   learningContent[_currentPage]["content"] ?? "", // Fallback for null content
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                                  style: TextStyle(
+                                    fontSize: 16 * settings.fontSize,
                                     height: 1.5,
+                                    fontFamily: fontFamily(),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -206,9 +223,10 @@ class _LessonPageState extends State<LessonPage> {
                             ),
                             Text(
                               'Page ${_currentPage + 1} of ${learningContent.length}',
-                              style: const TextStyle(
-                                fontSize: 16,
+                              style: TextStyle(
+                                fontSize: 16 * settings.fontSize,
                                 color: Colors.grey,
+                                fontFamily: fontFamily(),
                               ),
                             ),
                             IconButton(
@@ -235,20 +253,22 @@ class _LessonPageState extends State<LessonPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Quick Check',
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 24 * settings.fontSize,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
+                          fontFamily: fontFamily(),
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         quiz["question"],
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: 18 * settings.fontSize,
                           height: 1.5,
+                          fontFamily: fontFamily(),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -257,6 +277,8 @@ class _LessonPageState extends State<LessonPage> {
                           return _buildMCQOption(
                             option["text"],
                             option["isCorrect"],
+                            settings.fontSize,
+                            fontFamily(),
                           );
                         }).toList(),
                       ),
@@ -268,11 +290,12 @@ class _LessonPageState extends State<LessonPage> {
                             backgroundColor: Colors.blue,
                             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Submit',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16 * settings.fontSize,
                               color: Colors.white,
+                              fontFamily: fontFamily(),
                             ),
                           ),
                         ),
@@ -285,9 +308,10 @@ class _LessonPageState extends State<LessonPage> {
                                 ? 'Correct! Photosynthesis takes place in chloroplasts.'
                                 : 'Incorrect!',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16 * settings.fontSize,
                               color: _selectedAnswer == correctOption ? Colors.green : Colors.red,
                               fontWeight: FontWeight.bold,
+                              fontFamily: fontFamily(),
                             ),
                           ),
                         ),
@@ -307,17 +331,18 @@ class _LessonPageState extends State<LessonPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Web Resources',
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 24 * settings.fontSize,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
+                          fontFamily: fontFamily(),
                         ),
                       ),
                       const SizedBox(height: 8),
                       ...webResources.map((url) {
-                        return _buildWebResourceLink(url);
+                        return _buildWebResourceLink(url, settings.fontSize, fontFamily());
                       }),
                     ],
                   ),
@@ -330,12 +355,13 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  Widget _buildMCQOption(String option, bool isCorrect) {
+  Widget _buildMCQOption(String option, bool isCorrect, double fontSize, String fontFamily) {
     return RadioListTile<String>(
       title: Text(
         option,
-        style: const TextStyle(
-          fontSize: 16,
+        style: TextStyle(
+          fontSize: 16 * fontSize,
+          fontFamily: fontFamily,
         ),
       ),
       value: option, // Use the option text as the unique value
@@ -350,7 +376,7 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  Widget _buildWebResourceLink(String url) {
+  Widget _buildWebResourceLink(String url, double fontSize, String fontFamily) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
@@ -359,10 +385,11 @@ class _LessonPageState extends State<LessonPage> {
         },
         child: Text(
           url,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.blue,
             decoration: TextDecoration.underline,
-            fontSize: 16,
+            fontSize: 16 * fontSize,
+            fontFamily: fontFamily,
           ),
         ),
       ),

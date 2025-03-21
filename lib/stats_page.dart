@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'accessibility_model.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -10,12 +12,23 @@ class StatsPage extends StatefulWidget {
 class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
+        title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
+          ),
         ),
       ),
       body: Padding(
@@ -23,14 +36,24 @@ class _StatsPageState extends State<StatsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            // Title: Your Learning Progress
+            Text(
               "Your Learning Progress",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24 * settings.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            // Subtitle: Track your achievements and see how far you've come
+            Text(
               "Track your achievements and see how far you've come",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16 * settings.fontSize,
+                color: Colors.grey,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
             ),
             const SizedBox(height: 24),
             // First Card
@@ -41,30 +64,50 @@ class _StatsPageState extends State<StatsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    // Card Title: Current Streak
+                    Text(
                       "Current Streak",
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 18 * settings.fontSize,
+                        color: Colors.grey,
+                        fontFamily: fontFamily(), // Added fontFamily
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Text(
+                        // Streak Value
+                        Text(
                           "12",
-                          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 32 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: fontFamily(), // Added fontFamily
+                          ),
                         ),
                         const SizedBox(width: 8),
                         const Icon(Icons.whatshot, color: Colors.orange), // Fire emoji
                       ],
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    // Card Title: Study Hours
+                    Text(
                       "Study Hours",
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 18 * settings.fontSize,
+                        color: Colors.grey,
+                        fontFamily: fontFamily(), // Added fontFamily
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    // Subtitle: This week
+                    Text(
                       "This week",
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        color: Colors.grey,
+                        fontFamily: fontFamily(), // Added fontFamily
+                      ),
                     ),
                     const SizedBox(height: 8),
                     LinearProgressIndicator(
@@ -76,13 +119,23 @@ class _StatsPageState extends State<StatsPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        // Progress Value
+                        Text(
                           "72%",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                          style: TextStyle(
+                            fontSize: 16 * settings.fontSize,
+                            color: Colors.grey,
+                            fontFamily: fontFamily(), // Added fontFamily
+                          ),
                         ),
-                        const Text(
+                        // Goal Text
+                        Text(
                           "Weekly Goal - 20 Lessons",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                          style: TextStyle(
+                            fontSize: 16 * settings.fontSize,
+                            color: Colors.grey,
+                            fontFamily: fontFamily(), // Added fontFamily
+                          ),
                         ),
                       ],
                     ),
@@ -98,11 +151,11 @@ class _StatsPageState extends State<StatsPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    _buildSubjectProgress("Science", 0.45),
+                    _buildSubjectProgress("Science", 0.45, settings, fontFamily()),
                     const SizedBox(height: 16),
-                    _buildSubjectProgress("English", 0.65),
+                    _buildSubjectProgress("English", 0.65, settings, fontFamily()),
                     const SizedBox(height: 16),
-                    _buildSubjectProgress("History", 0.30),
+                    _buildSubjectProgress("History", 0.30, settings, fontFamily()),
                   ],
                 ),
               ),
@@ -113,7 +166,13 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildSubjectProgress(String subject, double progress) {
+  // Subject Progress Card Widget Template
+  Widget _buildSubjectProgress(
+    String subject,
+    double progress,
+    AccessibilitySettings settings,
+    String fontFamily, // Added fontFamily parameter
+  ) {
     return Column(
       children: [
         Row(
@@ -125,17 +184,27 @@ class _StatsPageState extends State<StatsPage> {
                 const SizedBox(width: 8),
                 Text(
                   subject,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18 * settings.fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Added fontFamily
+                  ),
                 ),
               ],
             ),
+            // Progress Percentage
             Text(
               "${(progress * 100).toInt()}%",
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 18 * settings.fontSize,
+                color: Colors.grey,
+                fontFamily: fontFamily, // Added fontFamily
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
+        // Linear Progress Bar
         LinearProgressIndicator(
           value: progress,
           backgroundColor: Colors.grey[300],

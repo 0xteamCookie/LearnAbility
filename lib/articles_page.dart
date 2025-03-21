@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import 'accessibility_model.dart';
 
 class ArticlesPage extends StatefulWidget {
   const ArticlesPage({super.key});
@@ -9,7 +11,7 @@ class ArticlesPage extends StatefulWidget {
 
 class _ArticlesPageState extends State<ArticlesPage> {
   final Map<String, dynamic> feedData = {
-  "articles": [
+    "articles": [
       {
         "image": "https://via.placeholder.com/150",
         "heading": "Getting Started with Dart",
@@ -33,16 +35,27 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue,
 
-          //APP NAME
-          title: Text(
-            "LearnAbility",
-              style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
+        // APP NAME
+        title: Text(
+          "LearnAbility",
+          style: TextStyle(
+            color: const Color.fromRGBO(255, 255, 255, 1),
+            fontSize: 24 * settings.fontSize,
+            fontFamily: fontFamily(), // Added fontFamily
           ),
         ),
+      ),
 
       body: SingleChildScrollView(
         child: Padding(
@@ -50,61 +63,72 @@ class _ArticlesPageState extends State<ArticlesPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "All Articles",
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 28 * settings.fontSize,
                   fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
               const SizedBox(height: 4),
 
-              const Text(
+              Text(
                 "Explore the latest content",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16 * settings.fontSize,
                   color: Colors.grey,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
               const SizedBox(height: 20),
 
               Wrap(
-              spacing: 8.0,
-              children: [
-                _buildCategoryChip("Science"),
-                _buildCategoryChip("Mathematics"),
-                _buildCategoryChip("History"),
-                _buildCategoryChip("Technology"),
+                spacing: 8.0,
+                children: [
+                  _buildCategoryChip("Science", settings.fontSize, fontFamily()),
+                  _buildCategoryChip("Mathematics", settings.fontSize, fontFamily()),
+                  _buildCategoryChip("History", settings.fontSize, fontFamily()),
+                  _buildCategoryChip("Technology", settings.fontSize, fontFamily()),
                 ],
               ),
               const SizedBox(height: 24),
 
-              const Text(
-              "Featured Articles",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              Text(
+                "Featured Articles",
+                style: TextStyle(
+                  fontSize: 20 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
+              const SizedBox(height: 8),
 
-            for (var article in feedData["articles"])
-              _buildArticleCard(
-                image: article["image"],
-                heading: article["heading"],
-                creator: article["creator"],
-                duration: article["duration"],
-              ),
-          ],
+              for (var article in feedData["articles"])
+                _buildArticleCard(
+                  image: article["image"],
+                  heading: article["heading"],
+                  creator: article["creator"],
+                  duration: article["duration"],
+                  fontSize: settings.fontSize,
+                  fontFamily: fontFamily(), // Pass fontFamily
+                ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCategoryChip(String label) {
+  Widget _buildCategoryChip(String label, double fontSize, String fontFamily) {
     return Chip(
-      label: Text(label),
+      label: Text(
+        label,
+        style: TextStyle(
+          fontSize: 14 * fontSize,
+          fontFamily: fontFamily, // Added fontFamily
+        ),
+      ),
       backgroundColor: Colors.blue[50],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -113,87 +137,98 @@ class _ArticlesPageState extends State<ArticlesPage> {
   }
 
   Widget _buildArticleCard({
-  required String image,
-  required String heading,
-  required String creator,
-  required String duration,
-}) {
-  return Card(
-    elevation: 4.0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-    margin: const EdgeInsets.only(bottom: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
-          child: Image.network(
-            image,
-            width: double.infinity,
-            height: 150,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: double.infinity,
-                height: 150,
-                color: Colors.grey[300],
-                child: const Icon(
-                  Icons.article,
-                  size: 50,
-                  color: Colors.grey,
-                ),
-              );
-            },
+    required String image,
+    required String heading,
+    required String creator,
+    required String duration,
+    required double fontSize,
+    required String fontFamily, // Added fontFamily parameter
+  }) {
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
+            child: Image.network(
+              image,
+              width: double.infinity,
+              height: 150,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: double.infinity,
+                  height: 150,
+                  color: Colors.grey[300],
+                  child: Icon(
+                    Icons.article,
+                    size: 50 * fontSize,
+                    color: Colors.grey,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                heading,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  heading,
+                  style: TextStyle(
+                    fontSize: 18 * fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Added fontFamily
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                creator,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+                const SizedBox(height: 8),
+                Text(
+                  creator,
+                  style: TextStyle(
+                    fontSize: 14 * fontSize,
+                    color: Colors.grey,
+                    fontFamily: fontFamily, // Added fontFamily
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(Icons.timer, size: 16),
-                  const SizedBox(width: 4),
-                  Text(
-                    duration,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.timer, size: 16 * fontSize),
+                    const SizedBox(width: 4),
+                    Text(
+                      duration,
+                      style: TextStyle(
+                        fontSize: 14 * fontSize,
+                        color: Colors.grey,
+                        fontFamily: fontFamily, // Added fontFamily
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      // Add "Read Article" functionality
-                    },
-                    child: const Text("Read Article"),
-                  ),
-                ],
-              ),
-            ],
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        // Add "Read Article" functionality
+                      },
+                      child: Text(
+                        "Read Article",
+                        style: TextStyle(
+                          fontSize: 14 * fontSize,
+                          fontFamily: fontFamily, // Added fontFamily
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }

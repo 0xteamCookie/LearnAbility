@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'accessibility_model.dart';
 
 class MyMaterial {
   final String imageUrl;
@@ -43,19 +45,22 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
     // Use a List of Maps to represent the JSON data
     final List<Map<String, dynamic>> jsonList = [
       {
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Photosynthesis_en.svg/1200px-Photosynthesis_en.svg.png",
+        "imageUrl":
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Photosynthesis_en.svg/1200px-Photosynthesis_en.svg.png",
         "title": "Personalized Material 1",
         "subtitle": "This is a personalized material uploaded by the user",
         "duration": "10 mins"
       },
       {
-        "imageUrl": "https://fatty15.com/cdn/shop/articles/Understanding_the_Process_of_Cellular_Respiration_1200x1200.png?v=1696520936",
+        "imageUrl":
+            "https://fatty15.com/cdn/shop/articles/Understanding_the_Process_of_Cellular_Respiration_1200x1200.png?v=1696520936",
         "title": "Personalized Material 2",
         "subtitle": "Another personalized material uploaded by the user",
         "duration": "20 mins"
       },
       {
-        "imageUrl": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg",
+        "imageUrl":
+            "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg",
         "title": "Personalized Material 3",
         "subtitle": "Yet another personalized material uploaded by the user",
         "duration": "30 mins"
@@ -69,12 +74,24 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    // Function to determine font family
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
           "LearnAbility",
-          style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
+          style: TextStyle(
+            color: const Color.fromRGBO(255, 255, 255, 1),
+            fontSize: 24 * settings.fontSize, // Apply dynamic font size
+            fontFamily: fontFamily(), // Apply font family
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -85,15 +102,21 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
             children: [
               Text(
                 "Personalized Materials",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24 * settings.fontSize, // Apply dynamic font size
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Apply font family
+                ),
               ),
               SizedBox(height: 16),
               ...materials.map((material) => _buildMaterialCard(
-                imageUrl: material.imageUrl,
-                title: material.title,
-                subtitle: material.subtitle,
-                duration: material.duration,
-              )),
+                    imageUrl: material.imageUrl,
+                    title: material.title,
+                    subtitle: material.subtitle,
+                    duration: material.duration,
+                    settings: settings,
+                    fontFamily: fontFamily(), // Pass font family
+                  )),
             ],
           ),
         ),
@@ -106,6 +129,8 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
     required String title,
     required String subtitle,
     required String duration,
+    required AccessibilitySettings settings,
+    required String fontFamily, // Pass font family
   }) {
     return Card(
       elevation: 4,
@@ -125,21 +150,37 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18 * settings.fontSize, // Apply dynamic font size
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily, // Apply font family
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
                   subtitle,
-                  style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99)),
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 100, 99, 99),
+                    fontSize: 16 * settings.fontSize, // Apply dynamic font size
+                    fontFamily: fontFamily, // Apply font family
+                  ),
                 ),
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 16, color: const Color.fromARGB(255, 89, 150, 255)),
+                    Icon(
+                      Icons.access_time,
+                      size: 16 * settings.fontSize, // Apply dynamic font size
+                      color: const Color.fromARGB(255, 89, 150, 255),
+                    ),
                     SizedBox(width: 4),
                     Text(
                       duration,
-                      style: TextStyle(color: const Color.fromARGB(255, 57, 108, 250)),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 57, 108, 250),
+                        fontSize: 16 * settings.fontSize, // Apply dynamic font size
+                        fontFamily: fontFamily, // Apply font family
+                      ),
                     ),
                   ],
                 ),
@@ -151,11 +192,18 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 32 * settings.fontSize, // Apply dynamic font size
+                        vertical: 12 * settings.fontSize, // Apply dynamic font size
+                      ),
                     ),
                     child: Text(
                       "View Material",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16 * settings.fontSize, // Apply dynamic font size
+                        fontFamily: fontFamily, // Apply font family
+                      ),
                     ),
                   ),
                 ),
