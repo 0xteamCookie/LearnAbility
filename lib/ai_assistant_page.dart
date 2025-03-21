@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:provider/provider.dart';
+import 'accessibility_model.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -24,12 +26,16 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
+        title: Text(
           "LearnAbility",
-          style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1)),
+          style: TextStyle(
+            color: const Color.fromRGBO(255, 255, 255, 1),
+            fontSize: 24 * settings.fontSize, // Updated
+          ),
         ),
       ),
       body: Chat(
@@ -38,22 +44,27 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
         user: _user,
         theme: DefaultChatTheme(
           // Customize the input box
-          inputBackgroundColor: Colors.blue, 
+          inputBackgroundColor: Colors.blue,
           inputTextColor: const Color.fromARGB(255, 255, 255, 255),
-          inputTextCursorColor: Colors.blue, 
+          inputTextCursorColor: Colors.blue,
           inputContainerDecoration: BoxDecoration(
-            border: Border.all(color:  Color.fromARGB(0, 158, 158, 158)), 
+            border: Border.all(color: const Color.fromARGB(0, 158, 158, 158)),
           ),
-           
+
           // Customize user message bubbles
-          primaryColor: Colors.blue, 
-          
-          userAvatarNameColors: [Colors.blue], 
+          primaryColor: Colors.blue,
+
+          userAvatarNameColors: [Colors.blue],
           receivedMessageBodyTextStyle: TextStyle(
-            color: Colors.black, 
+            color: Colors.black,
+            fontSize: 16 * settings.fontSize, // Updated
           ),
           sentMessageBodyTextStyle: TextStyle(
-            color: Colors.white, 
+            color: Colors.white,
+            fontSize: 16 * settings.fontSize, // Updated
+          ),
+          inputTextStyle: TextStyle(
+            fontSize: 16 * settings.fontSize, // Updated
           ),
         ),
       ),

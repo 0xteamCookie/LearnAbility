@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import "package:logger/logger.dart";
+import 'package:provider/provider.dart';
+import '../accessibility_model.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key});
@@ -102,6 +104,7 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
     final quiz = (_quizData["quiz"] as List)[_currentPage];
     final correctOption = (quiz["options"] as List)
         .firstWhere((option) => option["isCorrect"] == true)["text"];
@@ -111,9 +114,12 @@ class _QuizPageState extends State<QuizPage> {
       // TOP APPBAR
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
+        title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24 * settings.fontSize, // Updated
+          ),
         ),
       ),
 
@@ -125,8 +131,8 @@ class _QuizPageState extends State<QuizPage> {
             // LESSON NAME
             Text(
               _quizData["title"],
-              style: const TextStyle(
-                fontSize: 32.0,
+              style: TextStyle(
+                fontSize: 32.0 * settings.fontSize, // Updated
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
@@ -144,7 +150,7 @@ class _QuizPageState extends State<QuizPage> {
             // QUIZ CARD OR SCORE CARD
             Expanded(
               child: isLastQuestion && _isAnswerSubmitted
-                  ? _buildScoreCard() // Show score card at the end
+                  ? _buildScoreCard(settings.fontSize) // Show score card at the end
                   : SingleChildScrollView(
                       child: Card(
                         elevation: 4,
@@ -156,10 +162,10 @@ class _QuizPageState extends State<QuizPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Quick Check',
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 24 * settings.fontSize, // Updated
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue,
                                 ),
@@ -167,8 +173,8 @@ class _QuizPageState extends State<QuizPage> {
                               const SizedBox(height: 8),
                               Text(
                                 quiz["question"],
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: 18 * settings.fontSize, // Updated
                                   height: 1.5,
                                 ),
                               ),
@@ -178,6 +184,7 @@ class _QuizPageState extends State<QuizPage> {
                                   return _buildMCQOption(
                                     option["text"],
                                     option["isCorrect"],
+                                    settings.fontSize, // Pass fontSize
                                   );
                                 }).toList(),
                               ),
@@ -199,8 +206,8 @@ class _QuizPageState extends State<QuizPage> {
                                     _isAnswerSubmitted
                                         ? (isLastQuestion ? 'Finish' : 'Next')
                                         : 'Submit',
-                                    style: const TextStyle(
-                                      fontSize: 16,
+                                    style: TextStyle(
+                                      fontSize: 16 * settings.fontSize, // Updated
                                       color: Colors.white,
                                     ),
                                   ),
@@ -214,7 +221,7 @@ class _QuizPageState extends State<QuizPage> {
                                         ? 'Good Job! You\'re correct!!'
                                         : 'Incorrect! The correct answer is $correctOption.',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 16 * settings.fontSize, // Updated
                                       color: _selectedAnswer == correctOption ? Colors.green : Colors.red,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -232,12 +239,12 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  Widget _buildMCQOption(String option, bool isCorrect) {
+  Widget _buildMCQOption(String option, bool isCorrect, double fontSize) {
     return RadioListTile<String>(
       title: Text(
         option,
-        style: const TextStyle(
-          fontSize: 16,
+        style: TextStyle(
+          fontSize: 16 * fontSize, // Updated
         ),
       ),
       value: option,
@@ -252,7 +259,7 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  Widget _buildScoreCard() {
+  Widget _buildScoreCard(double fontSize) {
     final totalQuestions = (_quizData["quiz"] as List).length;
     final percentage = (_score / totalQuestions) * 100;
 
@@ -268,17 +275,16 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Quiz Completed!',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 24 * fontSize, // Updated
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                
                 SizedBox(
                   height: 150,
                   width: 300,
@@ -295,8 +301,8 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                       Text(
                         '${percentage.toStringAsFixed(1)}%',
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: TextStyle(
+                          fontSize: 24 * fontSize, // Updated
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -306,8 +312,8 @@ class _QuizPageState extends State<QuizPage> {
                 const SizedBox(height: 16),
                 Text(
                   'Your Score: $_score / $totalQuestions',
-                  style: const TextStyle(
-                    fontSize: 20,
+                  style: TextStyle(
+                    fontSize: 20 * fontSize, // Updated
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -341,8 +347,8 @@ class _QuizPageState extends State<QuizPage> {
                     children: [
                       Text(
                         quiz["question"],
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: 18 * fontSize, // Updated
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -350,15 +356,15 @@ class _QuizPageState extends State<QuizPage> {
                       Text(
                         'Your Answer: ${userAnswer ?? "Not answered"}',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16 * fontSize, // Updated
                           color: userAnswer == correctOption ? Colors.green : Colors.red,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Correct Answer: $correctOption',
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: 16 * fontSize, // Updated
                           color: Colors.green,
                         ),
                       ),
@@ -379,10 +385,10 @@ class _QuizPageState extends State<QuizPage> {
               backgroundColor: Colors.blue,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             ),
-            child: const Text(
+            child: Text(
               'Restart Quiz',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16 * fontSize, // Updated
                 color: Colors.white,
               ),
             ),

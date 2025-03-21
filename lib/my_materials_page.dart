@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'accessibility_model.dart';
 
 class MyMaterial {
   final String imageUrl;
@@ -69,6 +71,7 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context); // Get the font size from the provider
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -85,7 +88,10 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
             children: [
               Text(
                 "Personalized Materials",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24 * settings.fontSize,  // Apply dynamic font size
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 16),
               ...materials.map((material) => _buildMaterialCard(
@@ -93,6 +99,7 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
                 title: material.title,
                 subtitle: material.subtitle,
                 duration: material.duration,
+                settings: settings,
               )),
             ],
           ),
@@ -106,6 +113,7 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
     required String title,
     required String subtitle,
     required String duration,
+    required AccessibilitySettings settings,  // Pass settings to apply dynamic font size
   }) {
     return Card(
       elevation: 4,
@@ -125,21 +133,30 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18 * settings.fontSize,  // Apply dynamic font size
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
                   subtitle,
-                  style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99)),
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 100, 99, 99),
+                    fontSize: 16 * settings.fontSize,  // Apply dynamic font size
+                  ),
                 ),
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 16, color: const Color.fromARGB(255, 89, 150, 255)),
+                    Icon(Icons.access_time, size: 16 * settings.fontSize, color: const Color.fromARGB(255, 89, 150, 255)),
                     SizedBox(width: 4),
                     Text(
                       duration,
-                      style: TextStyle(color: const Color.fromARGB(255, 57, 108, 250)),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 57, 108, 250),
+                        fontSize: 16 * settings.fontSize,  // Apply dynamic font size
+                      ),
                     ),
                   ],
                 ),
@@ -151,11 +168,11 @@ class _MyMaterialsPageState extends State<MyMaterialsPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      padding: EdgeInsets.symmetric(horizontal: 32 * settings.fontSize, vertical: 12 * settings.fontSize),
                     ),
                     child: Text(
                       "View Material",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 16 * settings.fontSize),  // Apply dynamic font size
                     ),
                   ),
                 ),

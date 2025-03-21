@@ -12,7 +12,6 @@ import 'stats_page.dart';
 import 'package:provider/provider.dart';
 import 'accessibility_model.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -28,19 +27,19 @@ class _HomePageState extends State<HomePage> {
     final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
       key: _scaffoldKey,
-      
+
       //TOP APPBAR
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
 
-          //APP NAME
-          title: Text(
-            "LearnAbility",
-              style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
-          ),
+        //APP NAME
+        title: Text(
+          "LearnAbility",
+          style: TextStyle(color: const Color.fromRGBO(255, 255, 255, 1)),
+        ),
 
-          //NAVIGATION BAR BUTTON
-          actions: [
+        //NAVIGATION BAR BUTTON
+        actions: [
           IconButton(
             icon: const Icon(
               Icons.menu,
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      
+
       // NAVIGATION MENU
       endDrawer: Drawer(
         child: ListView(
@@ -71,13 +70,15 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            
 
             ListTile(
               leading: Icon(Icons.bar_chart),
-              title: Text('My Stats'),
+              title: Text(
+                'My Stats',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => StatsPage()),
@@ -87,7 +88,10 @@ class _HomePageState extends State<HomePage> {
 
             ListTile(
               leading: Icon(Icons.accessibility),
-              title: Text('Accessibility'),
+              title: Text(
+                'Accessibility',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -99,7 +103,10 @@ class _HomePageState extends State<HomePage> {
 
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              title: Text(
+                'Settings',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -123,9 +130,12 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.quiz),
-              title: Text('Quiz'),
+              title: Text(
+                'Quiz',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => QuizzesPage()),
@@ -134,9 +144,12 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.generating_tokens),
-              title: Text('Generate content'),
+              title: Text(
+                'Generate content',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => GenerateContentPage()),
@@ -145,9 +158,12 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.assistant),
-              title: Text('AI Assistant'),
+              title: Text(
+                'AI Assistant',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AiAssistantPage()),
@@ -168,9 +184,12 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.book),
-              title: Text('My Materials'),
+              title: Text(
+                'My Materials',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MyMaterialsPage()),
@@ -180,7 +199,10 @@ class _HomePageState extends State<HomePage> {
 
             ListTile(
               leading: Icon(Icons.movie),
-              title: Text('Videos'),
+              title: Text(
+                'Videos',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -191,7 +213,10 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.description),
-              title: Text('Articles'),
+              title: Text(
+                'Articles',
+                style: TextStyle(fontSize: 16.0 * settings.fontSize),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -206,10 +231,12 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(
                 color: Colors.red,
                 Icons.logout),
-              title: Text('Logout',
+              title: Text(
+                'Logout',
                 style: TextStyle(
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
+                  fontSize: 16.0 * settings.fontSize,
                 ),
               ),
               onTap: () {
@@ -226,7 +253,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:[
-              
+
               //WELCOME TEXT
               Text(
                 "Welcome Katty!",
@@ -236,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.black
                 ),
               ),
-              
+
               Text(
                 "Continue your Learning Journey",
                 style: TextStyle(
@@ -246,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                 )
               ),
               SizedBox(height:30),
-          
+
               //LESSON PAGE NAVIGATION BUTTON
               ElevatedButton(
                 onPressed: (){
@@ -271,112 +298,112 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 20),
 
-                //STATISTICS GRID
-                GridView.count(
-                  shrinkWrap: true, // Add this
-                  physics: NeverScrollableScrollPhysics(), // Add this
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  childAspectRatio: 4 / 2,
-                  children: [
-                    _buildStatCard("Study Streak", "7", " days"),
-                    _buildStatCard("Completed Lessons", "24", " lessons"),
-                    _buildStatCard("Weekly Progress", "12.5", " hours"),
-                    _buildStatCard("Quiz Average", "85", " %"),
-                  ],
-                ),
+              //STATISTICS GRID
+              GridView.count(
+                shrinkWrap: true, // Add this
+                physics: NeverScrollableScrollPhysics(), // Add this
+                crossAxisCount: 2,
+                mainAxisSpacing: 15,
+                crossAxisSpacing: 15,
+                childAspectRatio: 4 / 2,
+                children: [
+                  _buildStatCard("Study Streak", "7", " days"),
+                  _buildStatCard("Completed Lessons", "24", " lessons"),
+                  _buildStatCard("Weekly Progress", "12.5", " hours"),
+                  _buildStatCard("Quiz Average", "85", " %"),
+                ],
+              ),
 
-                //SUBJECT OPTIONS
-                Text(
-                  "Subjects to choose from:",
+              //SUBJECT OPTIONS
+              Text(
+                "Subjects to choose from:",
+                style: TextStyle(
+                  fontSize: 24.0 * settings.fontSize,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
+                )
+              ),
+              SizedBox(height:20),
+              Wrap(
+                spacing: 20.0,
+                runSpacing: 20.0,
+                children: [
+                  _buildSubjectButton("Maths"),
+                  _buildSubjectButton("Physics"),
+                  _buildSubjectButton("Chemistry"),
+                  _buildSubjectButton("Computer"),
+                  _buildSubjectButton("English"),
+                  _buildSubjectButton("Biology"),
+
+                ],
+              ),
+              SizedBox(height: 30),
+
+              //SHOW LESSONS IN PROGRESS
+              Text(
+                "Continue Learning",
+                style: TextStyle(
+                  fontSize: 32.0 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                ),
+              ),
+              Text(
+                "Pick up where you left off",
+                style: TextStyle(
+                  fontSize: 20.0 * settings.fontSize,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
+                )
+              ),
+              SizedBox(height:20),
+
+              _buildLessonCard(
+                subject: 'Science',
+                category: 'Biology',
+                title: 'Introduction to Photosynthesis',
+                lastAccessed: '2 hours ago',
+              ),
+              SizedBox(height: 16.0),
+
+              _buildLessonCard(
+                subject: 'English',
+                category: 'Writing',
+                title: 'Essay Structure and Planning',
+                lastAccessed: 'Yesterday',
+              ),
+              SizedBox(height: 16.0),
+
+              TextButton(
+                onPressed: () {
+                  // Navigate to view all lessons
+                },
+                child: Text(
+                  'View All Lessons →',
                   style: TextStyle(
-                    fontSize: 24.0 * settings.fontSize,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[700],
-                  )
-                ),
-                SizedBox(height:20),
-                Wrap(
-                  spacing: 20.0,
-                  runSpacing: 20.0,
-                  children: [
-                    _buildSubjectButton("Maths"),
-                    _buildSubjectButton("Physics"),
-                    _buildSubjectButton("Chemistry"),
-                    _buildSubjectButton("Computer"),
-                    _buildSubjectButton("English"),
-                    _buildSubjectButton("Biology"),
-
-                  ],
-                ),
-                SizedBox(height: 30),
-
-                //SHOW LESSONS IN PROGRESS
-                Text(
-                  "Continue Learning",
-                  style: TextStyle(
-                    fontSize: 32.0 * settings.fontSize,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black
+                    color: Colors.blue,
+                    fontSize: 16.0 * settings.fontSize,
                   ),
                 ),
-                Text(
-                  "Pick up where you left off",
-                  style: TextStyle(
-                    fontSize: 20.0 * settings.fontSize,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[700],
-                  )
-                ),
-                SizedBox(height:20),
-
-                _buildLessonCard(
-                  subject: 'Science',
-                  category: 'Biology',
-                  title: 'Introduction to Photosynthesis',
-                  lastAccessed: '2 hours ago',
-                ),
-                SizedBox(height: 16.0),
-
-                _buildLessonCard(
-                  subject: 'English',
-                  category: 'Writing',
-                  title: 'Essay Structure and Planning',
-                  lastAccessed: 'Yesterday',
-                ),
-                SizedBox(height: 16.0),
-
-                TextButton(
-                  onPressed: () {
-                    // Navigate to view all lessons
-                  },
-                  child: Text(
-                    'View All Lessons →',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 16.0 * settings.fontSize,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   //STATCARD WIDGET TEMPLATE
   Widget _buildStatCard(String title, String value, String subtitle){
     final settings = Provider.of<AccessibilitySettings>(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.5),
+            color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
           ),
@@ -413,7 +440,8 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 15.0 * settings.fontSize,
                 ),
               )
-          ],)
+            ],
+          )
         ],
       ),
     );
@@ -422,7 +450,7 @@ class _HomePageState extends State<HomePage> {
   //SUBJECT BUTTON WIDGET TEMPLATE
   Widget _buildSubjectButton(String subject){
     final settings = Provider.of<AccessibilitySettings>(context);
-    
+
     return ElevatedButton(
       onPressed: (){},
       style: ElevatedButton.styleFrom(
@@ -432,7 +460,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(8),
         ),
         elevation: 5,
-        shadowColor: Colors.grey.withValues(alpha: 0.5),
+        shadowColor: Colors.grey.withOpacity(0.5),
       ),
       child: Text(
         subject,
@@ -453,7 +481,7 @@ class _HomePageState extends State<HomePage> {
   }){
 
     final settings = Provider.of<AccessibilitySettings>(context);
-    
+
     return Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(
@@ -513,12 +541,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+              ],
+            ),
           ],
-        ), 
-      ],
-    ),
-  ),
-  );
+        ),
+      ),
+    );
   }
-
 }

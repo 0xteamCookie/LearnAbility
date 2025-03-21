@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import 'quiz_page.dart';
+import 'package:provider/provider.dart';
+import '../accessibility_model.dart';
 
 class QuizzesPage extends StatefulWidget {
   const QuizzesPage({super.key});
@@ -50,12 +52,16 @@ class _QuizzesPageState extends State<QuizzesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
+        title: Text(
           "LearnAbility",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24 * settings.fontSize, // Updated
+          ),
         ),
         actions: [
           IconButton(
@@ -76,14 +82,20 @@ class _QuizzesPageState extends State<QuizzesPage> {
         padding: const EdgeInsets.all(16.0),
         children: [
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'Quizzes',
-            style: TextStyle(fontSize: 34, color: Colors.black),
+            style: TextStyle(
+              fontSize: 34 * settings.fontSize, // Updated
+              color: Colors.black,
+            ),
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'Test your knowledge with interactive quizzes',
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 20 * settings.fontSize, // Updated
+              color: Colors.grey,
+            ),
           ),
           const SizedBox(height: 10),
 
@@ -95,9 +107,9 @@ class _QuizzesPageState extends State<QuizzesPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildQuizCategory('Available'),
-                _buildQuizCategory('Completed'),
-                _buildQuizCategory('Results & Analytics'),
+                _buildQuizCategory('Available', settings.fontSize),
+                _buildQuizCategory('Completed', settings.fontSize),
+                _buildQuizCategory('Results & Analytics', settings.fontSize),
               ],
             ),
           ),
@@ -115,6 +127,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
                 topic: quiz["topic"],
                 questions: quiz["questions"],
                 duration: quiz["duration"],
+                fontSize: settings.fontSize, // Pass fontSize
               );
             },
           ),
@@ -123,7 +136,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
     );
   }
 
-  Widget _buildQuizCategory(String title) {
+  Widget _buildQuizCategory(String title, double fontSize) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
@@ -134,8 +147,8 @@ class _QuizzesPageState extends State<QuizzesPage> {
         ),
         child: Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: 16 * fontSize, // Updated
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -148,6 +161,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
     required String topic,
     required String questions,
     required String duration,
+    required double fontSize, // Added fontSize parameter
   }) {
     return Card(
       elevation: 4,
@@ -163,7 +177,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
               margin: const EdgeInsets.only(right: 16.0),
               child: Icon(
                 _getSubjectIcon(subject),
-                size: 100,
+                size: 100 * fontSize, // Updated
                 color: Colors.blue,
               ),
             ),
@@ -175,23 +189,32 @@ class _QuizzesPageState extends State<QuizzesPage> {
                 children: [
                   Text(
                     subject,
-                    style: const TextStyle(
-                      fontSize: 20,
+                    style: TextStyle(
+                      fontSize: 20 * fontSize, // Updated
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 5),
                   Text(
                     topic,
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 16 * fontSize, // Updated
+                      color: Colors.grey,
+                    ),
                   ),
                   Text(
                     '$questions Questions',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 14 * fontSize, // Updated
+                      color: Colors.grey,
+                    ),
                   ),
                   Text(
                     'Duration: $duration',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 14 * fontSize, // Updated
+                      color: Colors.grey,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -202,9 +225,12 @@ class _QuizzesPageState extends State<QuizzesPage> {
                       backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Start Quiz',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 16 * fontSize, // Updated
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
