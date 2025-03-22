@@ -21,388 +21,389 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
-    final double gridHeight = settings.fontSize == 1.5 ? 1.5 : 1.7;
+    final double gridHeight = settings.fontSize == 1.5 ? 1.2 : 1.5;
     final bool isDyslexic = settings.openDyslexic;
-    String fontFamily(){
+    final String username = "Katty";
+
+    String fontFamily() {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
+
     return Scaffold(
       key: _scaffoldKey,
 
-      //TOP APPBAR
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-
-        //APP NAME
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            fontFamily: fontFamily(),
-            color: const Color.fromRGBO(255, 255, 255, 1)),
+      // NAVIGATION MENU
+      endDrawer: NavigationDrawer(
+  children: <Widget>[
+    const DrawerHeader(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+      ),
+      child: Text(
+        'LearnAbility',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24,
         ),
+      ),
+    ),
 
-        //NAVIGATION BAR BUTTON
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
+    // My Stats
+    ListTile(
+      leading: Icon(Icons.bar_chart_outlined),
+      title: Text('My Stats'),
+      tileColor: _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 0;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StatsPage()),
+        );
+      },
+    ),
+
+    // Accessibility
+    ListTile(
+      leading: Icon(Icons.accessibility_outlined),
+      title: Text('Accessibility'),
+      tileColor: _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 1;
+        });
+        Navigator.pop(context); 
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AccessibilityPage()),
+        );
+      },
+    ),
+
+    // Settings
+    ListTile(
+      leading: Icon(Icons.settings_outlined),
+      title: Text('Settings'),
+      tileColor: _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 2;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsPage()),
+        );
+      },
+    ),
+
+    const Divider(indent: 28, endIndent: 28),
+
+    // Tools Section
+    Padding(
+      padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+      child: Text(
+        'Tools',
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
+    ),
+
+    // Quiz
+    ListTile(
+      leading: Icon(Icons.quiz_outlined),
+      title: Text('Quiz'),
+      tileColor: _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 3;
+        });
+        Navigator.pop(context); 
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => QuizzesPage()),
+        );
+      },
+    ),
+
+    // Upload Content
+    ListTile(
+      leading: Icon(Icons.generating_tokens_outlined),
+      title: Text('Upload Content'),
+      tileColor: _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 4;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => GenerateContentPage()),
+        );
+      },
+    ),
+
+    // AI Assistant
+    ListTile(
+      leading: Icon(Icons.assistant_outlined),
+      title: Text('AI Assistant'),
+      tileColor: _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 5;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AiAssistantPage()),
+        );
+      },
+    ),
+
+    const Divider(indent: 28, endIndent: 28),
+
+    // Study Materials Section
+    Padding(
+      padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+      child: Text(
+        'Study Materials',
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
+    ),
+
+    // Lessons
+    ListTile(
+      leading: Icon(Icons.book_outlined),
+      title: Text('Lessons'),
+      tileColor: _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 6;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LessonsPage()),
+        );
+      },
+    ),
+
+    // Videos
+    ListTile(
+      leading: Icon(Icons.movie_outlined),
+      title: Text('Videos'),
+      tileColor: _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 7;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VideosPage()),
+        );
+      },
+    ),
+
+    // Articles
+    ListTile(
+      leading: Icon(Icons.description_outlined),
+      title: Text('Articles'),
+      tileColor: _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 8;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ArticlesPage()),
+        );
+      },
+    ),
+
+    const Divider(indent: 28, endIndent: 28),
+
+    // Logout
+    ListTile(
+      leading: Icon(Icons.logout, color: Colors.red),
+      title: Text(
+        'Logout',
+        style: TextStyle(color: Colors.red),
+      ),
+      tileColor: _selectedIndex == 9 ? Colors.red.withValues(alpha: .2) : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = 9;
+        });
+        Navigator.pop(context); 
+        // Handle logout logic here
+      },
+    ),
+  ],
+),
+
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 129, 194, 248),
+                  Colors.white,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
-            onPressed: () {
-              _scaffoldKey.currentState?.openEndDrawer();
-            }
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // WELCOME TEXT
+                  Text(
+                    "Welcome $username",
+                    style: TextStyle(
+                      fontSize: 30 * settings.fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+
+                  Text(
+                    "Here's what's been happening with your Learning Journey...",
+                    style: TextStyle(
+                      fontSize: 20.0 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[700],
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  // STATISTICS GRID
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio: gridHeight,
+                    children: [
+                      _buildStatCard("Study Streak", "7", " days", Icons.local_fire_department),
+                      _buildStatCard("Completed Lessons", "24", " lessons", Icons.emoji_events),
+                      _buildStatCard("Weekly Progress", "12.5", " hours", Icons.timer),
+                      _buildStatCard("Quiz Average", "85", " %", Icons.track_changes),
+                    ],
+                  ),
+
+                  // SHOW LESSONS IN PROGRESS
+                  Text(
+                    "Continue Learning",
+                    style: TextStyle(
+                      fontSize: 30.0 * settings.fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+
+                  Text(
+                    "Pick up where you left off",
+                    style: TextStyle(
+                      fontSize: 20.0 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[700],
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  _buildLessonCard(
+                    subject: 'Science',
+                    category: 'Biology',
+                    title: 'Introduction to Photosynthesis',
+                  ),
+                  SizedBox(height: 16.0),
+
+                  _buildLessonCard(
+                    subject: 'English',
+                    category: 'Writing',
+                    title: 'Essay Structure and Planning',
+                  ),
+                  SizedBox(height: 16.0),
+
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to view all lessons
+                    },
+                    child: Text(
+                      'View All Lessons →',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16.0 * settings.fontSize,
+                        fontFamily: fontFamily(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
 
-      // NAVIGATION MENU
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // HEADER
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'LearnAbility',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-            ),
-
-            ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text(
-                'My Stats',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StatsPage()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.accessibility),
-              title: Text(
-                'Accessibility',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AccessibilityPage()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text(
-                'Settings',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
-                );
-              },
-            ),
-            SizedBox(height: 22),
-
-            //LEARNING TOOLS
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                'Tools',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.quiz),
-              title: Text(
-                'Quiz',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QuizzesPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.generating_tokens),
-              title: Text(
-                'Generate content',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GenerateContentPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.assistant),
-              title: Text(
-                'AI Assistant',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AiAssistantPage()),
-                );
-              },
-            ),
-            SizedBox(height: 22),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                'Study Materials',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.book),
-              title: Text(
-                'My Materials',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyMaterialsPage()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.movie),
-              title: Text(
-                'Videos',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VideosPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.description),
-              title: Text(
-                'Articles',
-                style: TextStyle(fontSize: 16.0 * settings.fontSize, fontFamily: fontFamily()),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ArticlesPage()),
-                );
-              },
-            ),
-            SizedBox(height: 35),
-
-            ListTile(
-              leading: Icon(
-                color: Colors.red,
-                Icons.logout),
-              title: Text(
-                'Logout',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        height: 65.0,
+        margin: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
             ),
           ],
         ),
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:[
-
-              //WELCOME TEXT
-              Text(
-                "Welcome Katty!",
-                style: TextStyle(
-                  fontSize: 32 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: fontFamily(),
-                ),
+        child: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          color: Colors.transparent,
+          elevation: 0.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.account_circle),
+                onPressed: () {},
               ),
-
-              Text(
-                "Continue your Learning Journey",
-                style: TextStyle(
-                  fontSize: 24.0 * settings.fontSize,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[700],
-                  fontFamily: fontFamily(),
-                )
+              IconButton(
+                icon: Icon(Icons.bar_chart),
+                onPressed: () {},
               ),
-              SizedBox(height:30),
-
-              //LESSON PAGE NAVIGATION BUTTON
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const LessonsPage(),
-                  ));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(horizontal:20.0, vertical: 12.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  "Continue Learning",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0 * settings.fontSize,
-                    fontFamily: fontFamily(),
-                  ),
-                ),
+              IconButton(
+                icon: Icon(Icons.home),
+                onPressed: () {},
               ),
-              SizedBox(height: 20),
-
-              //STATISTICS GRID
-              GridView.count(
-                shrinkWrap: true, // Add this
-                physics: NeverScrollableScrollPhysics(), // Add this
-                crossAxisCount: 2,
-                mainAxisSpacing: 15,
-                crossAxisSpacing: 15,
-                childAspectRatio: gridHeight,
-                children: [
-                  _buildStatCard("Study Streak", "7", " days"),
-                  _buildStatCard("Completed Lessons", "24", " lessons"),
-                  _buildStatCard("Weekly Progress", "12.5", " hours"),
-                  _buildStatCard("Quiz Average", "85", " %"),
-                ],
-              ),
-
-              //SUBJECT OPTIONS
-              Text(
-                "Subjects to choose from:",
-                style: TextStyle(
-                  fontSize: 24.0 * settings.fontSize,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[700],
-                  fontFamily: fontFamily(),
-                )
-              ),
-              SizedBox(height:20),
-              Wrap(
-                spacing: 20.0,
-                runSpacing: 20.0,
-                children: [
-                  _buildSubjectButton("Maths"),
-                  _buildSubjectButton("Physics"),
-                  _buildSubjectButton("Chemistry"),
-                  _buildSubjectButton("Computer"),
-                  _buildSubjectButton("English"),
-                  _buildSubjectButton("Biology"),
-
-                ],
-              ),
-              SizedBox(height: 30),
-
-              //SHOW LESSONS IN PROGRESS
-              Text(
-                "Continue Learning",
-                style: TextStyle(
-                  fontSize: 32.0 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-              Text(
-                "Pick up where you left off",
-                style: TextStyle(
-                  fontSize: 20.0 * settings.fontSize,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[700],
-                  fontFamily: fontFamily(),
-                )
-              ),
-              SizedBox(height:20),
-
-              _buildLessonCard(
-                subject: 'Science',
-                category: 'Biology',
-                title: 'Introduction to Photosynthesis',
-                lastAccessed: '2 hours ago',
-              ),
-              SizedBox(height: 16.0),
-
-              _buildLessonCard(
-                subject: 'English',
-                category: 'Writing',
-                title: 'Essay Structure and Planning',
-                lastAccessed: 'Yesterday',
-              ),
-              SizedBox(height: 16.0),
-
-              TextButton(
+              IconButton(
+                icon: Icon(Icons.menu),
                 onPressed: () {
-                  // Navigate to view all lessons
+                  _scaffoldKey.currentState?.openEndDrawer();
                 },
-                child: Text(
-                  'View All Lessons →',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 16.0 * settings.fontSize,
-                    fontFamily: fontFamily(),
-                  ),
-                ),
               ),
             ],
           ),
@@ -411,16 +412,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //STATCARD WIDGET TEMPLATE
-  Widget _buildStatCard(String title, String value, String subtitle){
+  // STATCARD WIDGET TEMPLATE
+  Widget _buildStatCard(String title, String value, String subtitle, IconData icon) {
     final settings = Provider.of<AccessibilitySettings>(context);
-    final double boxHeight = settings.fontSize == 1.5 ? 33.0 : 20.0;
-    final double padding = settings.fontSize == 1.5 ? 10.0 : 16.0;
+    final double iconSize = settings.fontSize == 1.5 ? 20.0 : 25.0;
+    final double boxWidth = settings.fontSize == 1.5 ? 4.0 : 8.0;
+    final double padding = settings.fontSize == 1.0 ? 10.0 : 16.0;
     final bool isDyslexic = settings.openDyslexic;
-    String fontFamily(){
+
+    String fontFamily() {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
-
 
     return IntrinsicHeight(
       child: Container(
@@ -429,7 +431,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
+              color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
             ),
@@ -439,20 +441,26 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.0 * settings.fontSize,
-                  height: 1,
-                  fontFamily: fontFamily(),
+            Row(
+              children: [
+                Icon(icon, color: Colors.blue, size: iconSize * settings.fontSize),
+                SizedBox(width: boxWidth),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0 * settings.fontSize,
+                      height: 1,
+                      fontFamily: fontFamily(),
+                    ),
+                    overflow: TextOverflow.visible,
+                  ),
                 ),
-                overflow: TextOverflow.visible,
-              ),
+              ],
             ),
-            SizedBox(height: boxHeight),
+            SizedBox(height: 20.0),
             Row(
               children: [
                 Text(
@@ -464,7 +472,6 @@ class _HomePageState extends State<HomePage> {
                     fontFamily: fontFamily(),
                   ),
                 ),
-
                 Flexible(
                   child: Text(
                     subtitle,
@@ -475,55 +482,25 @@ class _HomePageState extends State<HomePage> {
                     ),
                     overflow: TextOverflow.visible,
                   ),
-                )
-            ],)
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  //SUBJECT BUTTON WIDGET TEMPLATE
-  Widget _buildSubjectButton(String subject){
-    final settings = Provider.of<AccessibilitySettings>(context);
-    final bool isDyslexic = settings.openDyslexic;
-    String fontFamily(){
-      return isDyslexic ? "OpenDyslexic" : "Roboto";
-    }
-
-    return ElevatedButton(
-      onPressed: (){},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.lightBlue[100],
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical:12.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        elevation: 5,
-        shadowColor: Colors.grey.withOpacity(0.5),
-      ),
-      child: Text(
-        subject,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0 * settings.fontSize,
-          fontFamily: fontFamily(),
-        )
-      ),
-    );
-  }
-
-  //LESSON CARD WIDGET TEMPLATE
+  // LESSON CARD WIDGET TEMPLATE
   Widget _buildLessonCard({
     required String subject,
     required String category,
     required String title,
-    required String lastAccessed,
-  }){
-
+  }) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final bool isDyslexic = settings.openDyslexic;
-    String fontFamily(){
+
+    String fontFamily() {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
@@ -546,7 +523,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: 8.0),
-
             Text(
               title,
               style: TextStyle(
@@ -555,7 +531,6 @@ class _HomePageState extends State<HomePage> {
                 fontFamily: fontFamily(),
               ),
             ),
-
             Text(
               category,
               style: TextStyle(
@@ -565,33 +540,18 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: 16.0),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Last accessed: $lastAccessed',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14.0 * settings.fontSize,
-                    fontFamily: fontFamily(),
-                  ),
+            TextButton(
+              onPressed: () {
+                // Continue action
+              },
+              child: Text(
+                'Continue',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16.0 * settings.fontSize,
+                  fontFamily: fontFamily(),
                 ),
-
-                TextButton(
-                  onPressed: () {
-                    // Continue action
-                  },
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 16.0 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),
