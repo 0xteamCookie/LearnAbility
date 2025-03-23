@@ -43,68 +43,19 @@ class _HomePageState extends State<HomePage> {
       endDrawer: NavigationDrawer(
         children: <Widget>[
           const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
+            // decoration: BoxDecoration(color: Colors.blue),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 106, 123, 216),
+            ),
             child: Text(
               'LearnAbility',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-
-          // My Stats
-          ListTile(
-            leading: Icon(Icons.bar_chart_outlined),
-            title: Text('My Stats'),
-            tileColor:
-                _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 0;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StatsPage()),
-              );
-            },
-          ),
-
-          // Accessibility
-          ListTile(
-            leading: Icon(Icons.accessibility_outlined),
-            title: Text('Accessibility'),
-            tileColor:
-                _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AccessibilityPage()),
-              );
-            },
-          ),
-
-          // Settings
-          ListTile(
-            leading: Icon(Icons.settings_outlined),
-            title: Text('Settings'),
-            tileColor:
-                _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 2;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-
-          const Divider(indent: 28, endIndent: 28),
 
           // Tools Section
           Padding(
@@ -115,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           // Quiz
           ListTile(
             leading: Icon(Icons.quiz_outlined),
-            title: Text('Quiz'),
+            title: Text('Quizzes'),
             tileColor:
                 _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
@@ -133,7 +84,7 @@ class _HomePageState extends State<HomePage> {
           // Upload Content
           ListTile(
             leading: Icon(Icons.generating_tokens_outlined),
-            title: Text('Upload Content'),
+            title: Text('My Materials'),
             tileColor:
                 _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
@@ -166,6 +117,22 @@ class _HomePageState extends State<HomePage> {
             },
           ),
 
+          ListTile(
+            leading: Icon(Icons.assistant_outlined),
+            title: Text('AI Voice Assistant'),
+            tileColor:
+                _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 5;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AiAssistantPage()),
+              );
+            },
+          ),
           const Divider(indent: 28, endIndent: 28),
 
           // Study Materials Section
@@ -230,7 +197,61 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
+          // My Stats
+          ListTile(
+            leading: Icon(Icons.bar_chart_outlined),
+            title: Text('My Stats'),
+            tileColor:
+                _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 0;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => StatsPage()),
+              );
+            },
+          ),
 
+          const Divider(indent: 28, endIndent: 28),
+
+          // Accessibility
+          ListTile(
+            leading: Icon(Icons.accessibility_outlined),
+            title: Text('Accessibility'),
+            tileColor:
+                _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 1;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccessibilityPage()),
+              );
+            },
+          ),
+
+          // Settings
+          ListTile(
+            leading: Icon(Icons.settings_outlined),
+            title: Text('Settings'),
+            tileColor:
+                _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 2;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
           const Divider(indent: 28, endIndent: 28),
 
           // Logout
@@ -317,8 +338,9 @@ class _HomePageState extends State<HomePage> {
                         fontsize: 18,
                       ),
                       Uihelper.CustomText(
-                        text: "See all >",
-                        color: const Color.fromARGB(255, 71, 70, 70),
+                        text: "See all →",
+                        // color: const Color.fromARGB(255, 71, 70, 70),
+                        color: Colors.blue,
                         fontweight: FontWeight.bold,
                         fontsize: 16,
                       ),
@@ -329,7 +351,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     // color: Color(0xFFEDE7F6), // Light purple background
-                    color: Color(0xFF2F2F2F),
+                    color: Color(0xFFFAF5FF),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -347,7 +369,7 @@ class _HomePageState extends State<HomePage> {
                                 radius: 20,
                                 child: Icon(
                                   Icons.calendar_today,
-                                  color: Colors.black,
+                                  color: Color(0xFF7E22CE),
                                   size: 18,
                                 ),
                               ),
@@ -389,14 +411,14 @@ class _HomePageState extends State<HomePage> {
                             "Web Development Fundamentals",
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.white,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 4),
                           Text(
                             "Today, 16:00",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
 
                           SizedBox(height: 10),
@@ -413,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                                 "CS",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -437,24 +459,28 @@ class _HomePageState extends State<HomePage> {
                         "7",
                         " days",
                         Icons.local_fire_department,
+                        Color(0XFF3B82F6),
                       ),
                       _buildStatCard(
                         "Completed Lessons",
                         "24",
                         " lessons",
                         Icons.emoji_events,
+                        Color(0XFF06B6D4),
                       ),
                       _buildStatCard(
                         "Weekly Progress",
                         "12.5",
                         " hours",
                         Icons.timer,
+                        Color(0XFF6366F1),
                       ),
                       _buildStatCard(
                         "Quiz Average",
                         "85",
                         " %",
                         Icons.track_changes,
+                        Color(0XFF14B8A6),
                       ),
                     ],
                   ),
@@ -508,7 +534,9 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Colors.indigo[100], // Light purple background
+                    // color: Colors.indigo[100], // Light purple background
+                    // color: Color(0xFFD1C4E9), // Light purple
+                    color: Color(0xFFFFF7ED),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -526,7 +554,8 @@ class _HomePageState extends State<HomePage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: Color(0xFFFFEDD5),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -585,7 +614,8 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Colors.indigo[100], // Light purple background
+                    // color: Color(0xFFD1C4E9), // Light purple
+                    color: Color(0xFFFFF7ED),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -603,7 +633,8 @@ class _HomePageState extends State<HomePage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: Color(0xFFFFEDD5),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -803,6 +834,7 @@ class _HomePageState extends State<HomePage> {
     String value,
     String subtitle,
     IconData icon,
+    Color color,
   ) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final double iconSize = settings.fontSize == 1.5 ? 20.0 : 25.0;
@@ -817,13 +849,15 @@ class _HomePageState extends State<HomePage> {
     return IntrinsicHeight(
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFF5F5F5),
+          color: Colors.white,
+          // color: Color(0xFFF5F5F5),
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
+              // color: Colors.grey.withValues(alpha: 0.5),
+              color: Color(0XFFE5E7Eb),
               // spreadRadius: 1,
-              blurRadius: 3,
+              blurRadius: 4,
             ),
           ],
         ),
@@ -837,7 +871,8 @@ class _HomePageState extends State<HomePage> {
                   icon,
                   // color: Colors.indigo,
                   // color: Colors.orange[800],
-                  color: Colors.deepPurple,
+                  color: color,
+                  // color: Colors.deepPurple,
                   size: iconSize * settings.fontSize,
                 ),
                 SizedBox(width: boxWidth),
@@ -862,7 +897,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   value,
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: color,
                     // color: Colors.indigo,
                     // color: Colors.orange,
                     fontWeight: FontWeight.bold,
@@ -894,6 +929,7 @@ class _HomePageState extends State<HomePage> {
     required String subject,
     required String category,
     required String title,
+    required Color color,
   }) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final bool isDyslexic = settings.openDyslexic;
