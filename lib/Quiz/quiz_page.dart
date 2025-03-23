@@ -62,15 +62,6 @@
             {"text": "Glucose", "isCorrect": true}
           ],
         },
-        {
-          "question": "Which of the following is NOT required for photosynthesis?",
-          "options": [
-            {"text": "Sunlight", "isCorrect": false},
-            {"text": "Carbon dioxide", "isCorrect": false},
-            {"text": "Water", "isCorrect": false},
-            {"text": "Glucose", "isCorrect": true}
-          ],
-        },
       ],
     };
 
@@ -111,7 +102,8 @@
       setState(() {
         _currentPage = (_quizData["quiz"] as List).length; // Move to score card
       });
-    }
+      _submitAnswer();
+}
 
     void _goToNextPage() {
       setState(() {
@@ -167,194 +159,154 @@
       final isLastQuestion = _currentPage == (_quizData["quiz"] as List).length - 1;
 
       return Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromARGB(255, 21, 0, 207),
-                    Color.fromARGB(255, 69, 59, 160),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top Row: Back Button - Timer - Submit Button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Top Row: Back Button - Timer - Submit Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, size: 28, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Text(
-                        '${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
-                        style: TextStyle(
-                          fontSize: 20 * settings.fontSize,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _autoSubmit(); // Submit and go to score card
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(100, 0, 115, 255),
-                          padding: EdgeInsets.all(5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                            fontSize: 18 * settings.fontSize,
-                            color: const Color.fromARGB(255, 174, 254, 190),
-                          ),
-                        ),
-                      ),
-                    ],
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
-
-                  const SizedBox(height: 16),
-
-                  // PROGRESS BAR
-                  LinearProgressIndicator(
-                    value: (_currentPage + 1) / (_quizData["quiz"] as List).length,
-                    backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 0, 140, 255)),
-                    minHeight: 6,
-                  ),
-                  const SizedBox(height: 40),
-
-                  // QUIZ CARD OR SCORE CARD
-                  Expanded(
-                    child: isQuizCompleted
-                        ? _buildScoreCard(settings.fontSize) // Show score card at the end
-                        : SingleChildScrollView(
-                            child: Container(
-                              constraints: BoxConstraints(minHeight: 700),
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 4,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Add this
-                                    children: [
-                                      // Container for Question Number, Question, and Options
-                                      Container(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${_currentPage + 1}.',
-                                              style: TextStyle(
-                                                fontSize: 28 * settings.fontSize,
-                                                fontWeight: FontWeight.bold,
-                                                color: const Color.fromARGB(255, 5, 13, 100),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              quiz["question"],
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 22 * settings.fontSize,
-                                                height: 1.5,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 21),
-                                            Column(
-                                              children: (quiz["options"] as List).map((option) {
-                                                final index = (quiz["options"] as List).indexOf(option);
-                                                final label = String.fromCharCode(65 + index); // A, B, C, D
-                                                return _buildMCQOption(
-                                                  option["text"],
-                                                  settings.fontSize,
-                                                  label,
-                                                );
-                                              }).toList(),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      // Container for Previous and Next Buttons
-                                      Container(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: _currentPage > 0 ? _goToPreviousPage : null,
-                                              style: ElevatedButton.styleFrom(
-                                                elevation: 5,
-                                                backgroundColor: const Color.fromARGB(204, 33, 75, 243),
-                                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                              ),
-                                              child: Text(
-                                                'Previous',
-                                                style: TextStyle(
-                                                  fontSize: 16 * settings.fontSize,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                if (_selectedAnswer != null) {
-                                                  _submitAnswer();
-                                                  if (!isLastQuestion) {
-                                                    _goToNextPage();
-                                                  } else {
-                                                    _autoSubmit(); // Submit and go to score card
-                                                  }
-                                                }
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: const Color.fromARGB(255, 33, 75, 243),
-                                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                                elevation: 5,
-                                              ),
-                                              child: Text(
-                                                isLastQuestion ? 'Submit' : 'Next',
-                                                style: TextStyle(
-                                                  fontSize: 16 * settings.fontSize,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                  Text(
+                    '${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
+                    style: TextStyle(
+                      fontSize: 20 * settings.fontSize,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+
+              const SizedBox(height: 16),
+
+              // PROGRESS BAR
+              LinearProgressIndicator(
+                value: (_currentPage + 1) / (_quizData["quiz"] as List).length,
+                backgroundColor: Colors.grey[300],
+                valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF2F2F2F)),
+                minHeight: 6,
+              ),
+              const SizedBox(height: 40),
+
+              // QUIZ CARD OR SCORE CARD
+              isQuizCompleted
+                ? _buildScoreCard(settings.fontSize) // Show score card at the end
+                : Container(
+                    constraints: BoxConstraints(minHeight: 700),
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Container for Question Number, Question, and Options
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${_currentPage + 1}.',
+                                  style: TextStyle(
+                                    fontSize: 28 * settings.fontSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color.fromARGB(255, 5, 13, 100),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  quiz["question"],
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22 * settings.fontSize,
+                                    height: 1.5,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 21),
+                                Column(
+                                  children: (quiz["options"] as List).map((option) {
+                                    final index = (quiz["options"] as List).indexOf(option);
+                                    final label = String.fromCharCode(65 + index); // A, B, C, D
+                                    return _buildMCQOption(
+                                      option["text"],
+                                      settings.fontSize,
+                                      label,
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 40),
+
+                            // Container for Previous and Next Buttons
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: _currentPage > 0 ? _goToPreviousPage : null,
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 5,
+                                    backgroundColor: const Color.fromARGB(204, 33, 75, 243),
+                                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                  ),
+                                  child: Text(
+                                    'Previous',
+                                    style: TextStyle(
+                                      fontSize: 16 * settings.fontSize,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (_selectedAnswer != null) {
+                                      _submitAnswer();
+                                      if (!isLastQuestion) {
+                                        _goToNextPage();
+                                      } else {
+                                        _autoSubmit(); // Submit and go to score card
+                                      }
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(255, 33, 75, 243),
+                                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                    elevation: 5,
+                                  ),
+                                  child: Text(
+                                    isLastQuestion ? 'Submit' : 'Next',
+                                    style: TextStyle(
+                                      fontSize: 16 * settings.fontSize,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+            ],
+          ),
         ),
       );
+
+
     }
 
     Widget _buildMCQOption(String option, double fontSize, String label) {
@@ -405,144 +357,148 @@
     }
 
     Widget _buildScoreCard(double fontSize) {
-      final totalQuestions = (_quizData["quiz"] as List).length;
-      final percentage = (_score / totalQuestions) * 100;
+  final totalQuestions = (_quizData["quiz"] as List).length;
+  final percentage = (_score / totalQuestions) * 100;
 
-      return Column(
-        children: [
-          // Pie Chart and Score Summary
-          Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    'Quiz Completed!',
-                    style: TextStyle(
-                      fontSize: 24 * fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 150,
-                    width: 300,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: CircularProgressIndicator(
-                            value: percentage / 100,
-                            strokeWidth: 7,
-                            backgroundColor: Colors.grey[300],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              percentage >= 50 ? Colors.green : Colors.red,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '${percentage.toStringAsFixed(1)}%',
-                          style: TextStyle(
-                            fontSize: 24 * fontSize,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Your Score: $_score / $totalQuestions',
-                    style: TextStyle(
-                      fontSize: 20 * fontSize,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        // Pie Chart and Score Summary
+        Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(height: 20),
-
-          // Scrollable List of MCQ Questions
-          Expanded(
-            child: ListView.builder(
-              itemCount: totalQuestions,
-              itemBuilder: (context, index) {
-                final quiz = (_quizData["quiz"] as List)[index];
-                final correctOption = (quiz["options"] as List)
-                    .firstWhere((option) => option["isCorrect"] == true)["text"];
-                final userAnswer = _userAnswers[index];
-
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          quiz["question"],
-                          style: TextStyle(
-                            fontSize: 18 * fontSize,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Your Answer: ${userAnswer ?? "Not answered"}',
-                          style: TextStyle(
-                            fontSize: 16 * fontSize,
-                            color: userAnswer == correctOption ? Colors.green : Colors.red,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Correct Answer: $correctOption',
-                          style: TextStyle(
-                            fontSize: 16 * fontSize,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          // Restart Quiz Button
-          Padding(
+          child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: _resetQuiz,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              ),
-              child: Text(
-                'Restart Quiz',
-                style: TextStyle(
-                  fontSize: 16 * fontSize,
-                  color: Colors.white,
+            child: Column(
+              children: [
+                Text(
+                  'Quiz Completed!',
+                  style: TextStyle(
+                    fontSize: 24 * fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
                 ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 150,
+                  width: 300,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: CircularProgressIndicator(
+                          value: percentage / 100,
+                          strokeWidth: 7,
+                          backgroundColor: Colors.grey[300],
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            percentage >= 50 ? Colors.green : Colors.red,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '${percentage.toStringAsFixed(1)}%',
+                        style: TextStyle(
+                          fontSize: 24 * fontSize,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Your Score: $_score / $totalQuestions',
+                  style: TextStyle(
+                    fontSize: 20 * fontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Scrollable List of MCQ Questions
+        SizedBox(
+          height: 400, // Set a fixed height or use MediaQuery to calculate dynamic height
+          child: ListView.builder(
+            itemCount: totalQuestions,
+            itemBuilder: (context, index) {
+              final quiz = (_quizData["quiz"] as List)[index];
+              final correctOption = (quiz["options"] as List)
+                  .firstWhere((option) => option["isCorrect"] == true)["text"];
+              final userAnswer = _userAnswers[index];
+
+              return Card(
+                elevation: 2,
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        quiz["question"],
+                        style: TextStyle(
+                          fontSize: 18 * fontSize,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Your Answer: ${userAnswer ?? "Not answered"}',
+                        style: TextStyle(
+                          fontSize: 16 * fontSize,
+                          color: userAnswer == correctOption ? Colors.green : Colors.red,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Correct Answer: $correctOption',
+                        style: TextStyle(
+                          fontSize: 16 * fontSize,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        // Restart Quiz Button
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            onPressed: _resetQuiz,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+            ),
+            child: Text(
+              'Restart Quiz',
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                color: Colors.white,
               ),
             ),
           ),
-        ],
-      );
-    }
+        ),
+      ],
+    ),
+  );
+}
+    
   }
