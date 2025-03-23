@@ -14,9 +14,8 @@ class _QuizPageState extends State<QuizPage> {
   int _currentPage = 0;
   String? _selectedAnswer;
   bool _isAnswerSubmitted = false;
-  int _score = 0; // Track the user's score
-  final List<String?> _userAnswers = []; // Track user's answers for each question
-
+  int _score = 0; 
+  final List<String?> _userAnswers = []; 
   final Logger logger = Logger();
 
   // EXAMPLE JSON DATA
