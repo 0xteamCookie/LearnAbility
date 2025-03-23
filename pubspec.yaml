@@ -16,6 +16,8 @@ dependencies:
   flutter_chat_ui: ^1.6.15
   flutter_chat_types: ^3.6.2
   provider: ^6.1.2
+  lucide_icons: ^0.257.0
+  fl_chart: ^0.70.2
 
 dev_dependencies:
   flutter_test:
@@ -26,9 +28,15 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/
+    - assets/images/
 
   fonts:
+    - family: bold 
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+    - family: regular
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
     - family: OpenDyslexic
       fonts:
         - asset: assets/fonts/OpenDyslexic-Regular.otf
