@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'Lesson/lessons_page.dart';
 import 'Quiz/quizzes_page.dart';
 import 'accessibility_page.dart';
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     final settings = Provider.of<AccessibilitySettings>(context);
     final double gridHeight = settings.fontSize == 1.5 ? 1.2 : 1.5;
     final bool isDyslexic = settings.openDyslexic;
-    final String username = "Katty";
+    final String username = "Katty Doe";
 
     String fontFamily() {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
@@ -41,15 +43,10 @@ class _HomePageState extends State<HomePage> {
       endDrawer: NavigationDrawer(
         children: <Widget>[
           const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
+            decoration: BoxDecoration(color: Colors.blue),
             child: Text(
               'LearnAbility',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
 
@@ -57,7 +54,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.bar_chart_outlined),
             title: Text('My Stats'),
-            tileColor: _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 0;
@@ -74,12 +72,13 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.accessibility_outlined),
             title: Text('Accessibility'),
-            tileColor: _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 1;
               });
-              Navigator.pop(context); 
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AccessibilityPage()),
@@ -91,7 +90,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.settings_outlined),
             title: Text('Settings'),
-            tileColor: _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 2;
@@ -109,22 +109,20 @@ class _HomePageState extends State<HomePage> {
           // Tools Section
           Padding(
             padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-            child: Text(
-              'Tools',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            child: Text('Tools', style: Theme.of(context).textTheme.titleSmall),
           ),
 
           // Quiz
           ListTile(
             leading: Icon(Icons.quiz_outlined),
             title: Text('Quiz'),
-            tileColor: _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 3;
               });
-              Navigator.pop(context); 
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => QuizzesPage()),
@@ -136,7 +134,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.generating_tokens_outlined),
             title: Text('Upload Content'),
-            tileColor: _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 4;
@@ -153,7 +152,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.assistant_outlined),
             title: Text('AI Assistant'),
-            tileColor: _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 5;
@@ -181,7 +181,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.book_outlined),
             title: Text('Lessons'),
-            tileColor: _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 6;
@@ -198,7 +199,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.movie_outlined),
             title: Text('Videos'),
-            tileColor: _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 7;
@@ -215,7 +217,8 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.description_outlined),
             title: Text('Articles'),
-            tileColor: _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
+            tileColor:
+                _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 8;
@@ -233,16 +236,14 @@ class _HomePageState extends State<HomePage> {
           // Logout
           ListTile(
             leading: Icon(Icons.logout, color: Colors.red),
-            title: Text(
-              'Logout',
-              style: TextStyle(color: Colors.red),
-            ),
-            tileColor: _selectedIndex == 9 ? Colors.red.withValues(alpha: .2) : null,
+            title: Text('Logout', style: TextStyle(color: Colors.red)),
+            tileColor:
+                _selectedIndex == 9 ? Colors.red.withValues(alpha: .2) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 9;
               });
-              Navigator.pop(context); 
+              Navigator.pop(context);
               // Handle logout logic here
             },
           ),
@@ -253,14 +254,12 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 129, 194, 248),
-                  Colors.white,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              color: Colors.white,
+              // gradient: LinearGradient(
+              //   colors: [Color.fromARGB(255, 129, 194, 248), Colors.white],
+              //   begin: Alignment.topCenter,
+              //   end: Alignment.bottomCenter,
+              // ),
             ),
           ),
 
@@ -270,27 +269,159 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // WELCOME TEXT
-                  Text(
-                    "Welcome $username",
-                    style: TextStyle(
-                      fontSize: 30 * settings.fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: fontFamily(),
-                    ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween, // Pushes items apart
+                    children: [
+                      // Left side: Username and grade (wrapped in Column)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            username,
+                            style: TextStyle(
+                              fontSize: 20 * settings.fontSize,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: fontFamily(),
+                            ),
+                          ),
+                          Uihelper.CustomText(
+                            text: "12th grade",
+                            color: const Color.fromARGB(255, 29, 28, 28),
+                            fontweight: FontWeight.bold,
+                            fontsize: 16,
+                          ),
+                        ],
+                      ),
+
+                      // Right side: Icon
+                      Icon(
+                        LucideIcons.user, // Change this to any icon
+                        size: 28,
+                        color: Colors.black,
+                      ),
+                    ],
                   ),
 
-                  Text(
-                    "Here's what's been happening with your Learning Journey...",
-                    style: TextStyle(
-                      fontSize: 20.0 * settings.fontSize,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[700],
-                      fontFamily: fontFamily(),
+                  // WELCOME TEXT
+                  SizedBox(height: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Uihelper.CustomText(
+                        text: "Next Lesson",
+                        color: Colors.black,
+                        fontweight: FontWeight.bold,
+                        fontsize: 18,
+                      ),
+                      Uihelper.CustomText(
+                        text: "See all >",
+                        color: const Color.fromARGB(255, 71, 70, 70),
+                        fontweight: FontWeight.bold,
+                        fontsize: 16,
+                      ),
+                    ],
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    // color: Color(0xFFEDE7F6), // Light purple background
+                    color: Color(0xFF2F2F2F),
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Row with Icon and Badge
+                          Row(
+                            children: [
+                              // Calendar Icon
+                              CircleAvatar(
+                                backgroundColor: Color(
+                                  0xFFD1C4E9,
+                                ), // Light purple
+                                radius: 20,
+                                child: Icon(
+                                  Icons.calendar_today,
+                                  color: Colors.black,
+                                  size: 18,
+                                ),
+                              ),
+                              Spacer(),
+                              // Badge
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Get Start",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.black,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Title & Time
+                          Text(
+                            "Web Development Fundamentals",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Today, 16:00",
+                            style: TextStyle(color: Colors.white),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Profile Row
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(""),
+                                radius: 14,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                "CS",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30),
 
                   // STATISTICS GRID
                   GridView.count(
@@ -301,37 +432,62 @@ class _HomePageState extends State<HomePage> {
                     crossAxisSpacing: 15,
                     childAspectRatio: gridHeight,
                     children: [
-                      _buildStatCard("Study Streak", "7", " days", Icons.local_fire_department),
-                      _buildStatCard("Completed Lessons", "24", " lessons", Icons.emoji_events),
-                      _buildStatCard("Weekly Progress", "12.5", " hours", Icons.timer),
-                      _buildStatCard("Quiz Average", "85", " %", Icons.track_changes),
+                      _buildStatCard(
+                        "Study Streak",
+                        "7",
+                        " days",
+                        Icons.local_fire_department,
+                      ),
+                      _buildStatCard(
+                        "Completed Lessons",
+                        "24",
+                        " lessons",
+                        Icons.emoji_events,
+                      ),
+                      _buildStatCard(
+                        "Weekly Progress",
+                        "12.5",
+                        " hours",
+                        Icons.timer,
+                      ),
+                      _buildStatCard(
+                        "Quiz Average",
+                        "85",
+                        " %",
+                        Icons.track_changes,
+                      ),
                     ],
                   ),
 
                   // SHOW LESSONS IN PROGRESS
-                  Text(
-                    "Continue Learning",
-                    style: TextStyle(
-                      fontSize: 30.0 * settings.fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-
+                  // Text(
+                  //   "Continue Learning",
+                  //   style: TextStyle(
+                  //     fontSize: 10.0 * settings.fontSize,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: Colors.black,
+                  //     fontFamily: fontFamily(),
+                  //   ),
+                  // ),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Pick up where you left off",
-                        style: TextStyle(
-                          fontSize: 20.0 * settings.fontSize,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[700],
-                          fontFamily: fontFamily(),
-                        ),
+                      Uihelper.CustomText(
+                        text: "My Materials",
+                        color: Colors.black,
+                        fontweight: FontWeight.bold,
+                        fontsize: 18,
                       ),
-
+                      // Text(
+                      //   "Pick up where you left off",
+                      //   style: TextStyle(
+                      //     fontSize: 20.0 * settings.fontSize,
+                      //     fontWeight: FontWeight.w600,
+                      //     color: Colors.grey[700],
+                      //     fontFamily: fontFamily(),
+                      //   ),
+                      // ),
                       TextButton(
                         onPressed: () {
                           // Navigate to view all lessons
@@ -347,20 +503,172 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
 
-                  _buildLessonCard(
-                    subject: 'Science',
-                    category: 'Biology',
-                    title: 'Introduction to Photosynthesis',
-                  ),
-                  SizedBox(height: 16.0),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    color: Colors.indigo[100], // Light purple background
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Row with Icon and Badge
+                          Row(
+                            children: [
+                              // Calendar Icon
+                              // Badge
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Ready",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.black,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
 
-                  _buildLessonCard(
-                    subject: 'English',
-                    category: 'Writing',
-                    title: 'Essay Structure and Planning',
+                          SizedBox(height: 10),
+
+                          // Title & Time
+                          Text(
+                            "Science Syllabus",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Today, 16:00",
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Profile Row
+                          Row(
+                            children: [
+                              Text(
+                                "Science",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                  SizedBox(height: 4),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    color: Colors.indigo[100], // Light purple background
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Row with Icon and Badge
+                          Row(
+                            children: [
+                              // Calendar Icon
+                              // Badge
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Ready",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.black,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Title & Time
+                          Text(
+                            "English poem",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Today, 16:00",
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+
+                          SizedBox(height: 10),
+
+                          // Profile Row
+                          Row(
+                            children: [
+                              Text(
+                                "Englis",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // _buildLessonCard(
+                  //   subject: 'Science',
+                  //   category: 'Biology',
+                  //   title: 'Science Syllabus',
+                  // ),
+                  // SizedBox(height: 16.0),
+
+                  // _buildLessonCard(
+                  //   subject: 'English',
+                  //   category: 'Writing',
+                  //   title: 'Some Poem',
+                  // ),
                   SizedBox(height: 16.0),
                 ],
               ),
@@ -368,8 +676,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
-
 
       bottomNavigationBar: Container(
         width: double.infinity,
@@ -396,8 +702,13 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               //SETTINGS ICON
               IconButton(
-                icon: Icon(Icons.settings,
-                    color: _selectedIndexBottomNavBar == 0 ? Colors.blue : Colors.black),
+                icon: Icon(
+                  Icons.settings,
+                  color:
+                      _selectedIndexBottomNavBar == 0
+                          ? Colors.blue
+                          : Colors.black,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -410,8 +721,13 @@ class _HomePageState extends State<HomePage> {
               ),
               //BAR CHART ICON
               IconButton(
-                icon: Icon(Icons.bar_chart,
-                    color: _selectedIndexBottomNavBar == 1 ? Colors.blue : Colors.black),
+                icon: Icon(
+                  Icons.bar_chart,
+                  color:
+                      _selectedIndexBottomNavBar == 1
+                          ? Colors.blue
+                          : Colors.black,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -424,8 +740,13 @@ class _HomePageState extends State<HomePage> {
               ),
               //HOME ICON
               IconButton(
-                icon: Icon(Icons.home,
-                    color: _selectedIndexBottomNavBar == 2 ? Colors.blue : Colors.black),
+                icon: Icon(
+                  Icons.home,
+                  color:
+                      _selectedIndexBottomNavBar == 2
+                          ? Colors.blue
+                          : Colors.black,
+                ),
                 onPressed: () {
                   setState(() {
                     _selectedIndexBottomNavBar = 2;
@@ -434,12 +755,19 @@ class _HomePageState extends State<HomePage> {
               ),
               //ACCESSIBILITY ICON
               IconButton(
-                icon: Icon(Icons.accessibility,
-                    color: _selectedIndexBottomNavBar == 3 ? Colors.blue : Colors.black),
+                icon: Icon(
+                  Icons.accessibility,
+                  color:
+                      _selectedIndexBottomNavBar == 3
+                          ? Colors.blue
+                          : Colors.black,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                    MaterialPageRoute(
+                      builder: (context) => AccessibilityPage(),
+                    ),
                   );
                   setState(() {
                     _selectedIndexBottomNavBar = 3;
@@ -448,8 +776,13 @@ class _HomePageState extends State<HomePage> {
               ),
               //MENU ICON
               IconButton(
-                icon: Icon(Icons.menu,
-                    color: _selectedIndexBottomNavBar == 4 ? Colors.blue : Colors.black),
+                icon: Icon(
+                  Icons.menu,
+                  color:
+                      _selectedIndexBottomNavBar == 4
+                          ? Colors.blue
+                          : Colors.black,
+                ),
                 onPressed: () {
                   setState(() {
                     _selectedIndexBottomNavBar = 4;
@@ -465,7 +798,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   // STATCARD WIDGET TEMPLATE
-  Widget _buildStatCard(String title, String value, String subtitle, IconData icon) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    String subtitle,
+    IconData icon,
+  ) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final double iconSize = settings.fontSize == 1.5 ? 20.0 : 25.0;
     final double boxWidth = settings.fontSize == 1.5 ? 4.0 : 8.0;
@@ -479,13 +817,13 @@ class _HomePageState extends State<HomePage> {
     return IntrinsicHeight(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Color(0xFFF5F5F5),
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withValues(alpha: 0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
+              // spreadRadius: 1,
+              blurRadius: 3,
             ),
           ],
         ),
@@ -495,7 +833,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Icon(icon, color: Colors.blue, size: iconSize * settings.fontSize),
+                Icon(
+                  icon,
+                  // color: Colors.indigo,
+                  // color: Colors.orange[800],
+                  color: Colors.deepPurple,
+                  size: iconSize * settings.fontSize,
+                ),
                 SizedBox(width: boxWidth),
                 Flexible(
                   child: Text(
@@ -518,7 +862,9 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   value,
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Colors.deepPurple,
+                    // color: Colors.indigo,
+                    // color: Colors.orange,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0 * settings.fontSize,
                     fontFamily: fontFamily(),
@@ -558,14 +904,13 @@ class _HomePageState extends State<HomePage> {
 
     return Card(
       elevation: 4.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(width: double.infinity),
             Text(
               subject,
               style: TextStyle(
