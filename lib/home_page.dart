@@ -6,7 +6,6 @@ import 'ai_assistant_page.dart';
 import 'videos_page.dart';
 import 'articles_page.dart';
 import 'generate_content_page.dart';
-import 'my_materials_page.dart';
 import 'settings_page.dart';
 import 'stats_page.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = -1;
+  int _selectedIndexBottomNavBar = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -39,215 +39,215 @@ class _HomePageState extends State<HomePage> {
 
       // NAVIGATION MENU
       endDrawer: NavigationDrawer(
-  children: <Widget>[
-    const DrawerHeader(
-      decoration: BoxDecoration(
-        color: Colors.blue,
+        children: <Widget>[
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'LearnAbility',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+
+          // My Stats
+          ListTile(
+            leading: Icon(Icons.bar_chart_outlined),
+            title: Text('My Stats'),
+            tileColor: _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 0;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => StatsPage()),
+              );
+            },
+          ),
+
+          // Accessibility
+          ListTile(
+            leading: Icon(Icons.accessibility_outlined),
+            title: Text('Accessibility'),
+            tileColor: _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 1;
+              });
+              Navigator.pop(context); 
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccessibilityPage()),
+              );
+            },
+          ),
+
+          // Settings
+          ListTile(
+            leading: Icon(Icons.settings_outlined),
+            title: Text('Settings'),
+            tileColor: _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 2;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
+
+          const Divider(indent: 28, endIndent: 28),
+
+          // Tools Section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              'Tools',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+
+          // Quiz
+          ListTile(
+            leading: Icon(Icons.quiz_outlined),
+            title: Text('Quiz'),
+            tileColor: _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 3;
+              });
+              Navigator.pop(context); 
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QuizzesPage()),
+              );
+            },
+          ),
+
+          // Upload Content
+          ListTile(
+            leading: Icon(Icons.generating_tokens_outlined),
+            title: Text('Upload Content'),
+            tileColor: _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 4;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GenerateContentPage()),
+              );
+            },
+          ),
+
+          // AI Assistant
+          ListTile(
+            leading: Icon(Icons.assistant_outlined),
+            title: Text('AI Assistant'),
+            tileColor: _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 5;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AiAssistantPage()),
+              );
+            },
+          ),
+
+          const Divider(indent: 28, endIndent: 28),
+
+          // Study Materials Section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              'Study Materials',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+
+          // Lessons
+          ListTile(
+            leading: Icon(Icons.book_outlined),
+            title: Text('Lessons'),
+            tileColor: _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 6;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LessonsPage()),
+              );
+            },
+          ),
+
+          // Videos
+          ListTile(
+            leading: Icon(Icons.movie_outlined),
+            title: Text('Videos'),
+            tileColor: _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 7;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VideosPage()),
+              );
+            },
+          ),
+
+          // Articles
+          ListTile(
+            leading: Icon(Icons.description_outlined),
+            title: Text('Articles'),
+            tileColor: _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 8;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ArticlesPage()),
+              );
+            },
+          ),
+
+          const Divider(indent: 28, endIndent: 28),
+
+          // Logout
+          ListTile(
+            leading: Icon(Icons.logout, color: Colors.red),
+            title: Text(
+              'Logout',
+              style: TextStyle(color: Colors.red),
+            ),
+            tileColor: _selectedIndex == 9 ? Colors.red.withValues(alpha: .2) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 9;
+              });
+              Navigator.pop(context); 
+              // Handle logout logic here
+            },
+          ),
+        ],
       ),
-      child: Text(
-        'LearnAbility',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-        ),
-      ),
-    ),
-
-    // My Stats
-    ListTile(
-      leading: Icon(Icons.bar_chart_outlined),
-      title: Text('My Stats'),
-      tileColor: _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => StatsPage()),
-        );
-      },
-    ),
-
-    // Accessibility
-    ListTile(
-      leading: Icon(Icons.accessibility_outlined),
-      title: Text('Accessibility'),
-      tileColor: _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 1;
-        });
-        Navigator.pop(context); 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AccessibilityPage()),
-        );
-      },
-    ),
-
-    // Settings
-    ListTile(
-      leading: Icon(Icons.settings_outlined),
-      title: Text('Settings'),
-      tileColor: _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 2;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SettingsPage()),
-        );
-      },
-    ),
-
-    const Divider(indent: 28, endIndent: 28),
-
-    // Tools Section
-    Padding(
-      padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-      child: Text(
-        'Tools',
-        style: Theme.of(context).textTheme.titleSmall,
-      ),
-    ),
-
-    // Quiz
-    ListTile(
-      leading: Icon(Icons.quiz_outlined),
-      title: Text('Quiz'),
-      tileColor: _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 3;
-        });
-        Navigator.pop(context); 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => QuizzesPage()),
-        );
-      },
-    ),
-
-    // Upload Content
-    ListTile(
-      leading: Icon(Icons.generating_tokens_outlined),
-      title: Text('Upload Content'),
-      tileColor: _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 4;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => GenerateContentPage()),
-        );
-      },
-    ),
-
-    // AI Assistant
-    ListTile(
-      leading: Icon(Icons.assistant_outlined),
-      title: Text('AI Assistant'),
-      tileColor: _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 5;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AiAssistantPage()),
-        );
-      },
-    ),
-
-    const Divider(indent: 28, endIndent: 28),
-
-    // Study Materials Section
-    Padding(
-      padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-      child: Text(
-        'Study Materials',
-        style: Theme.of(context).textTheme.titleSmall,
-      ),
-    ),
-
-    // Lessons
-    ListTile(
-      leading: Icon(Icons.book_outlined),
-      title: Text('Lessons'),
-      tileColor: _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 6;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LessonsPage()),
-        );
-      },
-    ),
-
-    // Videos
-    ListTile(
-      leading: Icon(Icons.movie_outlined),
-      title: Text('Videos'),
-      tileColor: _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 7;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => VideosPage()),
-        );
-      },
-    ),
-
-    // Articles
-    ListTile(
-      leading: Icon(Icons.description_outlined),
-      title: Text('Articles'),
-      tileColor: _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 8;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ArticlesPage()),
-        );
-      },
-    ),
-
-    const Divider(indent: 28, endIndent: 28),
-
-    // Logout
-    ListTile(
-      leading: Icon(Icons.logout, color: Colors.red),
-      title: Text(
-        'Logout',
-        style: TextStyle(color: Colors.red),
-      ),
-      tileColor: _selectedIndex == 9 ? Colors.red.withValues(alpha: .2) : null,
-      onTap: () {
-        setState(() {
-          _selectedIndex = 9;
-        });
-        Navigator.pop(context); 
-        // Handle logout logic here
-      },
-    ),
-  ],
-),
 
       body: Stack(
         children: [
@@ -319,14 +319,33 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
 
-                  Text(
-                    "Pick up where you left off",
-                    style: TextStyle(
-                      fontSize: 20.0 * settings.fontSize,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[700],
-                      fontFamily: fontFamily(),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Pick up where you left off",
+                        style: TextStyle(
+                          fontSize: 20.0 * settings.fontSize,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                          fontFamily: fontFamily(),
+                        ),
+                      ),
+
+                      TextButton(
+                        onPressed: () {
+                          // Navigate to view all lessons
+                        },
+                        child: Text(
+                          'See more →',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 16.0 * settings.fontSize,
+                            fontFamily: fontFamily(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
 
@@ -343,26 +362,14 @@ class _HomePageState extends State<HomePage> {
                     title: 'Essay Structure and Planning',
                   ),
                   SizedBox(height: 16.0),
-
-                  TextButton(
-                    onPressed: () {
-                      // Navigate to view all lessons
-                    },
-                    child: Text(
-                      'View All Lessons →',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 16.0 * settings.fontSize,
-                        fontFamily: fontFamily(),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
         ],
       ),
+
+
 
       bottomNavigationBar: Container(
         width: double.infinity,
@@ -387,21 +394,66 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
+              //SETTINGS ICON
               IconButton(
-                icon: Icon(Icons.account_circle),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.bar_chart),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.menu),
+                icon: Icon(Icons.settings,
+                    color: _selectedIndexBottomNavBar == 0 ? Colors.blue : Colors.black),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()),
+                  );
+                  setState(() {
+                    _selectedIndexBottomNavBar = 0;
+                  });
+                },
+              ),
+              //BAR CHART ICON
+              IconButton(
+                icon: Icon(Icons.bar_chart,
+                    color: _selectedIndexBottomNavBar == 1 ? Colors.blue : Colors.black),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StatsPage()),
+                  );
+                  setState(() {
+                    _selectedIndexBottomNavBar = 1;
+                  });
+                },
+              ),
+              //HOME ICON
+              IconButton(
+                icon: Icon(Icons.home,
+                    color: _selectedIndexBottomNavBar == 2 ? Colors.blue : Colors.black),
+                onPressed: () {
+                  setState(() {
+                    _selectedIndexBottomNavBar = 2;
+                  });
+                },
+              ),
+              //ACCESSIBILITY ICON
+              IconButton(
+                icon: Icon(Icons.accessibility,
+                    color: _selectedIndexBottomNavBar == 3 ? Colors.blue : Colors.black),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                  );
+                  setState(() {
+                    _selectedIndexBottomNavBar = 3;
+                  });
+                },
+              ),
+              //MENU ICON
+              IconButton(
+                icon: Icon(Icons.menu,
+                    color: _selectedIndexBottomNavBar == 4 ? Colors.blue : Colors.black),
+                onPressed: () {
+                  setState(() {
+                    _selectedIndexBottomNavBar = 4;
+                  });
                   _scaffoldKey.currentState?.openEndDrawer();
                 },
               ),
@@ -431,7 +483,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha: 0.5),
               spreadRadius: 2,
               blurRadius: 5,
             ),
