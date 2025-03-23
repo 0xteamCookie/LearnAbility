@@ -291,6 +291,8 @@ class _QuizPageState extends State<QuizPage> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
+
+                      
                       CircularProgressIndicator(
                         value: percentage / 100,
                         strokeWidth: 7,
