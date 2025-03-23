@@ -20,9 +20,15 @@ dependencies:
   fl_chart: ^0.70.2
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.14.3"
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/LearnAbility.png"  
 
 flutter:
   uses-material-design: true
