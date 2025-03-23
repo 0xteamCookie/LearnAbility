@@ -6,6 +6,8 @@ import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenSatate();
 }

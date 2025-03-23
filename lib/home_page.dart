@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'Lesson/lessons_page.dart';
@@ -41,70 +42,73 @@ class _HomePageState extends State<HomePage> {
 
       // NAVIGATION MENU
       endDrawer: NavigationDrawer(
+        backgroundColor: Colors.white,
         children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
-            child: Text(
-              'LearnAbility',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+          SizedBox(
+            height: 90.0,
+            child: const DrawerHeader(
+              child: Text(
+                'LearnAbility',
+                style: TextStyle(color: Colors.deepPurple, fontSize: 24),
+              ),
             ),
           ),
 
           // My Stats
-          ListTile(
-            leading: Icon(Icons.bar_chart_outlined),
-            title: Text('My Stats'),
-            tileColor:
-                _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 0;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StatsPage()),
-              );
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.bar_chart_outlined),
+          //   title: Text('My Stats'),
+          //   tileColor:
+          //       _selectedIndex == 0 ? Colors.deepPurple.withValues(alpha: .2) : null,
+          //   onTap: () {
+          //     setState(() {
+          //       _selectedIndex = 0;
+          //     });
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => StatsPage()),
+          //     );
+          //   },
+          // ),
 
-          // Accessibility
-          ListTile(
-            leading: Icon(Icons.accessibility_outlined),
-            title: Text('Accessibility'),
-            tileColor:
-                _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AccessibilityPage()),
-              );
-            },
-          ),
+          // // Accessibility
+          // ListTile(
+          //   leading: Icon(Icons.accessibility_outlined),
+          //   title: Text('Accessibility'),
+          //   tileColor:
+          //       _selectedIndex == 1 ? Colors.deepPurple.withValues(alpha: .2) : null,
+          //   onTap: () {
+          //     setState(() {
+          //       _selectedIndex = 1;
+          //     });
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => AccessibilityPage()),
+          //     );
+          //   },
+          // ),
 
-          // Settings
-          ListTile(
-            leading: Icon(Icons.settings_outlined),
-            title: Text('Settings'),
-            tileColor:
-                _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 2;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
+          // // Settings
+          // ListTile(
+          //   leading: Icon(Icons.settings_outlined),
+          //   title: Text('Settings'),
+          //   tileColor:
+          //       _selectedIndex == 2 ? Colors.deepPurple.withValues(alpha: .2) : null,
+          //   onTap: () {
+          //     setState(() {
+          //       _selectedIndex = 2;
+          //     });
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => SettingsPage()),
+          //     );
+          //   },
+          // ),
 
-          const Divider(indent: 28, endIndent: 28),
+          // const Divider(indent: 28, endIndent: 28),
 
           // Tools Section
           Padding(
@@ -117,7 +121,7 @@ class _HomePageState extends State<HomePage> {
             leading: Icon(Icons.quiz_outlined),
             title: Text('Quiz'),
             tileColor:
-                _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
+                _selectedIndex == 3 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 3;
@@ -133,9 +137,9 @@ class _HomePageState extends State<HomePage> {
           // Upload Content
           ListTile(
             leading: Icon(Icons.generating_tokens_outlined),
-            title: Text('Upload Content'),
+            title: Text('Generate Lessons'),
             tileColor:
-                _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
+                _selectedIndex == 4 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 4;
@@ -153,10 +157,28 @@ class _HomePageState extends State<HomePage> {
             leading: Icon(Icons.assistant_outlined),
             title: Text('AI Assistant'),
             tileColor:
-                _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
+                _selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 5;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AiAssistantPage()),
+              );
+            },
+          ),
+
+          // AI Voice Assistant
+          ListTile(
+            leading: Icon(Icons.assistant_outlined),
+            title: Text('AI Voice Assistant'),
+            tileColor:
+                _selectedIndex == 10 ? Color(0xFFEDE7F6) : null,
+            onTap: () {
+              setState(() {
+                _selectedIndex = 10;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -182,7 +204,7 @@ class _HomePageState extends State<HomePage> {
             leading: Icon(Icons.book_outlined),
             title: Text('Lessons'),
             tileColor:
-                _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
+                _selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 6;
@@ -200,7 +222,7 @@ class _HomePageState extends State<HomePage> {
             leading: Icon(Icons.movie_outlined),
             title: Text('Videos'),
             tileColor:
-                _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
+                _selectedIndex == 7 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 7;
@@ -218,7 +240,7 @@ class _HomePageState extends State<HomePage> {
             leading: Icon(Icons.description_outlined),
             title: Text('Articles'),
             tileColor:
-                _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
+                _selectedIndex == 8 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 _selectedIndex = 8;
@@ -297,11 +319,16 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       // Right side: Icon
-                      Icon(
-                        LucideIcons.user, // Change this to any icon
-                        size: 28,
-                        color: Colors.black,
+                      CircleAvatar(
+                        backgroundColor: Color(0xFFEDE7F6), // Light purple
+                        radius: 20,
+                        child: Icon(
+                          LucideIcons.user, // Change this to any icon
+                          size: 28,
+                          color: Colors.black,
+                        ),
                       ),
+                      
                     ],
                   ),
 
@@ -318,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Uihelper.CustomText(
                         text: "See all >",
-                        color: const Color.fromARGB(255, 71, 70, 70),
+                        color: Colors.deepPurple,
                         fontweight: FontWeight.bold,
                         fontsize: 16,
                       ),
@@ -328,8 +355,8 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    // color: Color(0xFFEDE7F6), // Light purple background
-                    color: Color(0xFF2F2F2F),
+                    color: Color(0xFFEDE7F6), // Light purple background
+                    // color: Color(0xFFD1C4E9),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -341,9 +368,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               // Calendar Icon
                               CircleAvatar(
-                                backgroundColor: Color(
-                                  0xFFD1C4E9,
-                                ), // Light purple
+                                backgroundColor: Colors.white, // Light purple
                                 radius: 20,
                                 child: Icon(
                                   Icons.calendar_today,
@@ -365,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "Get Start",
+                                      "Get Started",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -389,14 +414,14 @@ class _HomePageState extends State<HomePage> {
                             "Web Development Fundamentals",
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.white,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 4),
                           Text(
                             "Today, 16:00",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
 
                           SizedBox(height: 10),
@@ -413,7 +438,7 @@ class _HomePageState extends State<HomePage> {
                                 "CS",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -495,7 +520,7 @@ class _HomePageState extends State<HomePage> {
                         child: Text(
                           'See more →',
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.deepPurple,
                             fontSize: 16.0 * settings.fontSize,
                             fontFamily: fontFamily(),
                           ),
@@ -508,7 +533,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Colors.indigo[100], // Light purple background
+                    color: Color(0xFFEDE7F6), // Light purple background
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -585,7 +610,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Colors.indigo[100], // Light purple background
+                    color: Color(0xFFEDE7F6), // Light purple background
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -686,116 +711,107 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
+              color: Colors.grey.withValues(alpha: 0.1), // Subtle shadow
               spreadRadius: 2,
-              blurRadius: 5,
+              blurRadius: 10,
               offset: Offset(0, 3),
             ),
           ],
         ),
-        child: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          color: Colors.transparent,
-          elevation: 0.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              //SETTINGS ICON
-              IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color:
-                      _selectedIndexBottomNavBar == 0
-                          ? Colors.blue
-                          : Colors.black,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12.0), // Match the container's border radius
+          child: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            color: Colors.white,
+            elevation: 0.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                // SETTINGS ICON
+                _buildNavBarItem(
+                  icon: Icons.settings,
+                  isSelected: _selectedIndexBottomNavBar == 0,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                    );
+                    setState(() {
+                      _selectedIndexBottomNavBar = 0;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
-                  setState(() {
-                    _selectedIndexBottomNavBar = 0;
-                  });
-                },
-              ),
-              //BAR CHART ICON
-              IconButton(
-                icon: Icon(
-                  Icons.bar_chart,
-                  color:
-                      _selectedIndexBottomNavBar == 1
-                          ? Colors.blue
-                          : Colors.black,
+                // BAR CHART ICON
+                _buildNavBarItem(
+                  icon: Icons.bar_chart,
+                  isSelected: _selectedIndexBottomNavBar == 1,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => StatsPage()),
+                    );
+                    setState(() {
+                      _selectedIndexBottomNavBar = 1;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StatsPage()),
-                  );
-                  setState(() {
-                    _selectedIndexBottomNavBar = 1;
-                  });
-                },
-              ),
-              //HOME ICON
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color:
-                      _selectedIndexBottomNavBar == 2
-                          ? Colors.blue
-                          : Colors.black,
+                // HOME ICON
+                _buildNavBarItem(
+                  icon: Icons.home,
+                  isSelected: _selectedIndexBottomNavBar == 2,
+                  onPressed: () {
+                    setState(() {
+                      _selectedIndexBottomNavBar = 2;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    _selectedIndexBottomNavBar = 2;
-                  });
-                },
-              ),
-              //ACCESSIBILITY ICON
-              IconButton(
-                icon: Icon(
-                  Icons.accessibility,
-                  color:
-                      _selectedIndexBottomNavBar == 3
-                          ? Colors.blue
-                          : Colors.black,
+                // ACCESSIBILITY ICON
+                _buildNavBarItem(
+                  icon: Icons.accessibility,
+                  isSelected: _selectedIndexBottomNavBar == 3,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                    );
+                    setState(() {
+                      _selectedIndexBottomNavBar = 3;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AccessibilityPage(),
-                    ),
-                  );
-                  setState(() {
-                    _selectedIndexBottomNavBar = 3;
-                  });
-                },
-              ),
-              //MENU ICON
-              IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color:
-                      _selectedIndexBottomNavBar == 4
-                          ? Colors.blue
-                          : Colors.black,
+                // MENU ICON
+                _buildNavBarItem(
+                  icon: Icons.menu,
+                  isSelected: _selectedIndexBottomNavBar == 4,
+                  onPressed: () {
+                    setState(() {
+                      _selectedIndexBottomNavBar = 4;
+                    });
+                    _scaffoldKey.currentState?.openEndDrawer();
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    _selectedIndexBottomNavBar = 4;
-                  });
-                  _scaffoldKey.currentState?.openEndDrawer();
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildNavBarItem({
+  required IconData icon,
+  required bool isSelected,
+  required VoidCallback onPressed,
+}) {
+  return IconButton(
+    icon: Icon(
+      icon,
+      color: isSelected ? Colors.deepPurple : Colors.grey[600], // Selected: purple, Unselected: grey
+      size: 24.0,
+    ),
+    onPressed: onPressed,
+  );
+}
 
   // STATCARD WIDGET TEMPLATE
   Widget _buildStatCard(
@@ -817,7 +833,7 @@ class _HomePageState extends State<HomePage> {
     return IntrinsicHeight(
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFF5F5F5),
+          color: Color(0xFFEDE7F6),
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
@@ -833,13 +849,23 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Icon(
-                  icon,
-                  // color: Colors.indigo,
-                  // color: Colors.orange[800],
-                  color: Colors.deepPurple,
-                  size: iconSize * settings.fontSize,
+                CircleAvatar(
+                  backgroundColor: Colors.white, // Light purple
+                  radius: 18,
+                  child: Icon(
+                    icon,
+                    color: Colors.black,
+                    size: iconSize * settings.fontSize,
+                    
+                  ),
                 ),
+                // Icon(
+                //   icon,
+                //   // color: Colors.indigo,
+                //   // color: Colors.orange[800],
+                //   color: Colors.deepPurple,
+                //   size: iconSize * settings.fontSize,
+                // ),
                 SizedBox(width: boxWidth),
                 Flexible(
                   child: Text(
