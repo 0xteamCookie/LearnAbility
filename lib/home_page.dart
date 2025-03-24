@@ -26,22 +26,24 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = -1;
   int _selectedIndexBottomNavBar = 2;
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      authProvider.checkAuthStatus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+
     if (authProvider.isLoading) {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     print("🔍 Checking user in HomePage: ${authProvider.user?.toJson()}");
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (authProvider.user == null) {
-        print("❌ User is still null, reloading auth status...");
-        authProvider.checkAuthStatus();
-      }
-    });
 
     final String username = authProvider.user?.name ?? "Guest";
     // final String username = Provider.of<UserProvider>(context).username;

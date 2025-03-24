@@ -3,6 +3,9 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/screens/signup/signupscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
+import 'package:provider/provider.dart';
+import 'package:my_first_app/providers/auth_provider.dart';
+import 'package:my_first_app/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -11,23 +14,33 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthServices authService = AuthServices();
-
-  // Controllers for form fields
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // GlobalKey for form validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.isLoggedIn) {
+        print("✅ User already logged in, redirecting to HomePage...");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        print("❌ No user logged in, staying on LoginScreen.");
+      }
+    });
+  }
 
   void loginUser() {
     if (_formKey.currentState!.validate()) {
-      // Validate form first
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
-
       authService.loginUser(email: email, password: password, context: context);
-
-      print("Signing up with: $email - $password");
+      print("Logging in with: $email - $password");
     }
   }
 
@@ -53,23 +66,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.black,
                     fontweight: FontWeight.bold,
                     fontsize: 20,
-                    fontfamily: "regular",
                   ),
                 ],
               ),
-
               SizedBox(height: 28),
-
-              // 🛠 Wrap in Form Widget with GlobalKey
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Email Field
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(LucideIcons.moveRight),
+                        prefixIcon: Icon(LucideIcons.mail),
                         labelText: "Enter your email",
                       ),
                       validator: (value) {
@@ -80,15 +88,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     SizedBox(height: 8),
-
-                    // Password Field
                     TextFormField(
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon: Icon(LucideIcons.lock),
                         labelText: "Enter your password",
-                        suffixIcon: Icon(LucideIcons.eye),
                       ),
                       validator: (value) {
                         if (value == null || value.length < 6) {
@@ -98,8 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     SizedBox(height: 16),
-
-                    // Login Button
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -120,29 +123,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Don't have an account? "),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignupScreen(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            "Signup",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignupScreen(),
                           ),
-                        ),
-                      ],
+                        );
+                      },
+                      child: Text("New? Create an Account"),
                     ),
                   ],
                 ),
