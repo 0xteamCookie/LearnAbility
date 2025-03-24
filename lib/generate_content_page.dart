@@ -14,10 +14,12 @@ class Subject {
 class UploadedFile {
   final String name;
   final String subject;
+  final String topic;
 
   UploadedFile({
     required this.name,
     required this.subject,
+    required this.topic,
   });
 }
 
@@ -36,6 +38,9 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
   // Controllers for input fields
   TextEditingController subjectNameController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
+  TextEditingController topicController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController tagsController = TextEditingController();
 
   // Function to show create subject dialog
   Future<void> _createSubject() async {
@@ -185,80 +190,178 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
   // Function to handle file upload by Pranjal
   Future<void> _uploadFile(int subjectIndex) async {
     selectedSubjectIndex = subjectIndex;
+    topicController.clear();
+    descriptionController.clear();
+    tagsController.clear();
 
-    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
-    final bool isDyslexic = settings.openDyslexic;
-    String fontFamily() {
-      return isDyslexic ? "OpenDyslexic" : "Roboto";
-    }
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final settings = Provider.of<AccessibilitySettings>(context);
+        final bool isDyslexic = settings.openDyslexic;
 
-    // Directly open file picker without showing dialog first
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpeg', 'jpg', 'png', 'doc', 'docx', 'ppt', 'pptx'],
+        // Function to determine font family
+        String fontFamily() {
+          return isDyslexic ? "OpenDyslexic" : "Roboto";
+        }
+
+        return AlertDialog(
+          title: Text(
+            "Upload Files to ${subjects[subjectIndex].name}",
+            style: TextStyle(
+              fontSize: 20 * settings.fontSize,
+              fontFamily: fontFamily(),
+            ),
+          ),
+          content: SizedBox(
+            height: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Upload files to your learning materials library.",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Topic (Optional)",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  TextField(
+                    controller: topicController,
+                    decoration: InputDecoration(
+                      hintText: "Enter topic",
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(),
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Description (Optional)",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: "Enter a description for these files",
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(),
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Tags (Optional)",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                  TextField(
+                    controller: tagsController,
+                    decoration: InputDecoration(
+                      hintText: "Add tags",
+                      hintStyle: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(),
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily(),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Handle file upload
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['pdf', 'jpeg', 'jpg', 'png'],
+                );
+
+                if (result != null) {
+                  PlatformFile file = result.files.first;
+                  final newFile = UploadedFile(
+                    name: file.name,
+                    subject: subjects[subjectIndex].name,
+                    topic: topicController.text,
+                  );
+
+                  setState(() {
+                    // Add to both global list and subject-specific list
+                    uploadedFiles.add(newFile);
+                    subjects[subjectIndex].files.add(newFile);
+                  });
+                  Navigator.of(context).pop();
+                } else {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "No file selected",
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize,
+                          fontFamily: fontFamily(),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Text(
+                "Upload",
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily(),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
-
-    if (result != null) {
-      PlatformFile file = result.files.first;
-      final newFile = UploadedFile(
-        name: file.name,
-        subject: subjects[subjectIndex].name,
-      );
-
-      setState(() {
-        // Add to both global list and subject-specific list
-        uploadedFiles.add(newFile);
-        subjects[subjectIndex].files.add(newFile);
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green[700],
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  "File uploaded successfully",
-                  style: TextStyle(
-                    fontSize: 14 * settings.fontSize,
-                    fontFamily: fontFamily(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: EdgeInsets.all(10),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.orange,
-          content: Row(
-            children: [
-              Icon(Icons.info_outline, color: Colors.white),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  "No file selected",
-                  style: TextStyle(
-                    fontSize: 14 * settings.fontSize,
-                    fontFamily: fontFamily(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: EdgeInsets.all(10),
-        ),
-      );
-    }
   }
 
   // Confirmation before deleting
@@ -399,181 +502,101 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade700,
-        elevation: 0,
+        backgroundColor: Colors.blue,
         title: Text(
           "LearnAbility",
           style: TextStyle(
             color: Colors.white,
             fontSize: 24 * settings.fontSize,
-            fontWeight: FontWeight.bold,
             fontFamily: fontFamily(),
           ),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade50, Colors.white],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "My Materials",
-                style: TextStyle(
-                  fontSize: 27 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(),
-                  color: Colors.blue.shade800,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "My Materials",
+              style: TextStyle(
+                fontSize: 27 * settings.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(),
               ),
-              SizedBox(height: 8),
-              Text(
-                "Organize your learning resources by subject",
-                style: TextStyle(
-                  fontSize: 16 * settings.fontSize,
-                  color: Colors.grey.shade700,
-                  fontFamily: fontFamily(),
-                ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Organize your learning resources by subject",
+              style: TextStyle(
+                fontSize: 16 * settings.fontSize,
+                color: Colors.grey,
+                fontFamily: fontFamily(),
               ),
-              SizedBox(height: 16),
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.blue.shade100, Colors.blue.shade50],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    leading: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade700,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.create_new_folder, color: Colors.white),
-                    ),
-                    title: Text(
-                      "Create new subject",
-                      style: TextStyle(
-                        fontSize: 16 * settings.fontSize,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: fontFamily(),
-                      ),
-                    ),
-                    onTap: _createSubject,
+            ),
+            SizedBox(height: 16),
+            Card(
+              elevation: 2,
+              child: ListTile(
+                leading: Icon(Icons.create_new_folder, color: Colors.blue),
+                title: Text(
+                  "Create new subject",
+                  style: TextStyle(
+                    fontSize: 16 * settings.fontSize,
+                    fontFamily: fontFamily(),
                   ),
                 ),
+                onTap: _createSubject,
               ),
-              SizedBox(height: 24),
-              Row(
-                children: [
-                  Icon(Icons.folder_special, color: Colors.blue.shade700),
-                  SizedBox(width: 8),
-                  Text(
-                    "My Subjects",
-                    style: TextStyle(
-                      fontSize: 20 * settings.fontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily(),
-                      color: Colors.blue.shade800,
-                    ),
-                  ),
-                ],
+            ),
+            SizedBox(height: 16),
+            Text(
+              "My Subjects",
+              style: TextStyle(
+                fontSize: 20 * settings.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(),
               ),
-              SizedBox(height: 8),
-              Expanded(
-                child: subjects.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.folder_open, size: 48, color: Colors.grey),
-                          SizedBox(height: 16),
-                          Text(
-                            "No subjects created yet.",
-                            style: TextStyle(
-                              fontSize: 16 * settings.fontSize,
-                              fontFamily: fontFamily(),
-                              color: Colors.grey.shade600,
-                            ),
+            ),
+            SizedBox(height: 8),
+            Expanded(
+              child:
+                  subjects.isEmpty
+                      ? Center(
+                        child: Text(
+                          "No subjects created yet.",
+                          style: TextStyle(
+                            fontSize: 16 * settings.fontSize,
+                            fontFamily: fontFamily(),
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Create a subject to get started!",
-                            style: TextStyle(
-                              fontSize: 14 * settings.fontSize,
-                              fontFamily: fontFamily(),
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: subjects.length,
-                      itemBuilder: (context, subjectIndex) {
-                        Subject subject = subjects[subjectIndex];
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
-                          child: ExpansionTile(
-                            childrenPadding: EdgeInsets.only(bottom: 12),
-                            tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        ),
+                      )
+                      : ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: subjects.length,
+                        itemBuilder: (context, subjectIndex) {
+                          Subject subject = subjects[subjectIndex];
+                          return ExpansionTile(
                             title: Text(
                               subject.name,
                               style: TextStyle(
                                 fontSize: 18 * settings.fontSize,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: fontFamily(),
-                                color: Colors.blue.shade800,
                               ),
                             ),
-                            leading: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade100,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(Icons.subject, color: Colors.blue.shade700),
-                            ),
+                            leading: Icon(Icons.subject, color: Colors.blue),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  "${subject.files.length} files",
-                                  style: TextStyle(
-                                    fontSize: 14 * settings.fontSize,
-                                    color: Colors.grey,
-                                    fontFamily: fontFamily(),
-                                  ),
-                                ),
-                                SizedBox(width: 8),
                                 IconButton(
                                   icon: Icon(
                                     Icons.delete,
-                                    color: Colors.red.shade300,
+                                    color: Colors.red,
                                     size: 24 * settings.fontSize,
                                   ),
-                                  onPressed: () => _confirmDeleteSubject(subjectIndex),
+                                  onPressed:
+                                      () => _confirmDeleteSubject(subjectIndex),
                                 ),
                               ],
                             ),
@@ -586,164 +609,203 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                                   style: TextStyle(
                                     fontSize: 16 * settings.fontSize,
                                     fontFamily: fontFamily(),
-                                    fontStyle: subject.syllabusFileName == null
-                                        ? FontStyle.italic
-                                        : FontStyle.normal,
+                                    fontStyle:
+                                        subject.syllabusFileName == null
+                                            ? FontStyle.italic
+                                            : FontStyle.normal,
                                   ),
                                 ),
                                 onTap: () => _uploadSyllabus(subjectIndex),
                               ),
-                              
                               // Upload files option
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue.shade600,
-                                    foregroundColor: Colors.white,
-                                    padding: EdgeInsets.symmetric(vertical: 12),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  icon: Icon(Icons.upload_file),
-                                  label: Text(
-                                    "Upload resource",
-                                    style: TextStyle(
-                                      fontSize: 16 * settings.fontSize,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily(),
-                                    ),
-                                  ),
-                                  onPressed: () => _uploadFile(subjectIndex),
+                              ListTile(
+                                leading: Icon(
+                                  Icons.upload_file,
+                                  color: Colors.blue,
                                 ),
+                                title: Text(
+                                  "Upload resource",
+                                  style: TextStyle(
+                                    fontSize: 16 * settings.fontSize,
+                                    fontFamily: fontFamily(),
+                                  ),
+                                ),
+                                onTap: () => _uploadFile(subjectIndex),
                               ),
-                              
                               // Files list
                               if (subject.files.isEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Container(
-                                    padding: EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade100,
-                                      borderRadius: BorderRadius.circular(8),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "No files uploaded for this subject.",
+                                    style: TextStyle(
+                                      fontSize: 14 * settings.fontSize,
+                                      fontFamily: fontFamily(),
+                                      fontStyle: FontStyle.italic,
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.info_outline, color: Colors.grey),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          "No files uploaded for this subject.",
-                                          style: TextStyle(
-                                            fontSize: 14 * settings.fontSize,
-                                            fontFamily: fontFamily(),
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 )
                               else
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                        child: Text(
-                                          "Uploaded Files",
-                                          style: TextStyle(
-                                            fontSize: 16 * settings.fontSize,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: fontFamily(),
-                                            color: Colors.blue.shade800,
+                                ...List.generate(subject.files.length, (
+                                  fileIndex,
+                                ) {
+                                  UploadedFile fileData =
+                                      subject.files[fileIndex];
+                                  String fileName = fileData.name;
+                                  String fileExtension =
+                                      fileName.split('.').last.toLowerCase();
+
+                                  IconData fileIcon = Icons.insert_drive_file;
+                                  Color iconColor = Colors.blue;
+
+                                  switch (fileExtension) {
+                                    case 'pdf':
+                                      fileIcon = Icons.picture_as_pdf;
+                                      iconColor = Colors.red;
+                                      break;
+                                    case 'jpeg':
+                                    case 'jpg':
+                                    case 'png':
+                                      fileIcon = Icons.image;
+                                      iconColor = Colors.teal;
+                                      break;
+                                    default:
+                                      fileIcon = Icons.insert_drive_file;
+                                      iconColor = Colors.grey;
+                                  }
+
+                                  // Truncate filename if too long
+                                  String displayName = fileName;
+                                  if (fileName.length > 28) {
+                                    final nameParts = fileName.split('.');
+                                    final extension = nameParts.last;
+                                    final baseName = fileName.substring(
+                                      0,
+                                      fileName.length - extension.length - 1,
+                                    );
+
+                                    // Show first 15 chars + ... + last 10 chars
+                                    if (baseName.length > 25) {
+                                      displayName =
+                                          '${baseName.substring(0, 15)}...${baseName.substring(baseName.length - 10)}.$extension';
+                                    }
+                                  }
+
+                                  return Card(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 4,
+                                    ),
+                                    elevation: 1,
+                                    child: InkWell(
+                                      onLongPress: () {
+                                        // Show tooltip with full filename on long press
+                                        final scaffold = ScaffoldMessenger.of(
+                                          context,
+                                        );
+                                        scaffold.showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              fileName,
+                                              style: TextStyle(
+                                                fontFamily: fontFamily(),
+                                                fontSize:
+                                                    14 * settings.fontSize,
+                                              ),
+                                            ),
+                                            duration: Duration(seconds: 2),
+                                          ),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0,
+                                        ),
+                                        child: ListTile(
+                                          leading: Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: iconColor.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Icon(
+                                              fileIcon,
+                                              color: iconColor,
+                                            ),
+                                          ),
+                                          title: Text(
+                                            displayName,
+                                            style: TextStyle(
+                                              fontSize: 14 * settings.fontSize,
+                                              fontFamily: fontFamily(),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (fileData.topic.isNotEmpty)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        top: 4.0,
+                                                      ),
+                                                  child: Text(
+                                                    "Topic: ${fileData.topic}",
+                                                    style: TextStyle(
+                                                      fontSize:
+                                                          12 *
+                                                          settings.fontSize,
+                                                      fontFamily: fontFamily(),
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 2.0,
+                                                ),
+                                                child: Text(
+                                                  fileExtension.toUpperCase(),
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        10 * settings.fontSize,
+                                                    fontFamily: fontFamily(),
+                                                    color: iconColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          trailing: IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                              size: 20 * settings.fontSize,
+                                            ),
+                                            onPressed:
+                                                () => _confirmDelete(
+                                                  subjectIndex,
+                                                  fileIndex,
+                                                ),
                                           ),
                                         ),
                                       ),
-                                      ...List.generate(subject.files.length, (fileIndex) {
-                                        UploadedFile fileData = subject.files[fileIndex];
-                                        String fileName = fileData.name;
-                                        String fileExtension = fileName.split('.').last.toLowerCase();
-
-                                        IconData fileIcon = Icons.insert_drive_file;
-                                        Color iconColor = Colors.blue;
-
-                                        switch (fileExtension) {
-                                          case 'pdf':
-                                            fileIcon = Icons.picture_as_pdf;
-                                            iconColor = Colors.red;
-                                            break;
-                                          case 'jpeg':
-                                          case 'jpg':
-                                          case 'png':
-                                            fileIcon = Icons.image;
-                                            iconColor = Colors.teal;
-                                            break;
-                                          case 'doc':
-                                          case 'docx':
-                                            fileIcon = Icons.description;
-                                            iconColor = Colors.blue;
-                                            break;
-                                          case 'ppt':
-                                          case 'pptx':
-                                            fileIcon = Icons.slideshow;
-                                            iconColor = Colors.orange;
-                                            break;
-                                          default:
-                                            fileIcon = Icons.insert_drive_file;
-                                            iconColor = Colors.grey;
-                                        }
-
-                                        return Card(
-                                          margin: EdgeInsets.symmetric(vertical: 4),
-                                          elevation: 0,
-                                          color: Colors.grey.shade50,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                            side: BorderSide(color: Colors.grey.shade200),
-                                          ),
-                                          child: ListTile(
-                                            leading: Container(
-                                              padding: EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                color: iconColor.withOpacity(0.1),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Icon(fileIcon, color: iconColor),
-                                            ),
-                                            title: Text(
-                                              fileName,
-                                              style: TextStyle(
-                                                fontSize: 14 * settings.fontSize,
-                                                fontFamily: fontFamily(),
-                                              ),
-                                            ),
-                                            trailing: IconButton(
-                                              icon: Icon(
-                                                Icons.delete,
-                                                color: Colors.red.shade300,
-                                                size: 20 * settings.fontSize,
-                                              ),
-                                              onPressed: () => _confirmDelete(subjectIndex, fileIndex),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  );
+                                }),
                             ],
-                          ),
-                        );
-                      },
-                    ),
-              ),
-            ],
-          ),
+                          );
+                        },
+                      ),
+            ),
+          ],
         ),
       ),
     );
