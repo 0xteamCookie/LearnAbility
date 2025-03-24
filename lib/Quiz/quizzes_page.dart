@@ -54,66 +54,43 @@ class _QuizzesPageState extends State<QuizzesPage> {
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24 * settings.fontSize, // Updated
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const QuizPage(),
-              ));
-            },
-          ),
-        ],
-      ),
-
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          const SizedBox(height: 10),
-          Text(
-            'Quizzes',
-            style: TextStyle(
-              fontSize: 34 * settings.fontSize, // Updated
-              color: Colors.black,
-            ),
+          Row(
+            children: [
+              IconButton(
+                          icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+              Text(
+                  'Quizzes',
+                  style: TextStyle(
+                    fontSize: 30 * settings.fontSize, // Updated
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+          ),
+            ],
           ),
           const SizedBox(height: 10),
-          Text(
-            'Test your knowledge with interactive quizzes',
-            style: TextStyle(
-              fontSize: 20 * settings.fontSize, // Updated
-              color: Colors.grey,
-            ),
-          ),
+          
+          
           const SizedBox(height: 10),
 
           Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(6.0),
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildQuizCategory('Available', settings.fontSize),
                 _buildQuizCategory('Completed', settings.fontSize),
-                _buildQuizCategory('Results & Analytics', settings.fontSize),
+                _buildQuizCategory('Analytics', settings.fontSize),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          
 
           // List of Quiz Cards
           ListView.builder(
@@ -142,7 +119,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFD1C4E9),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -164,6 +141,8 @@ class _QuizzesPageState extends State<QuizzesPage> {
     required double fontSize, // Added fontSize parameter
   }) {
     return Card(
+      color: Colors.white,
+      margin: EdgeInsets.only(bottom: 20),
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -178,7 +157,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
               child: Icon(
                 _getSubjectIcon(subject),
                 size: 100 * fontSize, // Updated
-                color: Colors.blue,
+                color: Colors.deepPurple.withAlpha(150),
               ),
             ),
             const SizedBox(width: 15.0),
@@ -199,30 +178,33 @@ class _QuizzesPageState extends State<QuizzesPage> {
                     topic,
                     style: TextStyle(
                       fontSize: 16 * fontSize, // Updated
-                      color: Colors.grey,
+                      color: const Color.fromARGB(223, 0, 0, 0),
                     ),
                   ),
                   Text(
                     '$questions Questions',
                     style: TextStyle(
                       fontSize: 14 * fontSize, // Updated
-                      color: Colors.grey,
+                      color: const Color.fromARGB(223, 0, 0, 0),
                     ),
                   ),
                   Text(
                     'Duration: $duration',
                     style: TextStyle(
                       fontSize: 14 * fontSize, // Updated
-                      color: Colors.grey,
+                      color: const Color.fromARGB(223, 0, 0, 0),
                     ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      // Add functionality for starting the quiz
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuizPage()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.deepPurple.withAlpha(150),
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),
                     child: Text(

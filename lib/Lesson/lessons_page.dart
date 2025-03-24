@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'lesson_page.dart';
 import 'package:provider/provider.dart';
 import '../accessibility_model.dart';
 
@@ -97,45 +96,41 @@ class _LessonsPageState extends State<LessonsPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: const Color.fromRGBO(255, 255, 255, 1),
-            fontSize: 24 * settings.fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const LessonPage(),
-              ));
-            },
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Lessons",
-                style: TextStyle(
-                  fontSize: 24 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
-                ),
+              // Back Button
+              Row(
+                
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context); // Navigate back
+                    },
+                  ),
+                  Text(
+                    "Lessons",
+                    style: TextStyle(
+                      fontSize: 24 * settings.fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily(),
+                      
+                    ),
+                  ),
+                ],
+                
               ),
+              SizedBox(height: 16), // Add some spacing
+
+              // Lessons Title
+              
               SizedBox(height: 16),
+
+              // Lesson Cards
               ...lessons.map((lesson) => _buildLessonCard(
                 imageUrl: lesson.imageUrl,
                 title: lesson.title,
@@ -161,6 +156,7 @@ class _LessonsPageState extends State<LessonsPage> {
   }) {
     return Card(
       elevation: 4,
+      margin: const EdgeInsets.only(bottom: 16), // Add margin between cards
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
