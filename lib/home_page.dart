@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:my_first_app/providers/auth_provider.dart';
+import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'Lesson/lessons_page.dart';
 import 'Quiz/quizzes_page.dart';
@@ -27,10 +29,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    if (authProvider.isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    print("🔍 Checking user in HomePage: ${authProvider.user?.toJson()}");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (authProvider.user == null) {
+        print("❌ User is still null, reloading auth status...");
+        authProvider.checkAuthStatus();
+      }
+    });
+
+    final String username = authProvider.user?.name ?? "Guest";
+    // final String username = Provider.of<UserProvider>(context).username;
     final settings = Provider.of<AccessibilitySettings>(context);
     final double gridHeight = settings.fontSize == 1.5 ? 1.2 : 1.5;
     final bool isDyslexic = settings.openDyslexic;
-    final String username = "Katty Doe";
 
     String fontFamily() {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
@@ -318,10 +335,48 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       // Right side: Icon
-                      Icon(
-                        LucideIcons.user, // Change this to any icon
-                        size: 28,
-                        color: Colors.black,
+                      // Icon(
+                      //   LucideIcons.user, // Change this to any icon
+                      //   size: 28,
+                      //   color: Colors.black,
+                      // ),
+                      PopupMenuButton<String>(
+                        onSelected: (value) async {
+                          if (value == 'logout') {
+                            await Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            ).logout();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder:
+                            (context) => [
+                              PopupMenuItem(
+                                value: 'logout',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      LucideIcons.logOut,
+                                      size: 20,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text("Logout"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                        child: Icon(
+                          LucideIcons.user,
+                          size: 28,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
@@ -426,11 +481,7 @@ class _HomePageState extends State<HomePage> {
                           // Profile Row
                           Row(
                             children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(""),
-                                radius: 14,
-                              ),
-                              SizedBox(width: 8),
+                              // SizedBox(width: 8),
                               Text(
                                 "CS",
                                 style: TextStyle(
