@@ -20,7 +20,7 @@ class _StatsPageState extends State<StatsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return GlobalNavBar(     
+    return GlobalNavBar(
       body: Container(
         color: Colors.white,
         child: SingleChildScrollView(

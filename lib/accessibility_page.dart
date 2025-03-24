@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
 import "package:provider/provider.dart";
+import 'repository/widgets/global_navbar.dart';
 
 class AccessibilityPage extends StatefulWidget {
   const AccessibilityPage({super.key});
@@ -50,18 +51,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
       return "x";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22 * fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
-          ),
-        ),
-      ),
+    return GlobalNavBar(
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

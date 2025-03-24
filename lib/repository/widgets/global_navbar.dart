@@ -188,11 +188,11 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
       body: widget.body,
       // BOTTOM NAVIGATION BAR
       bottomNavigationBar: Container(
+        
         width: double.infinity,
         height: 65.0,
         margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
             BoxShadow(

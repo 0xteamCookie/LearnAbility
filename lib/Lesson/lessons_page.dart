@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'lesson_page.dart';
 import 'package:provider/provider.dart';
 import '../accessibility_model.dart';
+import '../repository/widgets/global_navbar.dart';
 
 void main() {
   runApp(
@@ -96,37 +97,14 @@ class _LessonsPageState extends State<LessonsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: const Color.fromRGBO(255, 255, 255, 1),
-            fontSize: 24 * settings.fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const LessonPage(),
-              ));
-            },
-          ),
-        ],
-      ),
+    return GlobalNavBar(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 50.0,),
               Text(
                 "Lessons",
                 style: TextStyle(
