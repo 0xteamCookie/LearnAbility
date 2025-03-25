@@ -1,27 +1,32 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:my_first_app/utils/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'accessibility_model.dart';
 
 class Subject {
+  final String id;
   final String name;
+  final String color;
   String? syllabusFileName;
-  List<UploadedFile> files;
 
-  Subject({required this.name, this.syllabusFileName, this.files = const []});
-}
-
-class UploadedFile {
-  final String name;
-  final String subject;
-  final String topic;
-
-  UploadedFile({
+  Subject({
+    required this.id,
     required this.name,
-    required this.subject,
-    required this.topic,
+    required this.color,
+    this.syllabusFileName,
   });
+
+  factory Subject.fromJson(Map<String, dynamic> json) {
+    return Subject(
+      id: json['id'],
+      name: json['name'],
+      color: json['color'] ?? 'blue',
+    );
+  }
 }
 
 class GenerateContentPage extends StatefulWidget {
@@ -33,10 +38,7 @@ class GenerateContentPage extends StatefulWidget {
 
 class _GenerateContentPageState extends State<GenerateContentPage> {
   List<Subject> subjects = [];
-  List<UploadedFile> uploadedFiles = [];
-  int? selectedSubjectIndex;
-
-  // Controllers for input fields
+  bool isLoading = true;
   TextEditingController subjectNameController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
   TextEditingController topicController = TextEditingController();
@@ -266,228 +268,202 @@ Future<void> _createSubject() async {
   );
 }
 
-  // Function to upload syllabus for a subject
-  Future<void> _uploadSyllabus(int subjectIndex) async {
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSubjects();
+  }
+
+
+  Future<void> uploadSyllabus(String subjectId) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
-    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
-    final bool isDyslexic = settings.openDyslexic;
-    String fontFamily() {
-      return isDyslexic ? "OpenDyslexic" : "Roboto";
-    }
-
     if (result != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('jwt_token');
+
+      if (token == null) return;
+
+      print("SYLLABUS STARTING UPLOADDD");
       PlatformFile file = result.files.first;
-      setState(() {
-        subjects[subjectIndex].syllabusFileName = file.name;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Syllabus uploaded successfully",
-            style: TextStyle(
-              fontSize: 14 * settings.fontSize,
-              fontFamily: fontFamily(),
-            ),
-          ),
-        ),
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Constants.uri}/api/v1/pyos/subjects/syllabus'),
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "No file selected",
-            style: TextStyle(
-              fontSize: 14 * settings.fontSize,
-              fontFamily: fontFamily(),
-            ),
-          ),
-        ),
+
+      request.headers['Authorization'] = 'Bearer $token';
+      request.fields['subjectId'] = subjectId;
+      request.files.add(
+        await http.MultipartFile.fromPath('document', file.path!),
       );
+
+      final response = await request.send();
+      print("SYLLABUS UPLOADDEDDD");
+      print(response.stream);
+
+      if (response.statusCode == 200) {
+        print("Syllabus uploaded successfully");
+      } else {
+        print("Failed to upload syllabus: ${response.reasonPhrase}");
+      }
     }
   }
 
-  // Function to handle file upload by Pranjal
-  Future<void> _uploadFile(int subjectIndex) async {
-    selectedSubjectIndex = subjectIndex;
-    topicController.clear();
-    descriptionController.clear();
-    tagsController.clear();
+  // Upload Material Function
+  Future<void> uploadMaterial(String subjectId) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+    );
 
+    if (result != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('jwt_token');
+
+      if (token == null) return;
+
+      PlatformFile file = result.files.first;
+      print("MATERIAL STARTING UPLOADDD");
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Constants.uri}/api/v1/pyos/materials'),
+      );
+
+      request.headers['Authorization'] = 'Bearer $token';
+      request.fields['subjectId'] = subjectId;
+      request.files.add(
+        await http.MultipartFile.fromPath('documents', file.path!),
+      );
+
+      final response = await request.send();
+
+      print("MATERIAL UPLOADDD");
+      if (response.statusCode == 200) {
+        print("Material uploaded successfully");
+      } else {
+        print("Failed to upload material: ${response.reasonPhrase}");
+      }
+    }
+  }
+
+  Future<void> fetchSubjects() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('jwt_token');
+
+    if (token == null || token.isEmpty) {
+      print("JWT token not found");
+      setState(() => isLoading = false);
+      return;
+    }
+    print("SEARCHING SUBJECTS");
+
+    final response = await http.get(
+      Uri.parse('${Constants.uri}/api/v1/pyos/subjects'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    print("DONE SUBJECTS");
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      setState(() {
+        subjects =
+            (data['subjects'] as List)
+                .map((json) => Subject.fromJson(json))
+                .toList();
+        isLoading = false;
+      });
+    } else {
+      print("Failed to fetch subjects: ${response.body}");
+      setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> createSubject() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('jwt_token');
+
+    if (token == null || token.isEmpty) {
+      print("JWT token not found");
+      return;
+    }
+
+    if (subjectNameController.text.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Please enter a subject name")));
+      return;
+    }
+
+    print("POSTING SUBJECTS");
+    final response = await http.post(
+      Uri.parse('${Constants.uri}/api/v1/pyos/subjects'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': subjectNameController.text,
+        'color': 'blue',
+      }), // Default color
+    );
+
+    print("POSTED SUBJECTS");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("POSTED SUBJECTS1");
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      final Subject newSubject = Subject.fromJson(responseData['subject']);
+      setState(() {
+        subjects.add(newSubject);
+      });
+      Navigator.pop(context); // Close dialog
+    } else {
+      print("Failed to create subject: ${response.body}");
+    }
+  }
+
+  Future<void> _showCreateSubjectDialog() async {
+    subjectNameController.clear();
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         final settings = Provider.of<AccessibilitySettings>(context);
         final bool isDyslexic = settings.openDyslexic;
-
-        // Function to determine font family
-        String fontFamily() {
-          return isDyslexic ? "OpenDyslexic" : "Roboto";
-        }
+        String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
 
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text(
-            "Upload Files to ${subjects[subjectIndex].name}",
+            "Create Subject",
             style: TextStyle(
               fontSize: 20 * settings.fontSize,
               fontFamily: fontFamily(),
             ),
           ),
-          content: SizedBox(
-            height: 400,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Upload files to your learning materials library.",
-                    style: TextStyle(
-                      fontSize: 16 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    "Topic (Optional)",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  TextField(
-                    controller: topicController,
-                    decoration: InputDecoration(
-                      hintText: "Enter topic",
-                      hintStyle: TextStyle(
-                        fontSize: 14 * settings.fontSize,
-                        fontFamily: fontFamily(),
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 14 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    "Description (Optional)",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  TextField(
-                    controller: descriptionController,
-                    decoration: InputDecoration(
-                      hintText: "Enter a description for these files",
-                      hintStyle: TextStyle(
-                        fontSize: 14 * settings.fontSize,
-                        fontFamily: fontFamily(),
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 14 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    "Tags (Optional)",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  TextField(
-                    controller: tagsController,
-                    decoration: InputDecoration(
-                      hintText: "Add tags",
-                      hintStyle: TextStyle(
-                        fontSize: 14 * settings.fontSize,
-                        fontFamily: fontFamily(),
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 14 * settings.fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                ],
-              ),
+          content: TextField(
+            controller: subjectNameController,
+            decoration: InputDecoration(hintText: "Enter subject name"),
+            style: TextStyle(
+              fontSize: 14 * settings.fontSize,
+              fontFamily: fontFamily(),
             ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "Cancel",
-                style: TextStyle(
-                  fontSize: 16 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
             ),
-            TextButton(
-              onPressed: () async {
-                // Handle file upload
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['pdf', 'jpeg', 'jpg', 'png'],
-                );
-
-                if (result != null) {
-                  PlatformFile file = result.files.first;
-                  final newFile = UploadedFile(
-                    name: file.name,
-                    subject: subjects[subjectIndex].name,
-                    topic: topicController.text,
-                  );
-
-                  setState(() {
-                    // Add to both global list and subject-specific list
-                    uploadedFiles.add(newFile);
-                    subjects[subjectIndex].files.add(newFile);
-                  });
-                  Navigator.of(context).pop();
-                } else {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "No file selected",
-                        style: TextStyle(
-                          fontSize: 14 * settings.fontSize,
-                          fontFamily: fontFamily(),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-              },
-              child: Text(
-                "Upload",
-                style: TextStyle(
-                  fontSize: 16 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-            ),
+            TextButton(onPressed: createSubject, child: Text("Create")),
           ],
         );
       },
     );
   }
-
   // Confirmation before deleting
   void _confirmDelete(int subjectIndex, int fileIndex) {
     final settings = Provider.of<AccessibilitySettings>(context, listen: false);
@@ -616,16 +592,12 @@ Future<void> _createSubject() async {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final bool isDyslexic = settings.openDyslexic;
-
-    // Function to determine font family
-    String fontFamily() {
-      return isDyslexic ? "OpenDyslexic" : "Roboto";
-    }
-
+    String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -935,6 +907,7 @@ Future<void> _createSubject() async {
               ),
             ],
           ),
+
         ),
       ),
     );

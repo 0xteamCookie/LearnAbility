@@ -8,15 +8,15 @@ import '../../ai_assistant_page.dart';
 import '../../articles_page.dart';
 import '../../generate_content_page.dart';
 import '../../home_page.dart';
-import '../../my_materials_page.dart';
 import '../../settings_page.dart';
 import '../../stats_page.dart';
 import '../../videos_page.dart';
+import '../../subjects.dart';
 
 class GlobalNavBar extends StatefulWidget {
-  final Widget body; 
+  final Widget body;
 
-  const GlobalNavBar({Key? key, required this.body}) : super(key: key);
+  const GlobalNavBar({super.key, required this.body});
 
   @override
   State<GlobalNavBar> createState() => _GlobalNavBarState();
@@ -24,7 +24,7 @@ class GlobalNavBar extends StatefulWidget {
 
 class _GlobalNavBarState extends State<GlobalNavBar> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
- 
+
   int selectedIndex = -1;
 
   @override
@@ -49,8 +49,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ListTile(
             leading: Icon(Icons.quiz_outlined),
             title: Text('Quiz'),
-            tileColor:
-                selectedIndex == 3 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 3 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 3;
@@ -67,8 +66,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ListTile(
             leading: Icon(Icons.generating_tokens_outlined),
             title: Text('Generate Lessons'),
-            tileColor:
-                selectedIndex == 4 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 4 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 4;
@@ -85,8 +83,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ListTile(
             leading: Icon(Icons.assistant_outlined),
             title: Text('AI Assistant'),
-            tileColor:
-                selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 5;
@@ -94,25 +91,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AiAssistantPage()),
-              );
-            },
-          ),
-
-          // AI Voice Assistant
-          ListTile(
-            leading: Icon(Icons.assistant_outlined),
-            title: Text('AI Voice Assistant'),
-            tileColor:
-                selectedIndex == 10 ? Color(0xFFEDE7F6) : null,
-            onTap: () {
-              setState(() {
-                selectedIndex = 10;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AiAssistantPage()),
+                MaterialPageRoute(builder: (context) => AIAssistantPage()),
               );
             },
           ),
@@ -132,8 +111,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ListTile(
             leading: Icon(Icons.book_outlined),
             title: Text('Lessons'),
-            tileColor:
-                selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 6;
@@ -145,13 +123,28 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               );
             },
           ),
+          ListTile(
+            leading: Icon(Icons.quiz_outlined),
+            title: Text('Subjects'),
+            tileColor:
+                selectedIndex == 9 ? Color(0xFFEDE7F6) : null,
+            onTap: () {
+              setState(() {
+                selectedIndex = 9;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Subjects()),
+              );
+            },
+          ),
 
           // Videos
           ListTile(
             leading: Icon(Icons.movie_outlined),
             title: Text('Videos'),
-            tileColor:
-                selectedIndex == 7 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 7 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 7;
@@ -168,8 +161,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ListTile(
             leading: Icon(Icons.description_outlined),
             title: Text('Articles'),
-            tileColor:
-                selectedIndex == 8 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 8 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 8;
@@ -181,7 +173,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               );
             },
           ),
-          
         ],
       ),
 
@@ -194,7 +185,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
         onTap: (index) {
-            settings.setSelectedIndex(index);
+          settings.setSelectedIndex(index);
 
           if (index == 0) {
             Navigator.push(

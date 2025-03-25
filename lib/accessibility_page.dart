@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
 import "package:provider/provider.dart";
-import 'repository/widgets/global_navbar.dart';
 
 class AccessibilityPage extends StatefulWidget {
   const AccessibilityPage({super.key});
@@ -13,21 +12,11 @@ class AccessibilityPage extends StatefulWidget {
 class _AccessibilityPageState extends State<AccessibilityPage> {
   final List<Color> _colorThemes = [
     Colors.red,
-    Colors.deepPurple,
+    Colors.blue,
     Colors.green,
     Colors.yellow,
     Colors.purple,
   ];
-
-   @override
-  void initState() {
-    super.initState();
-    // Set the correct index when this page loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(3);
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +50,42 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
       return "x";
     }
 
-    return GlobalNavBar(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header for Accessibility Settings
-            Text(
-              "Accessibility Settings",
-              style: TextStyle(
-                fontSize: 24 * fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                          icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                  ),
+                  Text(
+                    "Accessibility Settings",
+                    style: TextStyle(
+                      fontSize: 24 * fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+      
+              // Text & Display Section
+              Text(
+                "Text & Display",
+                style: TextStyle(
+                  fontSize: 20 * fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
               ),
             ),
               SizedBox(height: 10),
@@ -181,7 +193,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: wordPrediction,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {
@@ -203,7 +214,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: openDyslexic,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {
@@ -237,7 +247,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: visualTimers,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {
@@ -259,7 +268,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: breakReminders,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {

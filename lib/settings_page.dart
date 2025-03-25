@@ -83,61 +83,73 @@ class _SettingPageState extends State<SettingsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return GlobalNavBar(
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.all(16.0),
-          children: [
-            Text(
-              "Settings",
-              style: TextStyle(
-                fontSize: 28 * settings.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
+    return SafeArea(
+      child: GlobalNavBar(
+        body: Container(
+          color: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.all(16.0),
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Text(
+                    "Settings",
+                    style: TextStyle(
+                      fontSize: 28 * settings.fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Privacy Settings',
-              style: TextStyle(
-                fontSize: 22 * settings.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            SizedBox(height: 16),
-      
-            for (var setting in _privacySettings)
-              _buildPrivacySettingsCard(setting, settings, fontFamily()),
-            SizedBox(height: 24),
-            Text(
-              'Notification Settings',
-              style: TextStyle(
-                fontSize: 22 * settings.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            SizedBox(height: 16),
-      
-            for (var setting in _notificationSettings)
-              _buildNotificationSettingsCard(setting, settings, fontFamily()),
-            SizedBox(height: 24),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.grey[100]), // Correct way to set grey[100]
+              SizedBox(height: 16),
+              Text(
+                'Privacy Settings',
+                style: TextStyle(
+                  fontSize: 22 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
-                onPressed: _saveChanges,
-                child: Text(
-                  'Save Changes',
-                  style: TextStyle(
-                    fontSize: 16 * settings.fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
+              ),
+              SizedBox(height: 16),
+        
+              for (var setting in _privacySettings)
+                _buildPrivacySettingsCard(setting, settings, fontFamily()),
+              SizedBox(height: 24),
+              Text(
+                'Notification Settings',
+                style: TextStyle(
+                  fontSize: 22 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
+              ),
+              SizedBox(height: 16),
+        
+              for (var setting in _notificationSettings)
+                _buildNotificationSettingsCard(setting, settings, fontFamily()),
+              SizedBox(height: 24),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.grey[100]), // Correct way to set grey[100]
+                  ),
+                  onPressed: _saveChanges,
+                  child: Text(
+                    'Save Changes',
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
