@@ -47,11 +47,11 @@ class _StatsPageState extends State<StatsPage> {
     return Row(
       children: [
         IconButton(
-                                icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                                onPressed: () {
-                                  Navigator.pop(context); // Navigate back
-                                },
-                              ),       
+                icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context); // Navigate back
+                },
+              ),       
         Expanded(
           child: Text(
             "Your Learning Progress",

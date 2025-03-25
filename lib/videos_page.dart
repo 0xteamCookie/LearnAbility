@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:provider/provider.dart';
 import 'accessibility_model.dart';
 
@@ -45,44 +46,33 @@ class _VideosPageState extends State<VideosPage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: Text(
-            "LearnAbility",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22 * settings.fontSize, // Dynamically adjusting font size
-              fontFamily: fontFamily(), // Apply font family
-            ),
-          ),
-        ),
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title: All Videos
-                Text(
-                  "All Videos",
-                  style: TextStyle(
-                    fontSize: 28 * settings.fontSize, // Dynamically adjusting font size
-                    fontWeight: FontWeight.bold,
-                    fontFamily: fontFamily(), // Apply font family
-                  ),
+                Row(
+                  children: [
+                    IconButton(
+                    icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context); // Navigate back
+                      },
+                    ),
+                    Text(
+                      "All Videos",
+                      style: TextStyle(
+                        fontSize: 28 * settings.fontSize, // Dynamically adjusting font size
+                        fontWeight: FontWeight.bold,
+                        fontFamily: fontFamily(), // Apply font family
+                      ),
+                    ),
+                  ],
                 ),
+                
                 const SizedBox(height: 4),
-      
-                // Subtitle: Explore the latest content
-                Text(
-                  "Explore the latest content",
-                  style: TextStyle(
-                    fontSize: 16 * settings.fontSize, // Dynamically adjusting font size
-                    color: Colors.grey,
-                    fontFamily: fontFamily(), // Apply font family
-                  ),
-                ),
-                const SizedBox(height: 20),
       
                 // Category Chips
                 Wrap(
@@ -139,7 +129,7 @@ class _VideosPageState extends State<VideosPage> {
           fontFamily: fontFamily, // Apply font family
         ),
       ),
-      backgroundColor: Colors.blue[50],
+      backgroundColor: Color(0xFFEDE7F6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -185,61 +175,64 @@ class _VideosPageState extends State<VideosPage> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Video Heading
-                Text(
-                  heading,
-                  style: TextStyle(
-                    fontSize: 18 * settings.fontSize, // Dynamically adjusting font size
-                    fontWeight: FontWeight.bold,
-                    fontFamily: fontFamily, // Apply font family
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Creator Name
-                Text(
-                  creator,
-                  style: TextStyle(
-                    fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
-                    color: Colors.grey,
-                    fontFamily: fontFamily, // Apply font family
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.timer, size: 16),
-                    const SizedBox(width: 4),
-                    // Video Duration
-                    Text(
-                      duration,
-                      style: TextStyle(
-                        fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
-                        color: Colors.grey,
-                        fontFamily: fontFamily, // Apply font family
-                      ),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Video Heading
+                  Text(
+                    heading,
+                    style: TextStyle(
+                      fontSize: 18 * settings.fontSize, // Dynamically adjusting font size
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily, // Apply font family
                     ),
-                    const Spacer(),
-                    // Watch Video Button
-                    TextButton(
-                      onPressed: () {
-                        // Add "Watch Video" functionality
-                      },
-                      child: Text(
-                        "Watch Video",
+                  ),
+                  const SizedBox(height: 8),
+                  // Creator Name
+                  Text(
+                    creator,
+                    style: TextStyle(
+                      fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
+                      color: Colors.grey,
+                      fontFamily: fontFamily, // Apply font family
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.timer, size: 16),
+                      const SizedBox(width: 4),
+                      // Video Duration
+                      Text(
+                        duration,
                         style: TextStyle(
                           fontSize: 14 * settings.fontSize, // Dynamically adjusting font size
+                          color: Colors.grey,
                           fontFamily: fontFamily, // Apply font family
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const Spacer(),
+                      // Watch Video Button
+                      TextButton(
+                        onPressed: () {
+                        },
+                        child: Text(
+                          "Watch Video",
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontSize: 14 * settings.fontSize, 
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
