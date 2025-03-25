@@ -1,256 +1,320 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'package:my_first_app/domain/constants/appcolors.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Lesson/lessons_page.dart';
+import 'accessibility_model.dart';
+import 'utils/constants.dart';
 
-class Subjects extends StatefulWidget {
-  const Subjects({super.key});
+class Subject {
+  final String id;
+  final String name;
+  final String color;
+  final String status;
+  final int materialCount;
+  final String createdAt;
+  final String updatedAt;
 
-  @override
-  State<Subjects> createState() => _SubjectsState();
+  Subject({
+    required this.id,
+    required this.name,
+    required this.color,
+    required this.status,
+    required this.materialCount,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Subject.fromJson(Map<String, dynamic> json) {
+    return Subject(
+      id: json['id'],
+      name: json['name'],
+      color: json['color'] ?? 'blue',
+      status: json['status'],
+      materialCount: json['materialCount'] ?? 0,
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+  }
 }
 
-class _SubjectsState extends State<Subjects> {
-  List<Map<String, dynamic>> subjects = [];
+class SubjectsPage extends StatefulWidget {
+  const SubjectsPage({super.key});
+
+  @override
+  State<SubjectsPage> createState() => _SubjectsPageState();
+}
+
+class _SubjectsPageState extends State<SubjectsPage> {
+  List<Subject> subjects = [];
   bool isLoading = true;
-  Timer? _pollingTimer;
-  bool _hasError = false;
+  bool hasError = false;
+  bool isGeneratingLessons = false;
+  String? generatingSubjectId;
 
   @override
   void initState() {
     super.initState();
-    _fetchSubjects();
-    _startConditionalPolling();
+    fetchSubjects();
   }
 
-  void _startConditionalPolling() {
-    _pollingTimer?.cancel();
-    _pollingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isLoading && _hasProcessingSubjects()) {
-        _fetchSubjects();
-      } else if (!_hasProcessingSubjects()) {
-        timer.cancel();
-      }
+  Future<void> fetchSubjects() async {
+    setState(() {
+      isLoading = true;
+      hasError = false;
     });
-  }
 
-  bool _hasProcessingSubjects() {
-    return subjects.any((subject) => subject['status'] == 'PROCESSING');
-  }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('jwt_token');
 
-  @override
-  void dispose() {
-    _pollingTimer?.cancel();
-    super.dispose();
-  }
+    if (token == null || token.isEmpty) {
+      setState(() {
+        isLoading = false;
+        hasError = true;
+      });
+      return;
+    }
 
-  Future<void> _fetchSubjects() async {
     try {
-      setState(() => isLoading = true);
-      await Future.delayed(const Duration(milliseconds: 500));
-      
-      final Map<String, dynamic> response = {
-        "success": true,
-        "subjects": [
-          {
-            "id": "4ecf9a04-3f33-4515-a74e-357dcaa328e7",
-            "name": "Mathematics",
-            "color": "blue",
-            "status": "COMPLETED",
-            "createdAt": "2025-03-25T12:45:34.376Z",
-            "updatedAt": "2025-03-25T13:17:57.947Z",
-            "materialCount": 1
-          },
-          {
-            "id": "e17090bf-ca88-418d-ba6d-7ede17183f1a",
-            "name": "Science",
-            "color": "bg-blue-500",
-            "status": "PROCESSING",
-            "createdAt": "2025-03-25T12:18:48.922Z",
-            "updatedAt": "2025-03-25T12:39:50.537Z",
-            "materialCount": 2
-          },
-          {
-            "id": "0e8985f8-05bd-4197-ae63-b7d36300d5d4",
-            "name": "English",
-            "color": "bg-blue-500",
-            "status": "PROCESSING",
-            "createdAt": "2025-03-25T12:18:57.097Z",
-            "updatedAt": "2025-03-25T12:18:57.097Z",
-            "materialCount": 0
-          },
-        ]
-      };
+      final response = await http.get(
+        Uri.parse('${Constants.uri}/api/v1/pyos/subjects'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
 
-      if (mounted) {
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
         setState(() {
-          subjects = List<Map<String, dynamic>>.from(response['subjects'] as List);
+          subjects =
+              (data['subjects'] as List)
+                  .map((json) => Subject.fromJson(json))
+                  .toList();
           isLoading = false;
-          _hasError = false;
-          
-          if (_hasProcessingSubjects() && (_pollingTimer == null || !_pollingTimer!.isActive)) {
-            _startConditionalPolling();
-          }
+        });
+
+        // Start polling for processing subjects
+        _checkProcessingSubjects();
+      } else {
+        setState(() {
+          isLoading = false;
+          hasError = true;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          _hasError = true;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load subjects: $e')),
-        );
-        
-        if (_hasProcessingSubjects() && (_pollingTimer == null || !_pollingTimer!.isActive)) {
-          _startConditionalPolling();
+      setState(() {
+        isLoading = false;
+        hasError = true;
+      });
+    }
+  }
+
+  void _checkProcessingSubjects() {
+    // Check if any subjects are in PROCESSING state
+    bool hasProcessingSubjects = subjects.any(
+      (subject) => subject.status == 'PROCESSING',
+    );
+
+    if (hasProcessingSubjects) {
+      // Poll every 5 seconds for updates
+      Future.delayed(const Duration(seconds: 5), () {
+        if (mounted) {
+          fetchSubjects();
         }
+      });
+    }
+  }
+
+  Future<void> generateLessons(String subjectId) async {
+    setState(() {
+      isGeneratingLessons = true;
+      generatingSubjectId = subjectId;
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('jwt_token');
+
+    if (token == null || token.isEmpty) {
+      setState(() {
+        isGeneratingLessons = false;
+        generatingSubjectId = null;
+      });
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('${Constants.uri}/api/v1/pyos/subjects/$subjectId/lessons'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Successfully started generating lessons
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Generating lessons for this subject")),
+        );
+
+        // Refresh subjects to get updated status
+        fetchSubjects();
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Failed to generate lessons")));
       }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error generating lessons: $e")));
+    } finally {
+      setState(() {
+        isGeneratingLessons = false;
+        generatingSubjectId = null;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.grey[100],
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  const Text(
-                    "Explore Subjects",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (_hasError)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Text(
-                    'Failed to load subjects. Pull to refresh.',
-                    style: TextStyle(color: Colors.red[700]),
-                  ),
-                ),
-              Expanded(
-                child: isLoading && subjects.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : RefreshIndicator(
-                        onRefresh: _fetchSubjects,
-                        child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: subjects.length,
-                          itemBuilder: (context, index) {
-                            final subject = subjects[index];
-                            return _buildSubjectCard(
-                              subject['name'] as String,
-                              subject['status'] as String,
-                            );
-                          },
-                        ),
-                      ),
-              ),
-            ],
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
+
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryBackground,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          "Explore Subjects",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20 * settings.fontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: fontFamily(),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh, color: Colors.white),
+            onPressed: fetchSubjects,
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildSubjectCard(String subjectName, String status) {
-    final isProcessing = status == 'PROCESSING';
-    
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Icon(
-                  _getSubjectIcon(subjectName),
-                  size: 60,
-                  color: Colors.deepPurple,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        subjectName,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+      body:
+          isLoading && subjects.isEmpty
+              ? Center(child: CircularProgressIndicator())
+              : RefreshIndicator(
+                onRefresh: fetchSubjects,
+                child: CustomScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Start your learning journey",
+                              style: TextStyle(
+                                fontSize: 16 * settings.fontSize,
+                                color: Colors.grey.shade700,
+                                fontFamily: fontFamily(),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            if (hasError)
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.red.shade200,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      color: Colors.red.shade700,
+                                    ),
+                                    SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        "Failed to load subjects. Pull down to refresh.",
+                                        style: TextStyle(
+                                          fontSize: 14 * settings.fontSize,
+                                          color: Colors.red.shade700,
+                                          fontFamily: fontFamily(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: isProcessing
-                  ? _buildProcessingButton()
-                  : ElevatedButton(
-                      onPressed: () => _navigateToLessons(subjectName),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: const Text('Start Learning'),
                     ),
-            ),
-          ],
-        ),
-      ),
+                    SliverPadding(
+                      padding: EdgeInsets.all(16),
+                      sliver:
+                          subjects.isEmpty && !isLoading
+                              ? SliverToBoxAdapter(
+                                child: _buildEmptyState(settings, fontFamily()),
+                              )
+                              : SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) => _buildSubjectCard(
+                                    subjects[index],
+                                    settings,
+                                    fontFamily(),
+                                  ),
+                                  childCount: subjects.length,
+                                ),
+                              ),
+                    ),
+                  ],
+                ),
+              ),
     );
   }
 
-  Widget _buildProcessingButton() {
-    return ElevatedButton(
-      onPressed: null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurple.withOpacity(0.5),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-      ),
-      child: const Row(
+  Widget _buildEmptyState(AccessibilitySettings settings, String fontFamily) {
+    return Center(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Generating...'),
-          SizedBox(width: 8),
-          SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Colors.white,
+          Icon(Icons.school_outlined, size: 80, color: Colors.grey.shade400),
+          SizedBox(height: 16),
+          Text(
+            "No subjects available",
+            style: TextStyle(
+              fontSize: 18 * settings.fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Check back later or contact your administrator",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16 * settings.fontSize,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade600,
             ),
           ),
         ],
@@ -258,30 +322,263 @@ class _SubjectsState extends State<Subjects> {
     );
   }
 
-  void _navigateToLessons(String subjectName) {
-    _onStartLearning(subjectName);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LessonsPage()),
-    );
-  }
+  Widget _buildSubjectCard(
+    Subject subject,
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
+    final bool isProcessing = subject.status == 'PROCESSING';
+    final bool isGenerating =
+        isGeneratingLessons && generatingSubjectId == subject.id;
 
-  void _onStartLearning(String subjectName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Starting $subjectName')),
-    );
-  }
-
-  IconData _getSubjectIcon(String subject) {
-    switch (subject.toLowerCase()) {
-      case 'biology': return Icons.eco;
-      case 'mathematics': return Icons.calculate;
-      case 'chemistry': return Icons.science;
-      case 'computer': return Icons.computer;
-      case 'english': return Icons.menu_book;
-      case 'physics': return Icons.bolt;
-      case 'science': return Icons.science;
-      default: return Icons.book;
+    Color getSubjectColor() {
+      switch (subject.color.toLowerCase()) {
+        case 'blue':
+          return Color(0xFF3B82F6);
+        case 'red':
+          return Color(0xFFEF4444);
+        case 'green':
+          return Color(0xFF10B981);
+        case 'purple':
+          return Color(0xFF8B5CF6);
+        case 'yellow':
+          return Color(0xFFF59E0B);
+        case 'pink':
+          return Color(0xFFEC4899);
+        default:
+          return Color(0xFF3B82F6);
+      }
     }
+
+    IconData getSubjectIcon() {
+      switch (subject.name.toLowerCase()) {
+        case 'mathematics':
+          return Icons.calculate;
+        case 'science':
+          return Icons.science;
+        case 'english':
+          return Icons.menu_book;
+        case 'history':
+          return Icons.history_edu;
+        case 'geography':
+          return Icons.public;
+        case 'physics':
+          return Icons.bolt;
+        case 'chemistry':
+          return Icons.science;
+        case 'biology':
+          return Icons.eco;
+        case 'computer science':
+          return Icons.computer;
+        default:
+          return Icons.school;
+      }
+    }
+
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: getSubjectColor().withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    getSubjectIcon(),
+                    color: getSubjectColor(),
+                    size: 32,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        subject.name,
+                        style: TextStyle(
+                          fontSize: 18 * settings.fontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: fontFamily,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          if (isProcessing) ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.shade100,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.amber.shade300,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: 12,
+                                    height: 12,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.amber.shade800,
+                                    ),
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    "Processing",
+                                    style: TextStyle(
+                                      fontSize: 12 * settings.fontSize,
+                                      fontFamily: fontFamily,
+                                      color: Colors.amber.shade800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ] else ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade100,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.green.shade300,
+                                ),
+                              ),
+                              child: Text(
+                                "Ready",
+                                style: TextStyle(
+                                  fontSize: 12 * settings.fontSize,
+                                  fontFamily: fontFamily,
+                                  color: Colors.green.shade800,
+                                ),
+                              ),
+                            ),
+                          ],
+                          SizedBox(width: 8),
+                          Text(
+                            "${subject.materialCount} materials",
+                            style: TextStyle(
+                              fontSize: 14 * settings.fontSize,
+                              color: Colors.grey.shade600,
+                              fontFamily: fontFamily,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            if (isProcessing) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber.shade600,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed:
+                      isGenerating ? null : () => generateLessons(subject.id),
+                  child:
+                      isGenerating
+                          ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                "Generating Lessons...",
+                                style: TextStyle(
+                                  fontSize: 16 * settings.fontSize,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: fontFamily,
+                                ),
+                              ),
+                            ],
+                          )
+                          : Text(
+                            "Generate Lessons",
+                            style: TextStyle(
+                              fontSize: 16 * settings.fontSize,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: fontFamily,
+                            ),
+                          ),
+                ),
+              ),
+            ] else ...[
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryBackground,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => LessonsPage(
+                              subjectId: subject.id,
+                              subjectName: subject.name,
+                            ),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Start Learning",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
