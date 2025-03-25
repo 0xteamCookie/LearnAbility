@@ -5,6 +5,8 @@ import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
 
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }

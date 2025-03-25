@@ -137,7 +137,7 @@ class _SettingPageState extends State<SettingsPage> {
               SizedBox(height: 24),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.grey[100]), // Correct way to set grey[100]
+                    backgroundColor: WidgetStateProperty.all(Colors.grey[100]), // Correct way to set grey[100]
                   ),
                   onPressed: _saveChanges,
                   child: Text(
