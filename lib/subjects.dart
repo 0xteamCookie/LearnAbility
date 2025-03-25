@@ -64,7 +64,7 @@ class _SubjectsState extends State<Subjects> {
             "id": "e17090bf-ca88-418d-ba6d-7ede17183f1a",
             "name": "Science",
             "color": "bg-blue-500",
-            "status": "COMPLETED",
+            "status": "PROCESSING",
             "createdAt": "2025-03-25T12:18:48.922Z",
             "updatedAt": "2025-03-25T12:39:50.537Z",
             "materialCount": 2

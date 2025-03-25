@@ -137,8 +137,10 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
               ),
               SizedBox(height: 8),
               Card(
+                color: Colors.white,
                 elevation: 2,
                 child: ExpansionTile(
+                  backgroundColor: Colors.white,
                   title: Text(
                     "Upload Options",
                     style: TextStyle(
@@ -149,6 +151,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                   leading: Icon(Icons.add),
                   children: [
                     ListTile(
+                      tileColor: Colors.white,
                       leading: Icon(Icons.book, color: Colors.green),
                       title: Text(
                         "Upload Syllabus",
@@ -186,6 +189,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                       },
                     ),
                     ListTile(
+                      tileColor: Colors.white,
                       leading: Icon(Icons.upload_file, color: Colors.blue),
                       title: Text(
                         "Upload Resource",
@@ -674,7 +678,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                   Text(
                     "My Materials",
                     style: TextStyle(
-                      fontSize: 27 * settings.fontSize,
+                      fontSize: 24 * settings.fontSize,
                       fontWeight: FontWeight.bold,
                       fontFamily: fontFamily(),
                     ),

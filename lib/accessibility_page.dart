@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
+import "package:my_first_app/repository/widgets/global_navbar.dart";
 import "package:provider/provider.dart";
 
 class AccessibilityPage extends StatefulWidget {
@@ -17,6 +18,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     Colors.yellow,
     Colors.purple,
   ];
+  @override
+  void initState() {
+    super.initState();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(3);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +60,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     }
 
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
+      child: GlobalNavBar(
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
           child: Column(
