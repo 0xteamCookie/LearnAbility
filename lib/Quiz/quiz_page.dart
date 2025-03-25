@@ -152,6 +152,7 @@ class _QuizPageState extends State<QuizPage> {
 
   Widget _buildQuizIntro(double fontSize) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -170,7 +171,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
             const SizedBox(height: 40),
             Card(
-              color: Color(0xFFEDE7F6),
+              color: Colors.grey[100],
               elevation: 4,
               margin: EdgeInsets.only(top: 35.0),
               shape: RoundedRectangleBorder(
@@ -257,46 +258,49 @@ class _QuizPageState extends State<QuizPage> {
       color: Color(0xFFD1C4E9), 
       
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(15),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircleAvatar(
-                  backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
-                  radius: 15,
-                  child: Icon(
-                    Icons.timer,
-                    color: Colors.black,
-                    size: 22,
-
+      child: Container(
+        color: Colors.grey[300],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
+                    radius: 15,
+                    child: Icon(
+                      Icons.timer,
+                      color: Colors.black,
+                      size: 22,
+        
+                    ),
                   ),
-                ),
-            SizedBox(width:10),
-            Column(
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14 * fontSize,
-                    color: const Color.fromARGB(201, 0, 0, 0),
-                   
+              SizedBox(width:10),
+              Column(
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14 * fontSize,
+                      color: const Color.fromARGB(201, 0, 0, 0),
+                     
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 16 * fontSize,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  const SizedBox(height: 5),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 16 * fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -346,7 +350,7 @@ class _QuizPageState extends State<QuizPage> {
     final isLastQuestion = _currentPage == (_quizData["quiz"] as List).length - 1;
 
     return Scaffold(
-      backgroundColor: Color(0xFFEDE7F6),
+      backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
