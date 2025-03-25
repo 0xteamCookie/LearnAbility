@@ -229,15 +229,20 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Web Development Fundamentals",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18 * settings.fontSize,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily(),
                               ),
                             ),
                             SizedBox(height: 4),
                             Text(
                               "Today, 16:00",
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14 * settings.fontSize,
+                                fontFamily: fontFamily(),
+                              ),
                             ),
 
                             SizedBox(height: 10),
@@ -251,6 +256,8 @@ class _HomePageState extends State<HomePage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
+                                    fontSize: 16 * settings.fontSize,
+                                    fontFamily: fontFamily(),
                                   ),
                                 ),
                               ],
@@ -373,14 +380,19 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Science Syllabus",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18 * settings.fontSize,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily(),
                               ),
                             ),
                             SizedBox(height: 4),
                             Text(
                               "Today, 16:00",
-                              style: TextStyle(color: Colors.grey[600]),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14 * settings.fontSize,
+                                fontFamily: fontFamily(),
+                              ),
                             ),
 
                             SizedBox(height: 10),
@@ -389,7 +401,11 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   "Science",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16 * settings.fontSize,
+                                    fontFamily: fontFamily(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -445,14 +461,19 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "English poem",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18 * settings.fontSize,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily(),
                               ),
                             ),
                             SizedBox(height: 4),
                             Text(
                               "Today, 16:00",
-                              style: TextStyle(color: Colors.grey[600]),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14 * settings.fontSize,
+                                fontFamily: fontFamily(),
+                              ),
                             ),
 
                             SizedBox(height: 10),
@@ -461,7 +482,11 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   "Englis",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16 * settings.fontSize,
+                                    fontFamily: fontFamily(),
+                                  ),
                                 ),
                               ],
                             ),
