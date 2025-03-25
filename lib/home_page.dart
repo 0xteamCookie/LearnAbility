@@ -760,122 +760,50 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+            // Replace the floating bottom navigation bar with a standard bottom navigation bar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndexBottomNavBar,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black,
+        onTap: (index) {
+          setState(() {
+            _selectedIndexBottomNavBar = index;
+          });
 
-      bottomNavigationBar: Container(
-        width: double.infinity,
-        height: 65.0,
-        margin: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          color: Colors.transparent,
-          elevation: 0.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              //SETTINGS ICON
-              IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color:
-                      _selectedIndexBottomNavBar == 0
-                          ? Colors.blue
-                          : Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
-                  setState(() {
-                    _selectedIndexBottomNavBar = 0;
-                  });
-                },
-              ),
-              //BAR CHART ICON
-              IconButton(
-                icon: Icon(
-                  Icons.bar_chart,
-                  color:
-                      _selectedIndexBottomNavBar == 1
-                          ? Colors.blue
-                          : Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StatsPage()),
-                  );
-                  setState(() {
-                    _selectedIndexBottomNavBar = 1;
-                  });
-                },
-              ),
-              //HOME ICON
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color:
-                      _selectedIndexBottomNavBar == 2
-                          ? Colors.blue
-                          : Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selectedIndexBottomNavBar = 2;
-                  });
-                },
-              ),
-              //ACCESSIBILITY ICON
-              IconButton(
-                icon: Icon(
-                  Icons.accessibility,
-                  color:
-                      _selectedIndexBottomNavBar == 3
-                          ? Colors.blue
-                          : Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AccessibilityPage(),
-                    ),
-                  );
-                  setState(() {
-                    _selectedIndexBottomNavBar = 3;
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color:
-                      _selectedIndexBottomNavBar == 4
-                          ? Colors.blue
-                          : Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selectedIndexBottomNavBar = 4;
-                  });
-                  _scaffoldKey.currentState?.openEndDrawer();
-                },
-              ),
-            ],
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => StatsPage()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccessibilityPage()),
+            );
+          } else if (index == 4) {
+            _scaffoldKey.currentState?.openEndDrawer();
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
-        ),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility),
+            label: 'Access',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
+        ],
       ),
     );
   }
