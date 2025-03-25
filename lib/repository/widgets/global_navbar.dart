@@ -108,22 +108,22 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             ),
           ),
 
-          // Lessons
-          ListTile(
-            leading: Icon(Icons.book_outlined),
-            title: Text('Lessons'),
-            tileColor: selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
-            onTap: () {
-              setState(() {
-                selectedIndex = 6;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LessonsPage()),
-              );
-            },
-          ),
+          // // Lessons
+          // ListTile(
+          //   leading: Icon(Icons.book_outlined),
+          //   title: Text('Lessons'),
+          //   tileColor: selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
+          //   onTap: () {
+          //     setState(() {
+          //       selectedIndex = 6;
+          //     });
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => LessonsPage()),
+          //     );
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.quiz_outlined),
             title: Text('Subjects'),
@@ -135,7 +135,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Subjects()),
+                MaterialPageRoute(builder: (context) => SubjectsPage()),
               );
             },
           ),
