@@ -11,13 +11,15 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
-
   @override
   void initState() {
     super.initState();
     // Set the correct index when this page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(1);
+      Provider.of<AccessibilitySettings>(
+        context,
+        listen: false,
+      ).setSelectedIndex(1);
     });
   }
 
@@ -30,24 +32,25 @@ class _StatsPageState extends State<StatsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return GlobalNavBar(
-      body: Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 25),
-                _buildHeaderSection(settings, fontFamily()),
-                const SizedBox(height: 24),
-                _buildStreakCard(settings, fontFamily()),
-                const SizedBox(height: 24),
-                _buildSubjectsProgressCard(settings, fontFamily()),
-                const SizedBox(height: 24),
-                _buildWeeklyActivityCard(settings, fontFamily()),
-              ],
+    return SafeArea(
+      child: GlobalNavBar(
+        body: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeaderSection(settings, fontFamily()),
+                  const SizedBox(height: 24),
+                  _buildStreakCard(settings, fontFamily()),
+                  const SizedBox(height: 24),
+                  _buildSubjectsProgressCard(settings, fontFamily()),
+                  const SizedBox(height: 24),
+                  _buildWeeklyActivityCard(settings, fontFamily()),
+                ],
+              ),
             ),
           ),
         ),
@@ -55,12 +58,21 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildHeaderSection(AccessibilitySettings settings, String fontFamily) {
+  Widget _buildHeaderSection(
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             Expanded(
               child: Text(
                 "Your Learning Progress",
@@ -79,14 +91,6 @@ class _StatsPageState extends State<StatsPage> {
               tooltip: "Select time period",
             ),
           ],
-        ),
-        Text(
-          "Track your achievements and see how far you've come",
-          style: TextStyle(
-            fontSize: 16 * settings.fontSize,
-            color: Colors.grey,
-            fontFamily: fontFamily,
-          ),
         ),
       ],
     );
@@ -140,7 +144,10 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildSubjectsProgressCard(AccessibilitySettings settings, String fontFamily) {
+  Widget _buildSubjectsProgressCard(
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
     final Map<String, Map<String, dynamic>> subjects = {
       "Science": {"progress": 0.45, "color": Colors.green},
       "English": {"progress": 0.65, "color": Colors.purple},
@@ -207,7 +214,10 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildWeeklyActivityCard(AccessibilitySettings settings, String fontFamily) {
+  Widget _buildWeeklyActivityCard(
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
     final List<Map<String, dynamic>> weeklyActivity = [
       {"day": "Mon", "value": 0.3},
       {"day": "Tue", "value": 0.7},
@@ -238,25 +248,26 @@ class _StatsPageState extends State<StatsPage> {
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: weeklyActivity.map((activity) {
-                return Column(
-                  children: [
-                    Text(
-                      activity["day"],
-                      style: TextStyle(
-                        fontSize: 14 * settings.fontSize,
-                        fontFamily: fontFamily,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      width: 16,
-                      height: activity["value"] * 100,
-                      color: Colors.blue,
-                    ),
-                  ],
-                );
-              }).toList(),
+              children:
+                  weeklyActivity.map((activity) {
+                    return Column(
+                      children: [
+                        Text(
+                          activity["day"],
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: 16,
+                          height: activity["value"] * 100,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    );
+                  }).toList(),
             ),
           ],
         ),
