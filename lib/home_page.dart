@@ -28,12 +28,15 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = -1;
 
-   @override
+  @override
   void initState() {
     super.initState();
     // Set the correct index when this page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(2);
+      Provider.of<AccessibilitySettings>(
+        context,
+        listen: false,
+      ).setSelectedIndex(2);
     });
   }
 
@@ -59,8 +62,6 @@ class _HomePageState extends State<HomePage> {
 
     return GlobalNavBar(
       key: _scaffoldKey,
-
-      
 
       body: Stack(
         children: [
@@ -90,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 20,),
+                          SizedBox(height: 20),
                           Text(
                             username,
                             style: TextStyle(
@@ -153,7 +154,6 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.black,
                         ),
                       ),
-                      
                     ],
                   ),
 
@@ -530,53 +530,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-        ],
-      ),
-
-       
-            // Replace the floating bottom navigation bar with a standard bottom navigation bar
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndexBottomNavBar,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
-        onTap: (index) {
-          setState(() {
-            _selectedIndexBottomNavBar = index;
-          });
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingsPage()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StatsPage()),
-            );
-          } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AccessibilityPage()),
-            );
-          } else if (index == 4) {
-            _scaffoldKey.currentState?.openEndDrawer();
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility),
-            label: 'Access',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
         ],
       ),
     );
