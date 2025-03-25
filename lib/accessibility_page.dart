@@ -12,7 +12,7 @@ class AccessibilityPage extends StatefulWidget {
 class _AccessibilityPageState extends State<AccessibilityPage> {
   final List<Color> _colorThemes = [
     Colors.red,
-    Colors.deepPurple,
+    Colors.blue,
     Colors.green,
     Colors.yellow,
     Colors.purple,
@@ -58,14 +58,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Row(
-                 children: [
-                   IconButton(
-                              icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                              onPressed: () {
-                                Navigator.pop(context); // Navigate back
-                              },
-                            ),
+              Row(
+                children: [
+                  IconButton(
+                          icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                  ),
                   Text(
                     "Accessibility Settings",
                     style: TextStyle(
@@ -74,8 +74,8 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                       fontFamily: fontFamily(), // Added fontFamily
                     ),
                   ),
-                 ],
-               ),
+                ],
+              ),
               SizedBox(height: 20),
       
               // Text & Display Section
@@ -192,7 +192,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: wordPrediction,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {
@@ -214,7 +213,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: openDyslexic,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {
@@ -248,7 +246,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: visualTimers,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {
@@ -270,7 +267,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                   Spacer(),
                   Switch(
-                    inactiveTrackColor: Colors.grey[200],
                     value: breakReminders,
                     activeColor: Colors.deepPurple,
                     onChanged: (bool value) {

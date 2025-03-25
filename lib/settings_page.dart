@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:logger/logger.dart";
 import 'package:provider/provider.dart';
+import 'repository/widgets/global_navbar.dart';
 import 'accessibility_model.dart';
 
 final Logger logger = Logger();
@@ -64,6 +65,15 @@ class _SettingPageState extends State<SettingsPage> {
     });
   }
 
+   @override
+  void initState() {
+    super.initState();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
@@ -73,19 +83,19 @@ class _SettingPageState extends State<SettingsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: ListView(
+    return GlobalNavBar(
+      body: Container(
+        color: Colors.white,
+        child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
             Row(
               children: [
                 IconButton(
-                                  icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                                  onPressed: () {
-                                    Navigator.pop(context); // Navigate back
-                                  },
+                  icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
                 Text(
                   "Settings",
@@ -97,7 +107,6 @@ class _SettingPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-            
             SizedBox(height: 16),
             Text(
               'Privacy Settings',

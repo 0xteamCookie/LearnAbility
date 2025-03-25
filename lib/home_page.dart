@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
@@ -25,13 +27,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = -1;
-  int _selectedIndexBottomNavBar = 2;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      authProvider.checkAuthStatus();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(
+        context,
+        listen: false,
+      ).setSelectedIndex(2);
     });
   }
 
@@ -55,240 +60,8 @@ class _HomePageState extends State<HomePage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return Scaffold(
+    return GlobalNavBar(
       key: _scaffoldKey,
-
-      // NAVIGATION MENU
-      endDrawer: NavigationDrawer(
-        children: <Widget>[
-          const DrawerHeader(
-            // decoration: BoxDecoration(color: Colors.blue),
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 106, 123, 216),
-            ),
-            child: Text(
-              'LearnAbility',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
-          // Tools Section
-          Padding(
-            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-            child: Text('Tools', style: Theme.of(context).textTheme.titleSmall),
-          ),
-
-          // Quiz
-          ListTile(
-            leading: Icon(Icons.quiz_outlined),
-            title: Text('Quizzes'),
-            tileColor:
-                _selectedIndex == 3 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 3;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => QuizzesPage()),
-              );
-            },
-          ),
-
-          // Upload Content
-          ListTile(
-            leading: Icon(Icons.generating_tokens_outlined),
-            title: Text('My Materials'),
-            tileColor:
-                _selectedIndex == 4 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 4;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GenerateContentPage()),
-              );
-            },
-          ),
-
-          // AI Assistant
-          ListTile(
-            leading: Icon(Icons.assistant_outlined),
-            title: Text('AI Assistant'),
-            tileColor:
-                _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 5;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AiAssistantPage()),
-              );
-            },
-          ),
-
-          ListTile(
-            leading: Icon(Icons.assistant_outlined),
-            title: Text('AI Voice Assistant'),
-            tileColor:
-                _selectedIndex == 5 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 5;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AiAssistantPage()),
-              );
-            },
-          ),
-          const Divider(indent: 28, endIndent: 28),
-
-          // Study Materials Section
-          Padding(
-            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-            child: Text(
-              'Study Materials',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ),
-
-          // Lessons
-          ListTile(
-            leading: Icon(Icons.book_outlined),
-            title: Text('Lessons'),
-            tileColor:
-                _selectedIndex == 6 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 6;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LessonsPage()),
-              );
-            },
-          ),
-
-          // Videos
-          ListTile(
-            leading: Icon(Icons.movie_outlined),
-            title: Text('Videos'),
-            tileColor:
-                _selectedIndex == 7 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 7;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => VideosPage()),
-              );
-            },
-          ),
-
-          // Articles
-          ListTile(
-            leading: Icon(Icons.description_outlined),
-            title: Text('Articles'),
-            tileColor:
-                _selectedIndex == 8 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 8;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ArticlesPage()),
-              );
-            },
-          ),
-          // My Stats
-          ListTile(
-            leading: Icon(Icons.bar_chart_outlined),
-            title: Text('My Stats'),
-            tileColor:
-                _selectedIndex == 0 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 0;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StatsPage()),
-              );
-            },
-          ),
-
-          const Divider(indent: 28, endIndent: 28),
-
-          // Accessibility
-          ListTile(
-            leading: Icon(Icons.accessibility_outlined),
-            title: Text('Accessibility'),
-            tileColor:
-                _selectedIndex == 1 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AccessibilityPage()),
-              );
-            },
-          ),
-
-          // Settings
-          ListTile(
-            leading: Icon(Icons.settings_outlined),
-            title: Text('Settings'),
-            tileColor:
-                _selectedIndex == 2 ? Colors.blue.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 2;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-          const Divider(indent: 28, endIndent: 28),
-
-          // Logout
-          ListTile(
-            leading: Icon(Icons.logout, color: Colors.red),
-            title: Text('Logout', style: TextStyle(color: Colors.red)),
-            tileColor:
-                _selectedIndex == 9 ? Colors.red.withValues(alpha: .2) : null,
-            onTap: () {
-              setState(() {
-                _selectedIndex = 9;
-              });
-              Navigator.pop(context);
-              // Handle logout logic here
-            },
-          ),
-        ],
-      ),
 
       body: Stack(
         children: [
@@ -318,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: 20),
                           Text(
                             username,
                             style: TextStyle(
@@ -420,9 +194,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               // Calendar Icon
                               CircleAvatar(
-                                backgroundColor: Color(
-                                  0xFFD1C4E9,
-                                ), // Light purple
+                                backgroundColor: Colors.white, // Light purple
                                 radius: 20,
                                 child: Icon(
                                   Icons.calendar_today,
@@ -444,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "Get Start",
+                                      "Get Started",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -574,7 +346,7 @@ class _HomePageState extends State<HomePage> {
                         child: Text(
                           'See more →',
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.deepPurple,
                             fontSize: 16.0 * settings.fontSize,
                             fontFamily: fontFamily(),
                           ),
@@ -760,51 +532,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-            // Replace the floating bottom navigation bar with a standard bottom navigation bar
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndexBottomNavBar,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
-        onTap: (index) {
-          setState(() {
-            _selectedIndexBottomNavBar = index;
-          });
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingsPage()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StatsPage()),
-            );
-          } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AccessibilityPage()),
-            );
-          } else if (index == 4) {
-            _scaffoldKey.currentState?.openEndDrawer();
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility),
-            label: 'Access',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
-        ],
-      ),
     );
   }
 
@@ -818,7 +545,7 @@ class _HomePageState extends State<HomePage> {
   ) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final double iconSize = settings.fontSize == 1.5 ? 20.0 : 25.0;
-    final double boxWidth = settings.fontSize == 1.5 ? 4.0 : 8.0;
+    final double boxWidth = settings.fontSize == 1.0 ? 4.0 : 8.0;
     final double padding = settings.fontSize == 1.0 ? 10.0 : 16.0;
     final bool isDyslexic = settings.openDyslexic;
 
@@ -855,6 +582,13 @@ class _HomePageState extends State<HomePage> {
                   // color: Colors.deepPurple,
                   size: iconSize * settings.fontSize,
                 ),
+                // Icon(
+                //   icon,
+                //   // color: Colors.indigo,
+                //   // color: Colors.orange[800],
+                //   color: Colors.deepPurple,
+                //   size: iconSize * settings.fontSize,
+                // ),
                 SizedBox(width: boxWidth),
                 Flexible(
                   child: Text(

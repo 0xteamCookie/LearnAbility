@@ -8,6 +8,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _visualTimers = false;
   bool _breakReminders = false;
   int _selectedColorIndex = 0;
+  int _selectedIndexBottomNavBar = 2;
 
   double get fontSize => _fontSize;
   bool get openDyslexic => _openDyslexic;
@@ -16,6 +17,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool get visualTimers => _visualTimers;
   bool get breakReminders => _breakReminders;
   int get selectedColorIndex => _selectedColorIndex;
+  int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
 
   void setFontSize(double value) {
     _fontSize = value;
@@ -49,6 +51,11 @@ class AccessibilitySettings extends ChangeNotifier {
 
   void setColorIndex(int index) {
     _selectedColorIndex = index;
+    notifyListeners();
+  }
+
+  void setSelectedIndex(int index) {
+    _selectedIndexBottomNavBar = index;
     notifyListeners();
   }
 }
