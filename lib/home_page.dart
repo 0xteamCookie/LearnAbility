@@ -63,7 +63,6 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: GlobalNavBar(
         key: _scaffoldKey,
-
         body: Stack(
           children: [
             Container(
@@ -76,7 +75,6 @@ class _HomePageState extends State<HomePage> {
                 // ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: SingleChildScrollView(
@@ -109,13 +107,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-
-                        // Right side: Icon
-                        // Icon(
-                        //   LucideIcons.user, // Change this to any icon
-                        //   size: 28,
-                        //   color: Colors.black,
-                        // ),
                         PopupMenuButton<String>(
                           onSelected: (value) async {
                             if (value == 'logout') {
@@ -131,23 +122,22 @@ class _HomePageState extends State<HomePage> {
                               );
                             }
                           },
-                          itemBuilder:
-                              (context) => [
-                                PopupMenuItem(
-                                  value: 'logout',
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        LucideIcons.logOut,
-                                        size: 20,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text("Logout"),
-                                    ],
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 'logout',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    LucideIcons.logOut,
+                                    size: 20,
+                                    color: Colors.black,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 4),
+                                  Text("Logout"),
+                                ],
+                              ),
+                            ),
+                          ],
                           child: Icon(
                             LucideIcons.user,
                             size: 28,
@@ -310,16 +300,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
 
-                    // SHOW LESSONS IN PROGRESS
-                    // Text(
-                    //   "Continue Learning",
-                    //   style: TextStyle(
-                    //     fontSize: 10.0 * settings.fontSize,
-                    //     fontWeight: FontWeight.bold,
-                    //     color: Colors.black,
-                    //     fontFamily: fontFamily(),
-                    //   ),
-                    // ),
                     SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -330,15 +310,6 @@ class _HomePageState extends State<HomePage> {
                           fontweight: FontWeight.bold,
                           fontsize: 18,
                         ),
-                        // Text(
-                        //   "Pick up where you left off",
-                        //   style: TextStyle(
-                        //     fontSize: 20.0 * settings.fontSize,
-                        //     fontWeight: FontWeight.w600,
-                        //     color: Colors.grey[700],
-                        //     fontFamily: fontFamily(),
-                        //   ),
-                        // ),
                         TextButton(
                           onPressed: () {
                             // Navigate to view all lessons
@@ -359,8 +330,6 @@ class _HomePageState extends State<HomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      // color: Colors.indigo[100], // Light purple background
-                      // color: Color(0xFFD1C4E9), // Light purple
                       color: Color(0xFFFFF7ED),
                       elevation: 2,
                       child: Padding(
@@ -368,18 +337,14 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Row with Icon and Badge
                             Row(
                               children: [
-                                // Calendar Icon
-                                // Badge
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 10,
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    // color: Colors.white,
                                     color: Color(0xFFFFEDD5),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -405,7 +370,6 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: 10),
 
-                            // Title & Time
                             Text(
                               "Science Syllabus",
                               style: TextStyle(
@@ -421,7 +385,6 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: 10),
 
-                            // Profile Row
                             Row(
                               children: [
                                 Text(
@@ -439,7 +402,6 @@ class _HomePageState extends State<HomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      // color: Color(0xFFD1C4E9), // Light purple
                       color: Color(0xFFFFF7ED),
                       elevation: 2,
                       child: Padding(
@@ -447,18 +409,14 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Row with Icon and Badge
                             Row(
                               children: [
-                                // Calendar Icon
-                                // Badge
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 10,
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    // color: Colors.white,
                                     color: Color(0xFFFFEDD5),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -484,7 +442,6 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: 10),
 
-                            // Title & Time
                             Text(
                               "English poem",
                               style: TextStyle(
@@ -500,7 +457,6 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: 10),
 
-                            // Profile Row
                             Row(
                               children: [
                                 Text(
@@ -513,25 +469,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    // _buildLessonCard(
-                    //   subject: 'Science',
-                    //   category: 'Biology',
-                    //   title: 'Science Syllabus',
-                    // ),
-                    // SizedBox(height: 16.0),
-
-                    // _buildLessonCard(
-                    //   subject: 'English',
-                    //   category: 'Writing',
-                    //   title: 'Some Poem',
-                    // ),
                     SizedBox(height: 16.0),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -558,13 +502,10 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          // color: Color(0xFFF5F5F5),
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
-              // color: Colors.grey.withValues(alpha: 0.5),
               color: Color(0XFFE5E7Eb),
-              // spreadRadius: 1,
               blurRadius: 4,
             ),
           ],
@@ -577,19 +518,9 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Icon(
                   icon,
-                  // color: Colors.indigo,
-                  // color: Colors.orange[800],
                   color: color,
-                  // color: Colors.deepPurple,
                   size: iconSize * settings.fontSize,
                 ),
-                // Icon(
-                //   icon,
-                //   // color: Colors.indigo,
-                //   // color: Colors.orange[800],
-                //   color: Colors.deepPurple,
-                //   size: iconSize * settings.fontSize,
-                // ),
                 SizedBox(width: boxWidth),
                 Flexible(
                   child: Text(
@@ -613,8 +544,6 @@ class _HomePageState extends State<HomePage> {
                   value,
                   style: TextStyle(
                     color: color,
-                    // color: Colors.indigo,
-                    // color: Colors.orange,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0 * settings.fontSize,
                     fontFamily: fontFamily(),

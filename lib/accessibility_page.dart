@@ -61,17 +61,17 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               Row(
                 children: [
                   IconButton(
-                          icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                    icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                   Text(
                     "Accessibility Settings",
                     style: TextStyle(
                       fontSize: 24 * fontSize,
                       fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                 ],
@@ -84,16 +84,15 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 style: TextStyle(
                   fontSize: 20 * fontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
+                  fontFamily: fontFamily(),
                 ),
               ),
-            ),
               SizedBox(height: 10),
               Text(
                 "Font Size",
                 style: TextStyle(
                   fontSize: 16 * fontSize,
-                  fontFamily: fontFamily(), // Added fontFamily
+                  fontFamily: fontFamily(),
                 ),
               ),
               Slider(
@@ -115,7 +114,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 style: TextStyle(
                   fontSize: 20 * fontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
+                  fontFamily: fontFamily(),
                 ),
               ),
               SizedBox(height: 10),
@@ -147,7 +146,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 "Speech Rate",
                 style: TextStyle(
                   fontSize: 16 * fontSize,
-                  fontFamily: fontFamily(), // Added fontFamily
+                  fontFamily: fontFamily(),
                 ),
               ),
               Slider(
@@ -167,14 +166,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     "Slow",
                     style: TextStyle(
                       fontSize: 14 * fontSize,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                   Text(
                     "Fast",
                     style: TextStyle(
                       fontSize: 14 * fontSize,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                 ],
@@ -188,7 +187,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     "Word Prediction",
                     style: TextStyle(
                       fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                   Spacer(),
@@ -209,7 +208,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     "Dyslexia friendly font",
                     style: TextStyle(
                       fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                   Spacer(),
@@ -230,7 +229,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 style: TextStyle(
                   fontSize: 20 * fontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
+                  fontFamily: fontFamily(),
                 ),
               ),
               SizedBox(height: 10),
@@ -242,7 +241,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     "Visual Timers",
                     style: TextStyle(
                       fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                   Spacer(),
@@ -263,7 +262,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     "Break Reminders",
                     style: TextStyle(
                       fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(), // Added fontFamily
+                      fontFamily: fontFamily(),
                     ),
                   ),
                   Spacer(),
@@ -279,6 +278,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             ],
           ),
         ),
-      );
+      ),
+    );
   }
 }
