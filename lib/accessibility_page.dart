@@ -87,6 +87,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   fontFamily: fontFamily(), // Added fontFamily
                 ),
               ),
+            ),
               SizedBox(height: 10),
               Text(
                 "Font Size",
@@ -278,7 +279,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
