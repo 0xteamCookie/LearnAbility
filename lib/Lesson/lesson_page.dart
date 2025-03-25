@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../accessibility_model.dart';
 
 final Logger logger = Logger();
@@ -116,239 +117,241 @@ class _LessonPageState extends State<LessonPage> {
     final correctOption = (quiz["options"] as List)
         .firstWhere((option) => option["isCorrect"] == true)["text"];
 
-    return Scaffold(
-      backgroundColor:Color(0xFFEDE7F6),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               Row(
-                 children: [
-                   IconButton(
-                        icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                        onPressed: () {
-                          Navigator.pop(context); // Navigate back
-                        },
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor:Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Row(
+                   children: [
+                     IconButton(
+                          icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                          onPressed: () {
+                            Navigator.pop(context); // Navigate back
+                          },
+                        ),
+                Text(
+                  _lessonData["title"],
+                  style: TextStyle(
+                    fontSize: 28 * settings.fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: fontFamily(),
+                  ),
+                ),
+                   ],
+                 ),
+                const SizedBox(height: 8),
+                Text(
+                  _lessonData["subtitle"],
+                  style: TextStyle(
+                    fontSize: 18 * settings.fontSize,
+                    color: Colors.grey,
+                    fontFamily: fontFamily(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                LinearProgressIndicator(
+                  value: (_currentPage + 1) / learningContent.length,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                ),
+                const SizedBox(height: 16),
+                // Learning Content Card
+                Card(
+                  color: Colors.white,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: SizedBox(
+                    height: 600, // Fixed height for the card
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Page Title
+                          Text(
+                            learningContent[_currentPage]["title"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24 * settings.fontSize,
+                              color: Colors.deepPurple,
+                              fontFamily: fontFamily(),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          // Scrollable Page Content
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    learningContent[_currentPage]["content"] ?? "", // Fallback for null content
+                                    style: TextStyle(
+                                      fontSize: 16 * settings.fontSize,
+                                      height: 1.5,
+                                      fontFamily: fontFamily(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  // Page Image (if available)
+                                  if (learningContent[_currentPage]["image"]?.isNotEmpty ?? false)
+                                    Image.network(
+                                      learningContent[_currentPage]["image"],
+                                      fit: BoxFit.cover,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          // Navigation Buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: _goToPreviousPage,
+                                icon: const Icon(Icons.arrow_back),
+                                color: _currentPage > 0 ? Colors.deepPurple : Colors.grey,
+                              ),
+                              Text(
+                                'Page ${_currentPage + 1} of ${learningContent.length}',
+                                style: TextStyle(
+                                  fontSize: 16 * settings.fontSize,
+                                  color: Colors.grey,
+                                  fontFamily: fontFamily(),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: _goToNextPage,
+                                icon: const Icon(Icons.arrow_forward),
+                                color: _currentPage < learningContent.length - 1 ? Colors.deepPurple : Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-              Text(
-                _lessonData["title"],
-                style: TextStyle(
-                  fontSize: 28 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: fontFamily(),
+                    ),
+                  ),
                 ),
-              ),
-                 ],
-               ),
-              const SizedBox(height: 8),
-              Text(
-                _lessonData["subtitle"],
-                style: TextStyle(
-                  fontSize: 18 * settings.fontSize,
-                  color: Colors.grey,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              LinearProgressIndicator(
-                value: (_currentPage + 1) / learningContent.length,
-                backgroundColor: Colors.grey[300],
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
-              ),
-              const SizedBox(height: 16),
-              // Learning Content Card
-              Card(
-                color: Colors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: SizedBox(
-                  height: 600, // Fixed height for the card
+                const SizedBox(height: 20),
+                // Quick Check Section
+                Card(
+                  color: Colors.white,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Page Title
                         Text(
-                          learningContent[_currentPage]["title"],
+                          'Quick Check',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
                             fontSize: 24 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
                             color: Colors.deepPurple,
                             fontFamily: fontFamily(),
                           ),
                         ),
                         const SizedBox(height: 8),
-                        // Scrollable Page Content
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  learningContent[_currentPage]["content"] ?? "", // Fallback for null content
-                                  style: TextStyle(
-                                    fontSize: 16 * settings.fontSize,
-                                    height: 1.5,
-                                    fontFamily: fontFamily(),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                // Page Image (if available)
-                                if (learningContent[_currentPage]["image"]?.isNotEmpty ?? false)
-                                  Image.network(
-                                    learningContent[_currentPage]["image"],
-                                    fit: BoxFit.cover,
-                                  ),
-                              ],
-                            ),
+                        Text(
+                          quiz["question"],
+                          style: TextStyle(
+                            fontSize: 18 * settings.fontSize,
+                            height: 1.5,
+                            fontFamily: fontFamily(),
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // Navigation Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              onPressed: _goToPreviousPage,
-                              icon: const Icon(Icons.arrow_back),
-                              color: _currentPage > 0 ? Colors.deepPurple : Colors.grey,
+                        Column(
+                          children: (quiz["options"] as List).map((option) {
+                            return _buildMCQOption(
+                              option["text"],
+                              option["isCorrect"],
+                              settings.fontSize,
+                              fontFamily(),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 16),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: _isAnswerSubmitted ? null : _submitAnswer,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                             ),
-                            Text(
-                              'Page ${_currentPage + 1} of ${learningContent.length}',
+                            child: Text(
+                              'Submit',
                               style: TextStyle(
                                 fontSize: 16 * settings.fontSize,
-                                color: Colors.grey,
+                                color: Colors.white,
                                 fontFamily: fontFamily(),
                               ),
                             ),
-                            IconButton(
-                              onPressed: _goToNextPage,
-                              icon: const Icon(Icons.arrow_forward),
-                              color: _currentPage < learningContent.length - 1 ? Colors.deepPurple : Colors.grey,
-                            ),
-                          ],
+                          ),
                         ),
+                        if (_isAnswerSubmitted)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Text(
+                              _selectedAnswer == correctOption
+                                  ? 'Correct! Photosynthesis takes place in chloroplasts.'
+                                  : 'Incorrect!',
+                              style: TextStyle(
+                                fontSize: 16 * settings.fontSize,
+                                color: _selectedAnswer == correctOption ? Colors.green : Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily(),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // Quick Check Section
-              Card(
-                color: Colors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Quick Check',
-                        style: TextStyle(
-                          fontSize: 24 * settings.fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
-                          fontFamily: fontFamily(),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        quiz["question"],
-                        style: TextStyle(
-                          fontSize: 18 * settings.fontSize,
-                          height: 1.5,
-                          fontFamily: fontFamily(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Column(
-                        children: (quiz["options"] as List).map((option) {
-                          return _buildMCQOption(
-                            option["text"],
-                            option["isCorrect"],
-                            settings.fontSize,
-                            fontFamily(),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: _isAnswerSubmitted ? null : _submitAnswer,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurple,
-                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                          ),
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontSize: 16 * settings.fontSize,
-                              color: Colors.white,
-                              fontFamily: fontFamily(),
-                            ),
+                const SizedBox(height: 20),
+                // Web Resources Section
+                Card(
+                  color: Colors.white,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Web Resources',
+                          style: TextStyle(
+                            fontSize: 24 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple,
+                            fontFamily: fontFamily(),
                           ),
                         ),
-                      ),
-                      if (_isAnswerSubmitted)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text(
-                            _selectedAnswer == correctOption
-                                ? 'Correct! Photosynthesis takes place in chloroplasts.'
-                                : 'Incorrect!',
-                            style: TextStyle(
-                              fontSize: 16 * settings.fontSize,
-                              color: _selectedAnswer == correctOption ? Colors.green : Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: fontFamily(),
-                            ),
-                          ),
-                        ),
-                    ],
+                        const SizedBox(height: 8),
+                        ...webResources.map((url) {
+                          return _buildWebResourceLink(url, settings.fontSize, fontFamily());
+                        }),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // Web Resources Section
-              Card(
-                color: Colors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Web Resources',
-                        style: TextStyle(
-                          fontSize: 24 * settings.fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
-                          fontFamily: fontFamily(),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ...webResources.map((url) {
-                        return _buildWebResourceLink(url, settings.fontSize, fontFamily());
-                      }),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -380,8 +383,19 @@ class _LessonPageState extends State<LessonPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
-        onTap: () {
-          logger.d("Opening: $url");
+        onTap: () async {
+          try {
+            if (await canLaunchUrl(Uri.parse(url))) {
+              await launchUrl(
+                Uri.parse(url),
+                mode: LaunchMode.externalApplication,
+              );
+            } else {
+              logger.d("Could not launch $url");
+            }
+          } catch (e) {
+            logger.e("Error launching URL: $e");
+          }
         },
         child: Text(
           url,
@@ -395,4 +409,4 @@ class _LessonPageState extends State<LessonPage> {
       ),
     );
   }
-}
+  }

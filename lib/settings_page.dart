@@ -89,13 +89,23 @@ class _SettingPageState extends State<SettingsPage> {
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
-            Text(
-              "Settings",
-              style: TextStyle(
-                fontSize: 28 * settings.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                Text(
+                  "Settings",
+                  style: TextStyle(
+                    fontSize: 28 * settings.fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 16),
             Text(

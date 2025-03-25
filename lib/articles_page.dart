@@ -44,46 +44,32 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
-      
-          // APP NAME
-          title: Text(
-            "LearnAbility",
-            style: TextStyle(
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              fontSize: 24 * settings.fontSize,
-              fontFamily: fontFamily(), // Added fontFamily
-            ),
-          ),
-        ),
-      
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "All Articles",
-                  style: TextStyle(
-                    fontSize: 28 * settings.fontSize,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: fontFamily(), // Added fontFamily
-                  ),
-                ),
+                Row(
+                  children: [
+                    IconButton(
+                    icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context); // Navigate back
+                      },
+                    ),
+                    Text(
+                      "All Articles",
+                      style: TextStyle(
+                        fontSize: 28 * settings.fontSize,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: fontFamily(), // Added fontFamily
+                      ),
+                    ),
+                  ],
+                ), 
                 const SizedBox(height: 4),
-      
-                Text(
-                  "Explore the latest content",
-                  style: TextStyle(
-                    fontSize: 16 * settings.fontSize,
-                    color: Colors.grey,
-                    fontFamily: fontFamily(), // Added fontFamily
-                  ),
-                ),
-                const SizedBox(height: 20),
-      
                 Wrap(
                   spacing: 8.0,
                   children: [
@@ -131,7 +117,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
           fontFamily: fontFamily, // Added fontFamily
         ),
       ),
-      backgroundColor: Colors.blue[50],
+      backgroundColor: Color(0xFFEDE7F6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -176,57 +162,61 @@ class _ArticlesPageState extends State<ArticlesPage> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  heading,
-                  style: TextStyle(
-                    fontSize: 18 * fontSize,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: fontFamily, // Added fontFamily
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  creator,
-                  style: TextStyle(
-                    fontSize: 14 * fontSize,
-                    color: Colors.grey,
-                    fontFamily: fontFamily, // Added fontFamily
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.timer, size: 16 * fontSize),
-                    const SizedBox(width: 4),
-                    Text(
-                      duration,
-                      style: TextStyle(
-                        fontSize: 14 * fontSize,
-                        color: Colors.grey,
-                        fontFamily: fontFamily, // Added fontFamily
-                      ),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    heading,
+                    style: TextStyle(
+                      fontSize: 18 * fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily, // Added fontFamily
                     ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        // Add "Read Article" functionality
-                      },
-                      child: Text(
-                        "Read Article",
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    creator,
+                    style: TextStyle(
+                      fontSize: 14 * fontSize,
+                      color: Colors.grey,
+                      fontFamily: fontFamily, // Added fontFamily
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.timer, size: 16 * fontSize),
+                      const SizedBox(width: 4),
+                      Text(
+                        duration,
                         style: TextStyle(
                           fontSize: 14 * fontSize,
+                          color: Colors.grey,
                           fontFamily: fontFamily, // Added fontFamily
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          // Add "Read Article" functionality
+                        },
+                        child: Text(
+                          "Read Article",
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontSize: 14 * fontSize,
+                            fontFamily: fontFamily, // Added fontFamily
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

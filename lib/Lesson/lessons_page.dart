@@ -100,11 +100,11 @@ class _LessonsPageState extends State<LessonsPage> {
                 Row(
                  children: [
                    IconButton(
-                              icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                              onPressed: () {
-                                Navigator.pop(context); // Navigate back
-                              },
-                            ),
+                      icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                      onPressed: () {
+                        Navigator.pop(context); // Navigate back
+                      },
+                    ),
                   Text(
                     "Lessons",
                     style: TextStyle(
