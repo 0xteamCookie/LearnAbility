@@ -12,6 +12,7 @@ import '../../my_materials_page.dart';
 import '../../settings_page.dart';
 import '../../stats_page.dart';
 import '../../videos_page.dart';
+import '../../subjects.dart';
 
 class GlobalNavBar extends StatefulWidget {
   final Widget body; 
@@ -142,6 +143,22 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LessonsPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.quiz_outlined),
+            title: Text('Subjects'),
+            tileColor:
+                selectedIndex == 9 ? Color(0xFFEDE7F6) : null,
+            onTap: () {
+              setState(() {
+                selectedIndex = 9;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Subjects()),
               );
             },
           ),
