@@ -75,6 +75,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 fontWeight: FontWeight.bold,
                 fontFamily: fontFamily(), // Added fontFamily
               ),
+            ),
               SizedBox(height: 10),
               Text(
                 "Font Size",
@@ -270,7 +271,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

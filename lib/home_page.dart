@@ -532,53 +532,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
-       
-            // Replace the floating bottom navigation bar with a standard bottom navigation bar
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndexBottomNavBar,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
-        onTap: (index) {
-          setState(() {
-            _selectedIndexBottomNavBar = index;
-          });
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingsPage()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StatsPage()),
-            );
-          } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AccessibilityPage()),
-            );
-          } else if (index == 4) {
-            _scaffoldKey.currentState?.openEndDrawer();
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility),
-            label: 'Access',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
-        ],
-      ),
     );
   }
 
