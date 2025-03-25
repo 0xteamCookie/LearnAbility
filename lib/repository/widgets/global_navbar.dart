@@ -32,6 +32,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
     final settings = Provider.of<AccessibilitySettings>(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       key: _scaffoldKey,
 
       // NAVIGATION MENU
