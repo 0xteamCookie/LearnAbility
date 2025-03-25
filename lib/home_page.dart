@@ -858,7 +858,6 @@ class _HomePageState extends State<HomePage> {
                   });
                 },
               ),
-              //MENU ICON
               IconButton(
                 icon: Icon(
                   Icons.menu,

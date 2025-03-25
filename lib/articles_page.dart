@@ -42,78 +42,80 @@ class _ArticlesPageState extends State<ArticlesPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-
-        // APP NAME
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: const Color.fromRGBO(255, 255, 255, 1),
-            fontSize: 24 * settings.fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+      
+          // APP NAME
+          title: Text(
+            "LearnAbility",
+            style: TextStyle(
+              color: const Color.fromRGBO(255, 255, 255, 1),
+              fontSize: 24 * settings.fontSize,
+              fontFamily: fontFamily(), // Added fontFamily
+            ),
           ),
         ),
-      ),
-
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "All Articles",
-                style: TextStyle(
-                  fontSize: 28 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
+      
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "All Articles",
+                  style: TextStyle(
+                    fontSize: 28 * settings.fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-
-              Text(
-                "Explore the latest content",
-                style: TextStyle(
-                  fontSize: 16 * settings.fontSize,
-                  color: Colors.grey,
-                  fontFamily: fontFamily(), // Added fontFamily
+                const SizedBox(height: 4),
+      
+                Text(
+                  "Explore the latest content",
+                  style: TextStyle(
+                    fontSize: 16 * settings.fontSize,
+                    color: Colors.grey,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-
-              Wrap(
-                spacing: 8.0,
-                children: [
-                  _buildCategoryChip("Science", settings.fontSize, fontFamily()),
-                  _buildCategoryChip("Mathematics", settings.fontSize, fontFamily()),
-                  _buildCategoryChip("History", settings.fontSize, fontFamily()),
-                  _buildCategoryChip("Technology", settings.fontSize, fontFamily()),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              Text(
-                "Featured Articles",
-                style: TextStyle(
-                  fontSize: 20 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
+                const SizedBox(height: 20),
+      
+                Wrap(
+                  spacing: 8.0,
+                  children: [
+                    _buildCategoryChip("Science", settings.fontSize, fontFamily()),
+                    _buildCategoryChip("Mathematics", settings.fontSize, fontFamily()),
+                    _buildCategoryChip("History", settings.fontSize, fontFamily()),
+                    _buildCategoryChip("Technology", settings.fontSize, fontFamily()),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 8),
-
-              for (var article in feedData["articles"])
-                _buildArticleCard(
-                  image: article["image"],
-                  heading: article["heading"],
-                  creator: article["creator"],
-                  duration: article["duration"],
-                  fontSize: settings.fontSize,
-                  fontFamily: fontFamily(), // Pass fontFamily
+                const SizedBox(height: 24),
+      
+                Text(
+                  "Featured Articles",
+                  style: TextStyle(
+                    fontSize: 20 * settings.fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
                 ),
-            ],
+                const SizedBox(height: 8),
+      
+                for (var article in feedData["articles"])
+                  _buildArticleCard(
+                    image: article["image"],
+                    heading: article["heading"],
+                    creator: article["creator"],
+                    duration: article["duration"],
+                    fontSize: settings.fontSize,
+                    fontFamily: fontFamily(), // Pass fontFamily
+                  ),
+              ],
+            ),
           ),
         ),
       ),

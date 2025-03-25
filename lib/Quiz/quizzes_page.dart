@@ -53,62 +53,64 @@ class _QuizzesPageState extends State<QuizzesPage> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          Row(
-            children: [
-              IconButton(
-                          icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-              Text(
-                  'Quizzes',
-                  style: TextStyle(
-                    fontSize: 30 * settings.fontSize, // Updated
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-          ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          
-          
-          const SizedBox(height: 10),
-
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return SafeArea(
+      child: Scaffold(
+        body: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            Row(
               children: [
-                _buildQuizCategory('Available', settings.fontSize),
-                _buildQuizCategory('Completed', settings.fontSize),
-                _buildQuizCategory('Analytics', settings.fontSize),
+                IconButton(
+                            icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                Text(
+                    'Quizzes',
+                    style: TextStyle(
+                      fontSize: 30 * settings.fontSize, // Updated
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+            ),
               ],
             ),
-          ),
-          
-
-          // List of Quiz Cards
-          ListView.builder(
-            shrinkWrap: true, // Allow ListView to shrink-wrap its content
-            physics: const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
-            itemCount: _quizCards.length,
-            itemBuilder: (context, index) {
-              final quiz = _quizCards[index];
-              return _buildQuizItem(
-                subject: quiz["subject"],
-                topic: quiz["topic"],
-                questions: quiz["questions"],
-                duration: quiz["duration"],
-                fontSize: settings.fontSize, // Pass fontSize
-              );
-            },
-          ),
-        ],
+            const SizedBox(height: 10),
+            
+            
+            const SizedBox(height: 10),
+      
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildQuizCategory('Available', settings.fontSize),
+                  _buildQuizCategory('Completed', settings.fontSize),
+                  _buildQuizCategory('Analytics', settings.fontSize),
+                ],
+              ),
+            ),
+            
+      
+            // List of Quiz Cards
+            ListView.builder(
+              shrinkWrap: true, // Allow ListView to shrink-wrap its content
+              physics: const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
+              itemCount: _quizCards.length,
+              itemBuilder: (context, index) {
+                final quiz = _quizCards[index];
+                return _buildQuizItem(
+                  subject: quiz["subject"],
+                  topic: quiz["topic"],
+                  questions: quiz["questions"],
+                  duration: quiz["duration"],
+                  fontSize: settings.fontSize, // Pass fontSize
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

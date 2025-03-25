@@ -19,32 +19,24 @@ class _StatsPageState extends State<StatsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22 * settings.fontSize,
-            fontFamily: fontFamily(),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeaderSection(settings, fontFamily()),
-              const SizedBox(height: 24),
-              _buildStreakCard(settings, fontFamily()),
-              const SizedBox(height: 24),
-              _buildSubjectsProgressCard(settings, fontFamily()),
-              const SizedBox(height: 24),
-              _buildWeeklyActivityCard(settings, fontFamily()),
-            ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0xFFEDE7F6),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeaderSection(settings, fontFamily()),
+                const SizedBox(height: 24),
+                _buildStreakCard(settings, fontFamily()),
+                const SizedBox(height: 24),
+                _buildSubjectsProgressCard(settings, fontFamily()),
+                const SizedBox(height: 24),
+                _buildWeeklyActivityCard(settings, fontFamily()),
+              ],
+            ),
           ),
         ),
       ),
@@ -52,37 +44,31 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   Widget _buildHeaderSection(AccessibilitySettings settings, String fontFamily) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                "Your Learning Progress",
-                style: TextStyle(
-                  fontSize: 24 * settings.fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily,
-                ),
-              ),
+        IconButton(
+                                icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                                onPressed: () {
+                                  Navigator.pop(context); // Navigate back
+                                },
+                              ),       
+        Expanded(
+          child: Text(
+            "Your Learning Progress",
+            style: TextStyle(
+              fontSize: 24 * settings.fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
             ),
-            IconButton(
-              icon: const Icon(Icons.calendar_today),
-              onPressed: () {
-                // Show date range picker
-              },
-              tooltip: "Select time period",
-            ),
-          ],
-        ),
-        Text(
-          "Track your achievements and see how far you've come",
-          style: TextStyle(
-            fontSize: 16 * settings.fontSize,
-            color: Colors.grey,
-            fontFamily: fontFamily,
           ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.calendar_today),
+          color: Colors.deepPurple,
+          onPressed: () {
+            // Show date range picker
+          },
+          tooltip: "Select time period",
         ),
       ],
     );
@@ -92,6 +78,7 @@ class _StatsPageState extends State<StatsPage> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -145,6 +132,7 @@ class _StatsPageState extends State<StatsPage> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -215,6 +203,7 @@ class _StatsPageState extends State<StatsPage> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
