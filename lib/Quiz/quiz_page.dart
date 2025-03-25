@@ -347,6 +347,7 @@ class _QuizPageState extends State<QuizPage> {
     final isLastQuestion = _currentPage == (_quizData["quiz"] as List).length - 1;
 
     return Scaffold(
+      backgroundColor: Color(0xFFEDE7F6),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -376,7 +377,7 @@ class _QuizPageState extends State<QuizPage> {
             LinearProgressIndicator(
               value: (_currentPage + 1) / (_quizData["quiz"] as List).length,
               backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2F2F2F)),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
               minHeight: 6,
             ),
             const SizedBox(height: 40),
@@ -394,6 +395,7 @@ class _QuizPageState extends State<QuizPage> {
                         padding: const EdgeInsets.all(20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +440,7 @@ class _QuizPageState extends State<QuizPage> {
                                   onPressed: _currentPage > 0 ? _goToPreviousPage : null,
                                   style: ElevatedButton.styleFrom(
                                     elevation: 5,
-                                    backgroundColor: const Color.fromARGB(204, 33, 75, 243),
+                                    backgroundColor: Colors.deepPurple,
                                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                                   ),
                                   child: Text(  
@@ -461,7 +463,7 @@ class _QuizPageState extends State<QuizPage> {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(255, 33, 75, 243),
+                                    backgroundColor: Colors.deepPurple,
                                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                                     elevation: 5,
                                   ),
@@ -501,10 +503,11 @@ class _QuizPageState extends State<QuizPage> {
         padding: const EdgeInsets.all(11),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: isSelected ? const Color.fromARGB(255, 0, 175, 91) : Colors.white,
+          color: isSelected ? const Color.fromARGB(0, 0, 175, 90) : Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
-            color: isSelected ? const Color.fromARGB(255, 2, 78, 35) : Colors.grey,
+            width: 2,
+            color: isSelected ? Colors.deepPurple : Colors.grey,
           ),
         ),
         child: Row(
@@ -514,7 +517,7 @@ class _QuizPageState extends State<QuizPage> {
               style: TextStyle(
                 fontSize: 18 * fontSize,
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Colors.black,
+                color: Colors.black,
               ),
             ),
             const SizedBox(width: 8),
@@ -524,7 +527,7 @@ class _QuizPageState extends State<QuizPage> {
                 style: TextStyle(
                   fontSize: 18 * fontSize,
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : const Color.fromARGB(255, 0, 0, 0),
+                  color: Colors.black,
                 ),
               ),
             ),

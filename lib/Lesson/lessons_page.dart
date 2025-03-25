@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../accessibility_model.dart';
+import 'lesson_page.dart';
 
 void main() {
   runApp(
@@ -73,12 +74,6 @@ class _LessonsPageState extends State<LessonsPage> {
         "subtitle": "Explore the processes of cell division",
         "duration": "25 mins"
       },
-      {
-        "imageUrl": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg",
-        "title": "Cat-O-logy",
-        "subtitle": "meow meow meow",
-        "duration": "400 mins"
-      }
     ];
 
     setState(() {
@@ -96,6 +91,8 @@ class _LessonsPageState extends State<LessonsPage> {
     }
 
     return Scaffold(
+      backgroundColor: Color(0xFFEDE7F6),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -155,17 +152,34 @@ class _LessonsPageState extends State<LessonsPage> {
     required String fontFamily, // Added fontFamily parameter
   }) {
     return Card(
+      shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40)
+            ),
+      color: Colors.white,
       elevation: 4,
-      margin: const EdgeInsets.only(bottom: 16), // Add margin between cards
+      margin: const EdgeInsets.only(bottom: 16), 
+      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            imageUrl,
-            width: double.infinity,
-            height: 150,
-            fit: BoxFit.cover,
-          ),
+          ClipRRect(
+  borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(20), 
+    topRight: Radius.circular(20), 
+  ),
+  child: Container(
+    width: double.infinity,
+    height: 150, // Ensuring consistent height with the original image
+    alignment: Alignment.center, // Centers the icon inside the container
+    color: Colors.grey[200], // Optional background color for better visibility
+    child: Icon(
+      Icons.image,
+      size: 150, // Set icon size to 150
+      color: Colors.grey,
+    ),
+  ),
+),
+
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -191,26 +205,30 @@ class _LessonsPageState extends State<LessonsPage> {
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 16 * fontSize, color: const Color.fromARGB(255, 89, 150, 255)),
+                    Icon(Icons.access_time, size: 16 * fontSize, color: Colors.deepPurpleAccent,
+                    ),
                     SizedBox(width: 4),
                     Text(
                       duration,
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 57, 108, 250),
+                        color: Colors.deepPurpleAccent,
                         fontSize: 16 * fontSize,
                         fontFamily: fontFamily, // Added fontFamily
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Add navigation or action here
+                      Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LessonPage()),
+              );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.deepPurple,
                       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),
                     child: Text(

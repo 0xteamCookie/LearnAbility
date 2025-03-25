@@ -12,7 +12,7 @@ class AccessibilityPage extends StatefulWidget {
 class _AccessibilityPageState extends State<AccessibilityPage> {
   final List<Color> _colorThemes = [
     Colors.red,
-    Colors.blue,
+    Colors.deepPurple,
     Colors.green,
     Colors.yellow,
     Colors.purple,
@@ -51,39 +51,30 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22 * fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
-          ),
-        ),
-      ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header for Accessibility Settings
-            Text(
-              "Accessibility Settings",
-              style: TextStyle(
-                fontSize: 24 * fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            Text(
-              "Customize your learning experience",
-              style: TextStyle(
-                fontSize: 16 * fontSize,
-                color: Colors.grey,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
+             Row(
+               children: [
+                 IconButton(
+                            icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                            onPressed: () {
+                              Navigator.pop(context); // Navigate back
+                            },
+                          ),
+                Text(
+                  "Accessibility Settings",
+                  style: TextStyle(
+                    fontSize: 24 * fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
+               ],
+             ),
             SizedBox(height: 20),
 
             // Text & Display Section
@@ -107,7 +98,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               value: fontSize,
               min: 0.5,
               max: 1.5,
-              activeColor: Colors.blue,
+              activeColor: Colors.deepPurple,
               divisions: 4,
               label: displaySliderValue(fontSize),
               onChanged: (double value) {
@@ -162,7 +153,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               min: 0,
               max: 1,
               label: displaySliderValue(speechRate),
-              activeColor: Colors.blue,
+              activeColor: Colors.deepPurple,
               onChanged: (double value) {
                 settings.setSpeechRate(value);
               },
@@ -200,8 +191,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
                 Spacer(),
                 Switch(
+                  inactiveTrackColor: Colors.grey[200],
                   value: wordPrediction,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
+                  activeColor: Colors.deepPurple,
                   onChanged: (bool value) {
                     settings.setWordPrediction(value);
                   },
@@ -221,8 +213,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
                 Spacer(),
                 Switch(
+                  inactiveTrackColor: Colors.grey[200],
                   value: openDyslexic,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
+                  activeColor: Colors.deepPurple,
                   onChanged: (bool value) {
                     settings.setDyslexic(value);
                   },
@@ -254,8 +247,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
                 Spacer(),
                 Switch(
+                  inactiveTrackColor: Colors.grey[200],
                   value: visualTimers,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
+                  activeColor: Colors.deepPurple,
                   onChanged: (bool value) {
                     settings.setVisualTimers(value);
                   },
@@ -275,8 +269,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
                 Spacer(),
                 Switch(
+                  inactiveTrackColor: Colors.grey[200],
                   value: breakReminders,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
+                  activeColor: Colors.deepPurple,
                   onChanged: (bool value) {
                     settings.setBreakReminders(value);
                   },
