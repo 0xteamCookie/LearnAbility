@@ -4,7 +4,6 @@ import 'package:my_first_app/home_page.dart';
 import 'package:my_first_app/models/user.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/utils/constants.dart';

@@ -3,7 +3,6 @@ import "package:logger/logger.dart";
 import "package:provider/provider.dart";
 import "../accessibility_model.dart";
 import "dart:async";
-import 'quizzes_page.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key});

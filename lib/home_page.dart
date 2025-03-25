@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: GlobalNavBar(
         key: _scaffoldKey,
-      
+
         body: Stack(
           children: [
             Container(
@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                 // ),
               ),
             ),
-      
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: SingleChildScrollView(
@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-      
+
                         // Right side: Icon
                         // Icon(
                         //   LucideIcons.user, // Change this to any icon
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-      
+
                     // WELCOME TEXT
                     SizedBox(height: 18),
                     Row(
@@ -232,9 +232,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-      
+
                             SizedBox(height: 10),
-      
+
                             // Title & Time
                             Text(
                               "Web Development Fundamentals",
@@ -249,9 +249,9 @@ class _HomePageState extends State<HomePage> {
                               "Today, 16:00",
                               style: TextStyle(color: Colors.black),
                             ),
-      
+
                             SizedBox(height: 10),
-      
+
                             // Profile Row
                             Row(
                               children: [
@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-      
+
                     // STATISTICS GRID
                     GridView.count(
                       shrinkWrap: true,
@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-      
+
                     // SHOW LESSONS IN PROGRESS
                     // Text(
                     //   "Continue Learning",
@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-      
+
                     Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -402,9 +402,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-      
+
                             SizedBox(height: 10),
-      
+
                             // Title & Time
                             Text(
                               "Science Syllabus",
@@ -418,9 +418,9 @@ class _HomePageState extends State<HomePage> {
                               "Today, 16:00",
                               style: TextStyle(color: Colors.grey[600]),
                             ),
-      
+
                             SizedBox(height: 10),
-      
+
                             // Profile Row
                             Row(
                               children: [
@@ -481,9 +481,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-      
+
                             SizedBox(height: 10),
-      
+
                             // Title & Time
                             Text(
                               "English poem",
@@ -497,9 +497,9 @@ class _HomePageState extends State<HomePage> {
                               "Today, 16:00",
                               style: TextStyle(color: Colors.grey[600]),
                             ),
-      
+
                             SizedBox(height: 10),
-      
+
                             // Profile Row
                             Row(
                               children: [
@@ -519,7 +519,7 @@ class _HomePageState extends State<HomePage> {
                     //   title: 'Science Syllabus',
                     // ),
                     // SizedBox(height: 16.0),
-      
+
                     // _buildLessonCard(
                     //   subject: 'English',
                     //   category: 'Writing',

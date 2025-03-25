@@ -8,7 +8,6 @@ import '../../ai_assistant_page.dart';
 import '../../articles_page.dart';
 import '../../generate_content_page.dart';
 import '../../home_page.dart';
-import '../../my_materials_page.dart';
 import '../../settings_page.dart';
 import '../../stats_page.dart';
 import '../../videos_page.dart';
@@ -16,7 +15,7 @@ import '../../videos_page.dart';
 class GlobalNavBar extends StatefulWidget {
   final Widget body;
 
-  const GlobalNavBar({Key? key, required this.body}) : super(key: key);
+  const GlobalNavBar({super.key, required this.body});
 
   @override
   State<GlobalNavBar> createState() => _GlobalNavBarState();

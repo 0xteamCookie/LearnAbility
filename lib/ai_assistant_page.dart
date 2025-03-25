@@ -7,7 +7,7 @@ import 'utils/constants.dart';
 import 'domain/constants/appcolors.dart';
 
 class AIAssistantPage extends StatefulWidget {
-  const AIAssistantPage({Key? key}) : super(key: key);
+  const AIAssistantPage({super.key});
 
   @override
   State<AIAssistantPage> createState() => _AIAssistantPageState();
@@ -18,7 +18,7 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
   final ScrollController _scrollController = ScrollController();
   String _response = '';
   bool _isLoading = false;
-  List<Map<String, dynamic>> _chatHistory = [];
+  final List<Map<String, dynamic>> _chatHistory = [];
 
   @override
   void dispose() {
