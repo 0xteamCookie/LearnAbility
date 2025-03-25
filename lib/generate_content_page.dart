@@ -1231,7 +1231,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh, color: Colors.black),
+            icon: Icon(Icons.refresh, color: Colors.white),
             onPressed: fetchSubjects,
           ),
         ],
