@@ -89,7 +89,7 @@ class _LessonsPageState extends State<LessonsPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFFEDE7F6),
+        backgroundColor: Colors.grey[100],
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),

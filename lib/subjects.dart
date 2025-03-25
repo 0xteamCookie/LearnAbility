@@ -113,7 +113,7 @@ class _SubjectsState extends State<Subjects> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[100],
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

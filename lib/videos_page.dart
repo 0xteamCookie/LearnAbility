@@ -45,7 +45,7 @@ class _VideosPageState extends State<VideosPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[100],
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),

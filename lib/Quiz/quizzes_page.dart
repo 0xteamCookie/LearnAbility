@@ -55,6 +55,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
     final settings = Provider.of<AccessibilitySettings>(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey[100],
         body: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
@@ -69,16 +70,13 @@ class _QuizzesPageState extends State<QuizzesPage> {
                 Text(
                     'Quizzes',
                     style: TextStyle(
-                      fontSize: 30 * settings.fontSize, // Updated
+                      fontSize: 24 * settings.fontSize, // Updated
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
             ),
               ],
             ),
-            const SizedBox(height: 10),
-            
-            
             const SizedBox(height: 10),
       
             Container(
@@ -121,7 +119,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
         decoration: BoxDecoration(
-          color: Color(0xFFD1C4E9),
+          color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -159,7 +157,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
               child: Icon(
                 _getSubjectIcon(subject),
                 size: 100 * fontSize, // Updated
-                color: Colors.deepPurple.withAlpha(150),
+                color: Colors.deepPurple,
               ),
             ),
             const SizedBox(width: 15.0),
@@ -206,7 +204,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple.withAlpha(150),
+                      backgroundColor: Colors.deepPurple,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),
                     child: Text(
