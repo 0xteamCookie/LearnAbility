@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
 import "package:provider/provider.dart";
+import 'repository/widgets/global_navbar.dart';
 
 class AccessibilityPage extends StatefulWidget {
   const AccessibilityPage({super.key});
@@ -17,6 +18,16 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     Colors.yellow,
     Colors.purple,
   ];
+
+   @override
+  void initState() {
+    super.initState();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(3);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,42 +61,19 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
       return "x";
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               Row(
-                 children: [
-                   IconButton(
-                              icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                              onPressed: () {
-                                Navigator.pop(context); // Navigate back
-                              },
-                            ),
-                  Text(
-                    "Accessibility Settings",
-                    style: TextStyle(
-                      fontSize: 24 * fontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily(), // Added fontFamily
-                    ),
-                  ),
-                 ],
-               ),
-              SizedBox(height: 20),
-      
-              // Text & Display Section
-              Text(
-                "Text & Display",
-                style: TextStyle(
-                  fontSize: 20 * fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Added fontFamily
-                ),
+    return GlobalNavBar(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header for Accessibility Settings
+            Text(
+              "Accessibility Settings",
+              style: TextStyle(
+                fontSize: 24 * fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
               ),
               SizedBox(height: 10),
               Text(

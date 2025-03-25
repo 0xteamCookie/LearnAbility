@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'accessibility_model.dart';
+import './repository/widgets/global_navbar.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -10,6 +11,16 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(1);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
@@ -19,15 +30,16 @@ class _StatsPageState extends State<StatsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xFFEDE7F6),
-        body: SingleChildScrollView(
+    return GlobalNavBar(
+      body: Container(
+        color: Colors.white,
+        child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 25),
                 _buildHeaderSection(settings, fontFamily()),
                 const SizedBox(height: 24),
                 _buildStreakCard(settings, fontFamily()),
@@ -44,31 +56,37 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   Widget _buildHeaderSection(AccessibilitySettings settings, String fontFamily) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IconButton(
-                                icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                                onPressed: () {
-                                  Navigator.pop(context); // Navigate back
-                                },
-                              ),       
-        Expanded(
-          child: Text(
-            "Your Learning Progress",
-            style: TextStyle(
-              fontSize: 24 * settings.fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: fontFamily,
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                "Your Learning Progress",
+                style: TextStyle(
+                  fontSize: 24 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily,
+                ),
+              ),
             ),
-          ),
+            IconButton(
+              icon: const Icon(Icons.calendar_today),
+              onPressed: () {
+                // Show date range picker
+              },
+              tooltip: "Select time period",
+            ),
+          ],
         ),
-        IconButton(
-          icon: const Icon(Icons.calendar_today),
-          color: Colors.deepPurple,
-          onPressed: () {
-            // Show date range picker
-          },
-          tooltip: "Select time period",
+        Text(
+          "Track your achievements and see how far you've come",
+          style: TextStyle(
+            fontSize: 16 * settings.fontSize,
+            color: Colors.grey,
+            fontFamily: fontFamily,
+          ),
         ),
       ],
     );

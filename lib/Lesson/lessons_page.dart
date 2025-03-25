@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../accessibility_model.dart';
+import '../repository/widgets/global_navbar.dart';
 import 'lesson_page.dart';
 
 void main() {
