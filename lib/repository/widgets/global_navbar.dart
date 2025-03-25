@@ -24,8 +24,8 @@ class GlobalNavBar extends StatefulWidget {
 
 class _GlobalNavBarState extends State<GlobalNavBar> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _selectedIndexBottomNavBar = 2;
-  int _selectedIndex = -1;
+ 
+  int selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +50,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.quiz_outlined),
             title: Text('Quiz'),
             tileColor:
-                _selectedIndex == 3 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 3 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 3;
+                selectedIndex = 3;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -68,10 +68,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.generating_tokens_outlined),
             title: Text('Generate Lessons'),
             tileColor:
-                _selectedIndex == 4 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 4 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 4;
+                selectedIndex = 4;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -86,10 +86,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.assistant_outlined),
             title: Text('AI Assistant'),
             tileColor:
-                _selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 5;
+                selectedIndex = 5;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -104,10 +104,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.assistant_outlined),
             title: Text('AI Voice Assistant'),
             tileColor:
-                _selectedIndex == 10 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 10 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 10;
+                selectedIndex = 10;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -133,10 +133,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.book_outlined),
             title: Text('Lessons'),
             tileColor:
-                _selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 6;
+                selectedIndex = 6;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -151,10 +151,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.movie_outlined),
             title: Text('Videos'),
             tileColor:
-                _selectedIndex == 7 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 7 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 7;
+                selectedIndex = 7;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -169,10 +169,10 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             leading: Icon(Icons.description_outlined),
             title: Text('Articles'),
             tileColor:
-                _selectedIndex == 8 ? Color(0xFFEDE7F6) : null,
+                selectedIndex == 8 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
-                _selectedIndex = 8;
+                selectedIndex = 8;
               });
               Navigator.pop(context);
               Navigator.push(
@@ -187,115 +187,53 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
 
       body: widget.body,
       // BOTTOM NAVIGATION BAR
-      bottomNavigationBar: Container(
-        
-        width: double.infinity,
-        height: 65.0,
-        margin: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withAlpha(26),
-              spreadRadius: 2,
-              blurRadius: 10,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12.0),
-          child: BottomAppBar(
-            shape: const CircularNotchedRectangle(),
-            color: Colors.white,
-            elevation: 0.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                _buildNavBarItem(
-                  icon: Icons.settings,
-                  isSelected: _selectedIndexBottomNavBar == 0,
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndexBottomNavBar = 0;
-                    });
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
-                    );
-                  },
-                ),
-                // BAR CHART ICON
-                _buildNavBarItem(
-                  icon: Icons.bar_chart,
-                  isSelected: _selectedIndexBottomNavBar == 1,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => StatsPage()),
-                    );
-                    setState(() {
-                      _selectedIndexBottomNavBar = 1;
-                    });
-                  },
-                ),
-                // HOME ICON
-                _buildNavBarItem(
-                  icon: Icons.home,
-                  isSelected: _selectedIndexBottomNavBar == 2,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                    setState(() {
-                      _selectedIndexBottomNavBar = 2;
-                    });
-                  },
-                ),
-                // ACCESSIBILITY ICON
-                _buildNavBarItem(
-                  icon: Icons.accessibility,
-                  isSelected: _selectedIndexBottomNavBar == 3,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AccessibilityPage()),
-                    );
-                    setState(() {
-                      _selectedIndexBottomNavBar = 3;
-                    });
-                  },
-                ),
-                // MENU ICON
-                _buildNavBarItem(
-                  icon: Icons.menu,
-                  isSelected: _selectedIndexBottomNavBar == 4,
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndexBottomNavBar = 4;
-                    });
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  },
-                ),
-                // Add more icons and their corresponding onPressed logic...
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: settings.selectedIndexBottomNavBar,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black,
+        onTap: (index) {
+            settings.setSelectedIndex(index);
 
-  // Helper method for the bottom nav items
-  Widget _buildNavBarItem({
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onPressed,
-  }) {
-    return IconButton(
-      icon: Icon(icon, color: isSelected ? Colors.deepPurple : Colors.grey),
-      onPressed: onPressed,
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => StatsPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccessibilityPage()),
+            );
+          } else if (index == 4) {
+            _scaffoldKey.currentState?.openEndDrawer();
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility),
+            label: 'Access',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
+        ],
+      ),
     );
   }
 }

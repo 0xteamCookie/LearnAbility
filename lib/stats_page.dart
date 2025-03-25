@@ -11,6 +11,16 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(1);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);

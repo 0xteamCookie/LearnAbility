@@ -5,8 +5,10 @@ import 'home_page.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AccessibilitySettings(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AccessibilitySettings()),
+      ],
       child: const MyApp(),
     ),
   );

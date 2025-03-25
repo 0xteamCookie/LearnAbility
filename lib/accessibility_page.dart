@@ -19,6 +19,16 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     Colors.purple,
   ];
 
+   @override
+  void initState() {
+    super.initState();
+    // Set the correct index when this page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(3);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
