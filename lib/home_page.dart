@@ -60,477 +60,478 @@ class _HomePageState extends State<HomePage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return GlobalNavBar(
-      key: _scaffoldKey,
-
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              // gradient: LinearGradient(
-              //   colors: [Color.fromARGB(255, 129, 194, 248), Colors.white],
-              //   begin: Alignment.topCenter,
-              //   end: Alignment.bottomCenter,
-              // ),
+    return SafeArea(
+      child: GlobalNavBar(
+        key: _scaffoldKey,
+      
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                // gradient: LinearGradient(
+                //   colors: [Color.fromARGB(255, 129, 194, 248), Colors.white],
+                //   begin: Alignment.topCenter,
+                //   end: Alignment.bottomCenter,
+                // ),
+              ),
             ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween, // Pushes items apart
-                    children: [
-                      // Left side: Username and grade (wrapped in Column)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 20),
-                          Text(
-                            username,
+      
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween, // Pushes items apart
+                      children: [
+                        // Left side: Username and grade (wrapped in Column)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20),
+                            Text(
+                              username,
+                              style: TextStyle(
+                                fontSize: 20 * settings.fontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontFamily: fontFamily(),
+                              ),
+                            ),
+                            Uihelper.CustomText(
+                              text: "12th grade",
+                              color: const Color.fromARGB(255, 29, 28, 28),
+                              fontweight: FontWeight.bold,
+                              fontsize: 16,
+                            ),
+                          ],
+                        ),
+      
+                        // Right side: Icon
+                        // Icon(
+                        //   LucideIcons.user, // Change this to any icon
+                        //   size: 28,
+                        //   color: Colors.black,
+                        // ),
+                        PopupMenuButton<String>(
+                          onSelected: (value) async {
+                            if (value == 'logout') {
+                              await Provider.of<AuthProvider>(
+                                context,
+                                listen: false,
+                              ).logout();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ),
+                              );
+                            }
+                          },
+                          itemBuilder:
+                              (context) => [
+                                PopupMenuItem(
+                                  value: 'logout',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        LucideIcons.logOut,
+                                        size: 20,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text("Logout"),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                          child: Icon(
+                            LucideIcons.user,
+                            size: 28,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+      
+                    // WELCOME TEXT
+                    SizedBox(height: 18),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Uihelper.CustomText(
+                          text: "Next Lesson",
+                          color: Colors.black,
+                          fontweight: FontWeight.bold,
+                          fontsize: 18,
+                        ),
+                        Uihelper.CustomText(
+                          text: "See all →",
+                          // color: const Color.fromARGB(255, 71, 70, 70),
+                          color: Colors.blue,
+                          fontweight: FontWeight.bold,
+                          fontsize: 16,
+                        ),
+                      ],
+                    ),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      // color: Color(0xFFEDE7F6), // Light purple background
+                      color: Color(0xFFFAF5FF),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Row with Icon and Badge
+                            Row(
+                              children: [
+                                // Calendar Icon
+                                CircleAvatar(
+                                  backgroundColor: Colors.white, // Light purple
+                                  radius: 20,
+                                  child: Icon(
+                                    Icons.calendar_today,
+                                    color: Color(0xFF7E22CE),
+                                    size: 18,
+                                  ),
+                                ),
+                                Spacer(),
+                                // Badge
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Get Started",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.black,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+      
+                            SizedBox(height: 10),
+      
+                            // Title & Time
+                            Text(
+                              "Web Development Fundamentals",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Today, 16:00",
+                              style: TextStyle(color: Colors.black),
+                            ),
+      
+                            SizedBox(height: 10),
+      
+                            // Profile Row
+                            Row(
+                              children: [
+                                // SizedBox(width: 8),
+                                Text(
+                                  "CS",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+      
+                    // STATISTICS GRID
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 15,
+                      crossAxisSpacing: 15,
+                      childAspectRatio: gridHeight,
+                      children: [
+                        _buildStatCard(
+                          "Study Streak",
+                          "7",
+                          " days",
+                          Icons.local_fire_department,
+                          Color(0XFF3B82F6),
+                        ),
+                        _buildStatCard(
+                          "Completed Lessons",
+                          "24",
+                          " lessons",
+                          Icons.emoji_events,
+                          Color(0XFF06B6D4),
+                        ),
+                        _buildStatCard(
+                          "Weekly Progress",
+                          "12.5",
+                          " hours",
+                          Icons.timer,
+                          Color(0XFF6366F1),
+                        ),
+                        _buildStatCard(
+                          "Quiz Average",
+                          "85",
+                          " %",
+                          Icons.track_changes,
+                          Color(0XFF14B8A6),
+                        ),
+                      ],
+                    ),
+      
+                    // SHOW LESSONS IN PROGRESS
+                    // Text(
+                    //   "Continue Learning",
+                    //   style: TextStyle(
+                    //     fontSize: 10.0 * settings.fontSize,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Colors.black,
+                    //     fontFamily: fontFamily(),
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Uihelper.CustomText(
+                          text: "My Materials",
+                          color: Colors.black,
+                          fontweight: FontWeight.bold,
+                          fontsize: 18,
+                        ),
+                        // Text(
+                        //   "Pick up where you left off",
+                        //   style: TextStyle(
+                        //     fontSize: 20.0 * settings.fontSize,
+                        //     fontWeight: FontWeight.w600,
+                        //     color: Colors.grey[700],
+                        //     fontFamily: fontFamily(),
+                        //   ),
+                        // ),
+                        TextButton(
+                          onPressed: () {
+                            // Navigate to view all lessons
+                          },
+                          child: Text(
+                            'See more →',
                             style: TextStyle(
-                              fontSize: 20 * settings.fontSize,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.deepPurple,
+                              fontSize: 16.0 * settings.fontSize,
                               fontFamily: fontFamily(),
                             ),
                           ),
-                          Uihelper.CustomText(
-                            text: "12th grade",
-                            color: const Color.fromARGB(255, 29, 28, 28),
-                            fontweight: FontWeight.bold,
-                            fontsize: 16,
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+      
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
-
-                      // Right side: Icon
-                      // Icon(
-                      //   LucideIcons.user, // Change this to any icon
-                      //   size: 28,
-                      //   color: Colors.black,
-                      // ),
-                      PopupMenuButton<String>(
-                        onSelected: (value) async {
-                          if (value == 'logout') {
-                            await Provider.of<AuthProvider>(
-                              context,
-                              listen: false,
-                            ).logout();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
-                              ),
-                            );
-                          }
-                        },
-                        itemBuilder:
-                            (context) => [
-                              PopupMenuItem(
-                                value: 'logout',
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      LucideIcons.logOut,
-                                      size: 20,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text("Logout"),
-                                  ],
+                      // color: Colors.indigo[100], // Light purple background
+                      // color: Color(0xFFD1C4E9), // Light purple
+                      color: Color(0xFFFFF7ED),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Row with Icon and Badge
+                            Row(
+                              children: [
+                                // Calendar Icon
+                                // Badge
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    color: Color(0xFFFFEDD5),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Ready",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.black,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                              ],
+                            ),
+      
+                            SizedBox(height: 10),
+      
+                            // Title & Time
+                            Text(
+                              "Science Syllabus",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                        child: Icon(
-                          LucideIcons.user,
-                          size: 28,
-                          color: Colors.black,
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Today, 16:00",
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+      
+                            SizedBox(height: 10),
+      
+                            // Profile Row
+                            Row(
+                              children: [
+                                Text(
+                                  "Science",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-
-                  // WELCOME TEXT
-                  SizedBox(height: 18),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Uihelper.CustomText(
-                        text: "Next Lesson",
-                        color: Colors.black,
-                        fontweight: FontWeight.bold,
-                        fontsize: 18,
-                      ),
-                      Uihelper.CustomText(
-                        text: "See all →",
-                        // color: const Color.fromARGB(255, 71, 70, 70),
-                        color: Colors.blue,
-                        fontweight: FontWeight.bold,
-                        fontsize: 16,
-                      ),
-                    ],
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
                     ),
-                    // color: Color(0xFFEDE7F6), // Light purple background
-                    color: Color(0xFFFAF5FF),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Row with Icon and Badge
-                          Row(
-                            children: [
-                              // Calendar Icon
-                              CircleAvatar(
-                                backgroundColor: Colors.white, // Light purple
-                                radius: 20,
-                                child: Icon(
-                                  Icons.calendar_today,
-                                  color: Color(0xFF7E22CE),
-                                  size: 18,
-                                ),
-                              ),
-                              Spacer(),
-                              // Badge
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Get Started",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                    SizedBox(height: 4),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      // color: Color(0xFFD1C4E9), // Light purple
+                      color: Color(0xFFFFF7ED),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Row with Icon and Badge
+                            Row(
+                              children: [
+                                // Calendar Icon
+                                // Badge
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    color: Color(0xFFFFEDD5),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Ready",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.black,
-                                      size: 16,
-                                    ),
-                                  ],
+                                      SizedBox(width: 4),
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.black,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 10),
-
-                          // Title & Time
-                          Text(
-                            "Web Development Fundamentals",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                              ],
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Today, 16:00",
-                            style: TextStyle(color: Colors.black),
-                          ),
-
-                          SizedBox(height: 10),
-
-                          // Profile Row
-                          Row(
-                            children: [
-                              // SizedBox(width: 8),
-                              Text(
-                                "CS",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
+      
+                            SizedBox(height: 10),
+      
+                            // Title & Time
+                            Text(
+                              "English poem",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // STATISTICS GRID
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 15,
-                    crossAxisSpacing: 15,
-                    childAspectRatio: gridHeight,
-                    children: [
-                      _buildStatCard(
-                        "Study Streak",
-                        "7",
-                        " days",
-                        Icons.local_fire_department,
-                        Color(0XFF3B82F6),
-                      ),
-                      _buildStatCard(
-                        "Completed Lessons",
-                        "24",
-                        " lessons",
-                        Icons.emoji_events,
-                        Color(0XFF06B6D4),
-                      ),
-                      _buildStatCard(
-                        "Weekly Progress",
-                        "12.5",
-                        " hours",
-                        Icons.timer,
-                        Color(0XFF6366F1),
-                      ),
-                      _buildStatCard(
-                        "Quiz Average",
-                        "85",
-                        " %",
-                        Icons.track_changes,
-                        Color(0XFF14B8A6),
-                      ),
-                    ],
-                  ),
-
-                  // SHOW LESSONS IN PROGRESS
-                  // Text(
-                  //   "Continue Learning",
-                  //   style: TextStyle(
-                  //     fontSize: 10.0 * settings.fontSize,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Colors.black,
-                  //     fontFamily: fontFamily(),
-                  //   ),
-                  // ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Uihelper.CustomText(
-                        text: "My Materials",
-                        color: Colors.black,
-                        fontweight: FontWeight.bold,
-                        fontsize: 18,
-                      ),
-                      // Text(
-                      //   "Pick up where you left off",
-                      //   style: TextStyle(
-                      //     fontSize: 20.0 * settings.fontSize,
-                      //     fontWeight: FontWeight.w600,
-                      //     color: Colors.grey[700],
-                      //     fontFamily: fontFamily(),
-                      //   ),
-                      // ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to view all lessons
-                        },
-                        child: Text(
-                          'See more →',
-                          style: TextStyle(
-                            color: Colors.deepPurple,
-                            fontSize: 16.0 * settings.fontSize,
-                            fontFamily: fontFamily(),
-                          ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Today, 16:00",
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+      
+                            SizedBox(height: 10),
+      
+                            // Profile Row
+                            Row(
+                              children: [
+                                Text(
+                                  "Englis",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
                     ),
-                    // color: Colors.indigo[100], // Light purple background
-                    // color: Color(0xFFD1C4E9), // Light purple
-                    color: Color(0xFFFFF7ED),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Row with Icon and Badge
-                          Row(
-                            children: [
-                              // Calendar Icon
-                              // Badge
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  // color: Colors.white,
-                                  color: Color(0xFFFFEDD5),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Ready",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.black,
-                                      size: 16,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 10),
-
-                          // Title & Time
-                          Text(
-                            "Science Syllabus",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Today, 16:00",
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-
-                          SizedBox(height: 10),
-
-                          // Profile Row
-                          Row(
-                            children: [
-                              Text(
-                                "Science",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    // color: Color(0xFFD1C4E9), // Light purple
-                    color: Color(0xFFFFF7ED),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Row with Icon and Badge
-                          Row(
-                            children: [
-                              // Calendar Icon
-                              // Badge
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  // color: Colors.white,
-                                  color: Color(0xFFFFEDD5),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Ready",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.black,
-                                      size: 16,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 10),
-
-                          // Title & Time
-                          Text(
-                            "English poem",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Today, 16:00",
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-
-                          SizedBox(height: 10),
-
-                          // Profile Row
-                          Row(
-                            children: [
-                              Text(
-                                "Englis",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // _buildLessonCard(
-                  //   subject: 'Science',
-                  //   category: 'Biology',
-                  //   title: 'Science Syllabus',
-                  // ),
-                  // SizedBox(height: 16.0),
-
-                  // _buildLessonCard(
-                  //   subject: 'English',
-                  //   category: 'Writing',
-                  //   title: 'Some Poem',
-                  // ),
-                  SizedBox(height: 16.0),
-                ],
+                    // _buildLessonCard(
+                    //   subject: 'Science',
+                    //   category: 'Biology',
+                    //   title: 'Science Syllabus',
+                    // ),
+                    // SizedBox(height: 16.0),
+      
+                    // _buildLessonCard(
+                    //   subject: 'English',
+                    //   category: 'Writing',
+                    //   title: 'Some Poem',
+                    // ),
+                    SizedBox(height: 16.0),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
