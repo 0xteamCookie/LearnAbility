@@ -43,80 +43,82 @@ class _VideosPageState extends State<VideosPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22 * settings.fontSize, // Dynamically adjusting font size
-            fontFamily: fontFamily(), // Apply font family
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: Text(
+            "LearnAbility",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22 * settings.fontSize, // Dynamically adjusting font size
+              fontFamily: fontFamily(), // Apply font family
+            ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title: All Videos
-              Text(
-                "All Videos",
-                style: TextStyle(
-                  fontSize: 28 * settings.fontSize, // Dynamically adjusting font size
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Apply font family
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title: All Videos
+                Text(
+                  "All Videos",
+                  style: TextStyle(
+                    fontSize: 28 * settings.fontSize, // Dynamically adjusting font size
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Apply font family
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-
-              // Subtitle: Explore the latest content
-              Text(
-                "Explore the latest content",
-                style: TextStyle(
-                  fontSize: 16 * settings.fontSize, // Dynamically adjusting font size
-                  color: Colors.grey,
-                  fontFamily: fontFamily(), // Apply font family
+                const SizedBox(height: 4),
+      
+                // Subtitle: Explore the latest content
+                Text(
+                  "Explore the latest content",
+                  style: TextStyle(
+                    fontSize: 16 * settings.fontSize, // Dynamically adjusting font size
+                    color: Colors.grey,
+                    fontFamily: fontFamily(), // Apply font family
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-
-              // Category Chips
-              Wrap(
-                spacing: 8.0,
-                children: [
-                  _buildCategoryChip("Science", settings, fontFamily()),
-                  _buildCategoryChip("Mathematics", settings, fontFamily()),
-                  _buildCategoryChip("History", settings, fontFamily()),
-                  _buildCategoryChip("Technology", settings, fontFamily()),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Section Title: Featured Videos
-              Text(
-                "Featured Videos",
-                style: TextStyle(
-                  fontSize: 20 * settings.fontSize, // Dynamically adjusting font size
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(), // Apply font family
+                const SizedBox(height: 20),
+      
+                // Category Chips
+                Wrap(
+                  spacing: 8.0,
+                  children: [
+                    _buildCategoryChip("Science", settings, fontFamily()),
+                    _buildCategoryChip("Mathematics", settings, fontFamily()),
+                    _buildCategoryChip("History", settings, fontFamily()),
+                    _buildCategoryChip("Technology", settings, fontFamily()),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 8),
-
-              // Dynamically generate video cards from feedData
-              for (var video in feedData["videos"])
-                _buildVideoCard(
-                  image: video["image"],
-                  heading: video["heading"],
-                  creator: video["creator"],
-                  duration: video["duration"],
-                  settings: settings,
-                  fontFamily: fontFamily(), // Pass font family
+                const SizedBox(height: 24),
+      
+                // Section Title: Featured Videos
+                Text(
+                  "Featured Videos",
+                  style: TextStyle(
+                    fontSize: 20 * settings.fontSize, // Dynamically adjusting font size
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Apply font family
+                  ),
                 ),
-            ],
+                const SizedBox(height: 8),
+      
+                // Dynamically generate video cards from feedData
+                for (var video in feedData["videos"])
+                  _buildVideoCard(
+                    image: video["image"],
+                    heading: video["heading"],
+                    creator: video["creator"],
+                    duration: video["duration"],
+                    settings: settings,
+                    fontFamily: fontFamily(), // Pass font family
+                  ),
+              ],
+            ),
           ),
         ),
       ),

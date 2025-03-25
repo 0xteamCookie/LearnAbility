@@ -73,67 +73,73 @@ class _SettingPageState extends State<SettingsPage> {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24 * settings.fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
-          ),
-        ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: [
-          Text(
-            "Settings",
-            style: TextStyle(
-              fontSize: 28 * settings.fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: fontFamily(), // Added fontFamily
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: ListView(
+          padding: EdgeInsets.all(16.0),
+          children: [
+            Row(
+              children: [
+                IconButton(
+                                  icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                                  onPressed: () {
+                                    Navigator.pop(context); // Navigate back
+                                  },
+                ),
+                Text(
+                  "Settings",
+                  style: TextStyle(
+                    fontSize: 28 * settings.fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Privacy Settings',
-            style: TextStyle(
-              fontSize: 22 * settings.fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: fontFamily(), // Added fontFamily
-            ),
-          ),
-          SizedBox(height: 16),
-
-          for (var setting in _privacySettings)
-            _buildPrivacySettingsCard(setting, settings, fontFamily()),
-          SizedBox(height: 24),
-          Text(
-            'Notification Settings',
-            style: TextStyle(
-              fontSize: 22 * settings.fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: fontFamily(), // Added fontFamily
-            ),
-          ),
-          SizedBox(height: 16),
-
-          for (var setting in _notificationSettings)
-            _buildNotificationSettingsCard(setting, settings, fontFamily()),
-          SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: _saveChanges,
-            child: Text(
-              'Save Changes',
+            
+            SizedBox(height: 16),
+            Text(
+              'Privacy Settings',
               style: TextStyle(
-                fontSize: 16 * settings.fontSize,
+                fontSize: 22 * settings.fontSize,
+                fontWeight: FontWeight.bold,
                 fontFamily: fontFamily(), // Added fontFamily
               ),
             ),
-          ),
-        ],
+            SizedBox(height: 16),
+      
+            for (var setting in _privacySettings)
+              _buildPrivacySettingsCard(setting, settings, fontFamily()),
+            SizedBox(height: 24),
+            Text(
+              'Notification Settings',
+              style: TextStyle(
+                fontSize: 22 * settings.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily(), // Added fontFamily
+              ),
+            ),
+            SizedBox(height: 16),
+      
+            for (var setting in _notificationSettings)
+              _buildNotificationSettingsCard(setting, settings, fontFamily()),
+            SizedBox(height: 24),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey[100]), // Correct way to set grey[100]
+                ),
+                onPressed: _saveChanges,
+                child: Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    fontSize: 16 * settings.fontSize,
+                    fontFamily: fontFamily(), // Added fontFamily
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -144,6 +150,7 @@ class _SettingPageState extends State<SettingsPage> {
     String fontFamily, // Added fontFamily parameter
   ) {
     return Card(
+      color: Colors.grey[100],
       margin: EdgeInsets.symmetric(vertical: 8),
       child: SwitchListTile(
         title: Text(
@@ -164,7 +171,8 @@ class _SettingPageState extends State<SettingsPage> {
         onChanged: (value) {
           _updateSetting(_privacySettings, setting["key"], value);
         },
-        activeColor: Colors.blue,
+        activeColor: Colors.deepPurple,
+        inactiveTrackColor: Colors.grey[200],
       ),
     );
   }
@@ -175,6 +183,7 @@ class _SettingPageState extends State<SettingsPage> {
     String fontFamily, // Added fontFamily parameter
   ) {
     return Card(
+      color: Colors.grey[100],
       margin: EdgeInsets.symmetric(vertical: 8),
       child: SwitchListTile(
         title: Text(
@@ -195,7 +204,8 @@ class _SettingPageState extends State<SettingsPage> {
         onChanged: (value) {
           _updateSetting(_notificationSettings, setting["key"], value);
         },
-        activeColor: Colors.blue,
+        activeColor: Colors.deepPurple,
+        inactiveTrackColor: Colors.grey[200],
       ),
     );
   }

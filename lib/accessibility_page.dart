@@ -12,7 +12,7 @@ class AccessibilityPage extends StatefulWidget {
 class _AccessibilityPageState extends State<AccessibilityPage> {
   final List<Color> _colorThemes = [
     Colors.red,
-    Colors.blue,
+    Colors.deepPurple,
     Colors.green,
     Colors.yellow,
     Colors.purple,
@@ -50,240 +50,237 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
       return "x";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22 * fontSize,
-            fontFamily: fontFamily(), // Added fontFamily
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header for Accessibility Settings
-            Text(
-              "Accessibility Settings",
-              style: TextStyle(
-                fontSize: 24 * fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            Text(
-              "Customize your learning experience",
-              style: TextStyle(
-                fontSize: 16 * fontSize,
-                color: Colors.grey,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Text & Display Section
-            Text(
-              "Text & Display",
-              style: TextStyle(
-                fontSize: 20 * fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Font Size",
-              style: TextStyle(
-                fontSize: 16 * fontSize,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            Slider(
-              value: fontSize,
-              min: 0.5,
-              max: 1.5,
-              activeColor: Colors.blue,
-              divisions: 4,
-              label: displaySliderValue(fontSize),
-              onChanged: (double value) {
-                settings.setFontSize(value);
-              },
-            ),
-            SizedBox(height: 20),
-
-            // Color Theme Section
-            Text(
-              "Color Theme",
-              style: TextStyle(
-                fontSize: 20 * fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: _colorThemes.map((color) {
-                return GestureDetector(
-                  onTap: () {
-                    settings.setColorIndex(_colorThemes.indexOf(color));
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: selectedColorIndex == _colorThemes.indexOf(color)
-                          ? Border.all(color: Colors.black, width: 2)
-                          : null,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+               Row(
+                 children: [
+                   IconButton(
+                              icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                              onPressed: () {
+                                Navigator.pop(context); // Navigate back
+                              },
+                            ),
+                  Text(
+                    "Accessibility Settings",
+                    style: TextStyle(
+                      fontSize: 24 * fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: fontFamily(), // Added fontFamily
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 20),
-
-            // Speech Rate Section
-            Text(
-              "Speech Rate",
-              style: TextStyle(
-                fontSize: 16 * fontSize,
-                fontFamily: fontFamily(), // Added fontFamily
+                 ],
+               ),
+              SizedBox(height: 20),
+      
+              // Text & Display Section
+              Text(
+                "Text & Display",
+                style: TextStyle(
+                  fontSize: 20 * fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
               ),
-            ),
-            Slider(
-              value: speechRate,
-              min: 0,
-              max: 1,
-              label: displaySliderValue(speechRate),
-              activeColor: Colors.blue,
-              onChanged: (double value) {
-                settings.setSpeechRate(value);
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Slow",
-                  style: TextStyle(
-                    fontSize: 14 * fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
-                  ),
+              SizedBox(height: 10),
+              Text(
+                "Font Size",
+                style: TextStyle(
+                  fontSize: 16 * fontSize,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
-                Text(
-                  "Fast",
-                  style: TextStyle(
-                    fontSize: 14 * fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Word Prediction Section
-            Row(
-              children: [
-                Text(
-                  "Word Prediction",
-                  style: TextStyle(
-                    fontSize: 16 * fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
-                  ),
-                ),
-                Spacer(),
-                Switch(
-                  value: wordPrediction,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
-                  onChanged: (bool value) {
-                    settings.setWordPrediction(value);
-                  },
-                ),
-              ],
-            ),
-
-            // Dyslexia friendly font Section
-            Row(
-              children: [
-                Text(
-                  "Dyslexia friendly font",
-                  style: TextStyle(
-                    fontSize: 16 * fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
-                  ),
-                ),
-                Spacer(),
-                Switch(
-                  value: openDyslexic,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
-                  onChanged: (bool value) {
-                    settings.setDyslexic(value);
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Focus & Timers Section
-            Text(
-              "Focus & Timers",
-              style: TextStyle(
-                fontSize: 20 * fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(), // Added fontFamily
               ),
-            ),
-            SizedBox(height: 10),
-
-            // Visual Timers Section
-            Row(
-              children: [
-                Text(
-                  "Visual Timers",
-                  style: TextStyle(
-                    fontSize: 16 * fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
+              Slider(
+                value: fontSize,
+                min: 0.5,
+                max: 1.5,
+                activeColor: Colors.deepPurple,
+                divisions: 4,
+                label: displaySliderValue(fontSize),
+                onChanged: (double value) {
+                  settings.setFontSize(value);
+                },
+              ),
+              SizedBox(height: 20),
+      
+              // Color Theme Section
+              Text(
+                "Color Theme",
+                style: TextStyle(
+                  fontSize: 20 * fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: _colorThemes.map((color) {
+                  return GestureDetector(
+                    onTap: () {
+                      settings.setColorIndex(_colorThemes.indexOf(color));
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: selectedColorIndex == _colorThemes.indexOf(color)
+                            ? Border.all(color: Colors.black, width: 2)
+                            : null,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+      
+              // Speech Rate Section
+              Text(
+                "Speech Rate",
+                style: TextStyle(
+                  fontSize: 16 * fontSize,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
+              ),
+              Slider(
+                value: speechRate,
+                min: 0,
+                max: 1,
+                label: displaySliderValue(speechRate),
+                activeColor: Colors.deepPurple,
+                onChanged: (double value) {
+                  settings.setSpeechRate(value);
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Slow",
+                    style: TextStyle(
+                      fontSize: 14 * fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
                   ),
-                ),
-                Spacer(),
-                Switch(
-                  value: visualTimers,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
-                  onChanged: (bool value) {
-                    settings.setVisualTimers(value);
-                  },
-                ),
-              ],
-            ),
-
-            // Break Reminders Section
-            Row(
-              children: [
-                Text(
-                  "Break Reminders",
-                  style: TextStyle(
-                    fontSize: 16 * fontSize,
-                    fontFamily: fontFamily(), // Added fontFamily
+                  Text(
+                    "Fast",
+                    style: TextStyle(
+                      fontSize: 14 * fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
                   ),
+                ],
+              ),
+              SizedBox(height: 20),
+      
+              // Word Prediction Section
+              Row(
+                children: [
+                  Text(
+                    "Word Prediction",
+                    style: TextStyle(
+                      fontSize: 16 * fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
+                  ),
+                  Spacer(),
+                  Switch(
+                    inactiveTrackColor: Colors.grey[200],
+                    value: wordPrediction,
+                    activeColor: Colors.deepPurple,
+                    onChanged: (bool value) {
+                      settings.setWordPrediction(value);
+                    },
+                  ),
+                ],
+              ),
+      
+              // Dyslexia friendly font Section
+              Row(
+                children: [
+                  Text(
+                    "Dyslexia friendly font",
+                    style: TextStyle(
+                      fontSize: 16 * fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
+                  ),
+                  Spacer(),
+                  Switch(
+                    inactiveTrackColor: Colors.grey[200],
+                    value: openDyslexic,
+                    activeColor: Colors.deepPurple,
+                    onChanged: (bool value) {
+                      settings.setDyslexic(value);
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+      
+              // Focus & Timers Section
+              Text(
+                "Focus & Timers",
+                style: TextStyle(
+                  fontSize: 20 * fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
                 ),
-                Spacer(),
-                Switch(
-                  value: breakReminders,
-                  activeColor: const Color.fromARGB(255, 29, 106, 237),
-                  onChanged: (bool value) {
-                    settings.setBreakReminders(value);
-                  },
-                ),
-              ],
-            ),
-          ],
+              ),
+              SizedBox(height: 10),
+      
+              // Visual Timers Section
+              Row(
+                children: [
+                  Text(
+                    "Visual Timers",
+                    style: TextStyle(
+                      fontSize: 16 * fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
+                  ),
+                  Spacer(),
+                  Switch(
+                    inactiveTrackColor: Colors.grey[200],
+                    value: visualTimers,
+                    activeColor: Colors.deepPurple,
+                    onChanged: (bool value) {
+                      settings.setVisualTimers(value);
+                    },
+                  ),
+                ],
+              ),
+      
+              // Break Reminders Section
+              Row(
+                children: [
+                  Text(
+                    "Break Reminders",
+                    style: TextStyle(
+                      fontSize: 16 * fontSize,
+                      fontFamily: fontFamily(), // Added fontFamily
+                    ),
+                  ),
+                  Spacer(),
+                  Switch(
+                    inactiveTrackColor: Colors.grey[200],
+                    value: breakReminders,
+                    activeColor: Colors.deepPurple,
+                    onChanged: (bool value) {
+                      settings.setBreakReminders(value);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

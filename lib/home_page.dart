@@ -760,8 +760,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
-      // Replace the floating bottom navigation bar with a standard bottom navigation bar
+            // Replace the floating bottom navigation bar with a standard bottom navigation bar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndexBottomNavBar,
         type: BottomNavigationBarType.fixed,
