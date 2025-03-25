@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/global_navbar.dart';
+import 'package:my_first_app/providers/auth_provider.dart';
+import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'Lesson/lessons_page.dart';
 import 'Quiz/quizzes_page.dart';
@@ -37,10 +39,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
+    if (authProvider.isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    print("🔍 Checking user in HomePage: ${authProvider.user?.toJson()}");
+
+    final String username = authProvider.user?.name ?? "Guest";
+    // final String username = Provider.of<UserProvider>(context).username;
     final settings = Provider.of<AccessibilitySettings>(context);
     final double gridHeight = settings.fontSize == 1.5 ? 1.2 : 1.5;
     final bool isDyslexic = settings.openDyslexic;
-    final String username = "Katty Doe";
 
     String fontFamily() {
       return isDyslexic ? "OpenDyslexic" : "Roboto";
@@ -99,11 +110,45 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       // Right side: Icon
-                      CircleAvatar(
-                        backgroundColor: Color(0xFFEDE7F6), // Light purple
-                        radius: 20,
+                      // Icon(
+                      //   LucideIcons.user, // Change this to any icon
+                      //   size: 28,
+                      //   color: Colors.black,
+                      // ),
+                      PopupMenuButton<String>(
+                        onSelected: (value) async {
+                          if (value == 'logout') {
+                            await Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            ).logout();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder:
+                            (context) => [
+                              PopupMenuItem(
+                                value: 'logout',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      LucideIcons.logOut,
+                                      size: 20,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text("Logout"),
+                                  ],
+                                ),
+                              ),
+                            ],
                         child: Icon(
-                          LucideIcons.user, // Change this to any icon
+                          LucideIcons.user,
                           size: 28,
                           color: Colors.black,
                         ),
@@ -124,8 +169,9 @@ class _HomePageState extends State<HomePage> {
                         fontsize: 18,
                       ),
                       Uihelper.CustomText(
-                        text: "See all >",
-                        color: Colors.deepPurple,
+                        text: "See all →",
+                        // color: const Color.fromARGB(255, 71, 70, 70),
+                        color: Colors.blue,
                         fontweight: FontWeight.bold,
                         fontsize: 16,
                       ),
@@ -135,8 +181,8 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Color(0xFFEDE7F6), // Light purple background
-                    // color: Color(0xFFD1C4E9),
+                    // color: Color(0xFFEDE7F6), // Light purple background
+                    color: Color(0xFFFAF5FF),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -152,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                                 radius: 20,
                                 child: Icon(
                                   Icons.calendar_today,
-                                  color: Colors.black,
+                                  color: Color(0xFF7E22CE),
                                   size: 18,
                                 ),
                               ),
@@ -209,11 +255,7 @@ class _HomePageState extends State<HomePage> {
                           // Profile Row
                           Row(
                             children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(""),
-                                radius: 14,
-                              ),
-                              SizedBox(width: 8),
+                              // SizedBox(width: 8),
                               Text(
                                 "CS",
                                 style: TextStyle(
@@ -242,24 +284,28 @@ class _HomePageState extends State<HomePage> {
                         "7",
                         " days",
                         Icons.local_fire_department,
+                        Color(0XFF3B82F6),
                       ),
                       _buildStatCard(
                         "Completed Lessons",
                         "24",
                         " lessons",
                         Icons.emoji_events,
+                        Color(0XFF06B6D4),
                       ),
                       _buildStatCard(
                         "Weekly Progress",
                         "12.5",
                         " hours",
                         Icons.timer,
+                        Color(0XFF6366F1),
                       ),
                       _buildStatCard(
                         "Quiz Average",
                         "85",
                         " %",
                         Icons.track_changes,
+                        Color(0XFF14B8A6),
                       ),
                     ],
                   ),
@@ -313,7 +359,9 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Color(0xFFEDE7F6), // Light purple background
+                    // color: Colors.indigo[100], // Light purple background
+                    // color: Color(0xFFD1C4E9), // Light purple
+                    color: Color(0xFFFFF7ED),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -331,7 +379,8 @@ class _HomePageState extends State<HomePage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: Color(0xFFFFEDD5),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -390,7 +439,8 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: Color(0xFFEDE7F6), // Light purple background
+                    // color: Color(0xFFD1C4E9), // Light purple
+                    color: Color(0xFFFFF7ED),
                     elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -408,7 +458,8 @@ class _HomePageState extends State<HomePage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: Color(0xFFFFEDD5),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -483,6 +534,51 @@ class _HomePageState extends State<HomePage> {
       ),
 
        
+            // Replace the floating bottom navigation bar with a standard bottom navigation bar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndexBottomNavBar,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black,
+        onTap: (index) {
+          setState(() {
+            _selectedIndexBottomNavBar = index;
+          });
+
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => StatsPage()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccessibilityPage()),
+            );
+          } else if (index == 4) {
+            _scaffoldKey.currentState?.openEndDrawer();
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility),
+            label: 'Access',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
+        ],
+      ),
     );
   }
 
@@ -492,6 +588,7 @@ class _HomePageState extends State<HomePage> {
     String value,
     String subtitle,
     IconData icon,
+    Color color,
   ) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final double iconSize = settings.fontSize == 1.5 ? 20.0 : 25.0;
@@ -506,13 +603,15 @@ class _HomePageState extends State<HomePage> {
     return IntrinsicHeight(
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFEDE7F6),
+          color: Colors.white,
+          // color: Color(0xFFF5F5F5),
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
+              // color: Colors.grey.withValues(alpha: 0.5),
+              color: Color(0XFFE5E7Eb),
               // spreadRadius: 1,
-              blurRadius: 3,
+              blurRadius: 4,
             ),
           ],
         ),
@@ -522,15 +621,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.white, // Light purple
-                  radius: 18,
-                  child: Icon(
-                    icon,
-                    color: Colors.black,
-                    size: iconSize * settings.fontSize,
-                    
-                  ),
+                Icon(
+                  icon,
+                  // color: Colors.indigo,
+                  // color: Colors.orange[800],
+                  color: color,
+                  // color: Colors.deepPurple,
+                  size: iconSize * settings.fontSize,
                 ),
                 // Icon(
                 //   icon,
@@ -561,7 +658,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   value,
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: color,
                     // color: Colors.indigo,
                     // color: Colors.orange,
                     fontWeight: FontWeight.bold,
@@ -593,6 +690,7 @@ class _HomePageState extends State<HomePage> {
     required String subject,
     required String category,
     required String title,
+    required Color color,
   }) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final bool isDyslexic = settings.openDyslexic;

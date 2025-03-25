@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/providers/auth_provider.dart';
+import 'package:my_first_app/providers/user_provider.dart';
+import 'package:my_first_app/repository/screens/splash/splashscreen.dart';
 import 'package:provider/provider.dart';
 import 'package:my_first_app/accessibility_model.dart';
 import 'home_page.dart';
 
 void main() {
   runApp(
+    // ChangeNotifierProvider(
+    //   create: (context) => AccessibilitySettings(),
+    //   child: const MyApp(),
+    // ),
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AccessibilitySettings()),
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider()..checkAuthStatus(),
+        ),
+        ChangeNotifierProvider(create: (context) => AccessibilitySettings()),
+        // ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

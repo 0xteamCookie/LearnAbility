@@ -94,9 +94,9 @@ class _StatsPageState extends State<StatsPage> {
 
   Widget _buildStreakCard(AccessibilitySettings settings, String fontFamily) {
     return Card(
-      color: Color(0xFFEDE7F6),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -148,9 +148,9 @@ class _StatsPageState extends State<StatsPage> {
     };
 
     return Card(
-      color: Color(0xFFEDE7F6),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -200,7 +200,7 @@ class _StatsPageState extends State<StatsPage> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -219,9 +219,9 @@ class _StatsPageState extends State<StatsPage> {
     ];
 
     return Card(
-      color: Color(0xFFEDE7F6),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

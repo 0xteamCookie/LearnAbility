@@ -117,35 +117,32 @@ class _LessonPageState extends State<LessonPage> {
         .firstWhere((option) => option["isCorrect"] == true)["text"];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "LearnAbility",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24 * settings.fontSize,
-            fontFamily: fontFamily(),
-          ),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-      ),
+      backgroundColor:Color(0xFFEDE7F6),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               Row(
+                 children: [
+                   IconButton(
+                        icon: Icon(Icons.arrow_back, size: 28, color: Colors.black),
+                        onPressed: () {
+                          Navigator.pop(context); // Navigate back
+                        },
+                      ),
               Text(
                 _lessonData["title"],
                 style: TextStyle(
-                  fontSize: 32 * settings.fontSize,
+                  fontSize: 28 * settings.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Colors.black,
                   fontFamily: fontFamily(),
                 ),
               ),
+                 ],
+               ),
               const SizedBox(height: 8),
               Text(
                 _lessonData["subtitle"],
@@ -159,11 +156,12 @@ class _LessonPageState extends State<LessonPage> {
               LinearProgressIndicator(
                 value: (_currentPage + 1) / learningContent.length,
                 backgroundColor: Colors.grey[300],
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
               ),
               const SizedBox(height: 16),
               // Learning Content Card
               Card(
+                color: Colors.white,
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -181,7 +179,7 @@ class _LessonPageState extends State<LessonPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24 * settings.fontSize,
-                            color: Colors.blue,
+                            color: Colors.deepPurple,
                             fontFamily: fontFamily(),
                           ),
                         ),
@@ -219,7 +217,7 @@ class _LessonPageState extends State<LessonPage> {
                             IconButton(
                               onPressed: _goToPreviousPage,
                               icon: const Icon(Icons.arrow_back),
-                              color: _currentPage > 0 ? Colors.blue : Colors.grey,
+                              color: _currentPage > 0 ? Colors.deepPurple : Colors.grey,
                             ),
                             Text(
                               'Page ${_currentPage + 1} of ${learningContent.length}',
@@ -232,7 +230,7 @@ class _LessonPageState extends State<LessonPage> {
                             IconButton(
                               onPressed: _goToNextPage,
                               icon: const Icon(Icons.arrow_forward),
-                              color: _currentPage < learningContent.length - 1 ? Colors.blue : Colors.grey,
+                              color: _currentPage < learningContent.length - 1 ? Colors.deepPurple : Colors.grey,
                             ),
                           ],
                         ),
@@ -244,6 +242,7 @@ class _LessonPageState extends State<LessonPage> {
               const SizedBox(height: 20),
               // Quick Check Section
               Card(
+                color: Colors.white,
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -258,7 +257,7 @@ class _LessonPageState extends State<LessonPage> {
                         style: TextStyle(
                           fontSize: 24 * settings.fontSize,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: Colors.deepPurple,
                           fontFamily: fontFamily(),
                         ),
                       ),
@@ -287,7 +286,7 @@ class _LessonPageState extends State<LessonPage> {
                         child: ElevatedButton(
                           onPressed: _isAnswerSubmitted ? null : _submitAnswer,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.deepPurple,
                             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                           ),
                           child: Text(
@@ -322,6 +321,7 @@ class _LessonPageState extends State<LessonPage> {
               const SizedBox(height: 20),
               // Web Resources Section
               Card(
+                color: Colors.white,
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -336,7 +336,7 @@ class _LessonPageState extends State<LessonPage> {
                         style: TextStyle(
                           fontSize: 24 * settings.fontSize,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: Colors.deepPurple,
                           fontFamily: fontFamily(),
                         ),
                       ),
@@ -386,7 +386,7 @@ class _LessonPageState extends State<LessonPage> {
         child: Text(
           url,
           style: TextStyle(
-            color: Colors.blue,
+            color: Colors.deepPurpleAccent,
             decoration: TextDecoration.underline,
             fontSize: 16 * fontSize,
             fontFamily: fontFamily,
