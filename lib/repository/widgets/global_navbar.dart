@@ -66,7 +66,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           // Upload Content
           ListTile(
             leading: Icon(Icons.generating_tokens_outlined),
-            title: Text('Generate Lessons'),
+            title: Text('My Materials'),
             tileColor: selectedIndex == 4 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
@@ -83,7 +83,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           // AI Assistant
           ListTile(
             leading: Icon(Icons.assistant_outlined),
-            title: Text('AI Assistant'),
+            title: Text('AI Learning Assistant'),
             tileColor: selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
@@ -108,27 +108,26 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             ),
           ),
 
-          // Lessons
-          ListTile(
-            leading: Icon(Icons.book_outlined),
-            title: Text('Lessons'),
-            tileColor: selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
-            onTap: () {
-              setState(() {
-                selectedIndex = 6;
-              });
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LessonsPage()),
-              );
-            },
-          ),
+          // // Lessons
+          // ListTile(
+          //   leading: Icon(Icons.book_outlined),
+          //   title: Text('Lessons'),
+          //   tileColor: selectedIndex == 6 ? Color(0xFFEDE7F6) : null,
+          //   onTap: () {
+          //     setState(() {
+          //       selectedIndex = 6;
+          //     });
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => LessonsPage()),
+          //     );
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.quiz_outlined),
             title: Text('Subjects'),
-            tileColor:
-                selectedIndex == 9 ? Color(0xFFEDE7F6) : null,
+            tileColor: selectedIndex == 9 ? Color(0xFFEDE7F6) : null,
             onTap: () {
               setState(() {
                 selectedIndex = 9;
@@ -136,7 +135,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Subjects()),
+                MaterialPageRoute(builder: (context) => SubjectsPage()),
               );
             },
           ),
