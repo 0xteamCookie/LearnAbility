@@ -825,7 +825,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
         case 'green':
           return Color(0xFF10B981);
         case 'purple':
-          return Color(0xFF8B5CF6);
+          return Color(0XFF6366F1);
         case 'yellow':
           return Color(0xFFF59E0B);
         case 'pink':

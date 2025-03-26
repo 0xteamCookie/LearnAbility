@@ -495,7 +495,7 @@ class _QuizPageState extends State<QuizPage> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0XFF6366F1), Color(0XFF8B5CF6)],
+                  colors: [Color(0XFF6366F1), Color(0XFF6366F1)],
                 ),
               ),
               child: Column(
