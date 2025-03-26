@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/ai_voice_page.dart';
 import 'package:provider/provider.dart';
 import '../../Lesson/lessons_page.dart';
 import '../../Quiz/quizzes_page.dart';
@@ -97,6 +98,21 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             },
           ),
 
+          ListTile(
+            leading: Icon(Icons.assistant_outlined),
+            title: Text('AI Voice Learning Assistant'),
+            tileColor: selectedIndex == 5 ? Color(0xFFEDE7F6) : null,
+            onTap: () {
+              setState(() {
+                selectedIndex = 5;
+              });
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VoiceAiChat()),
+              );
+            },
+          ),
           const Divider(indent: 28, endIndent: 28),
 
           // Study Materials Section
