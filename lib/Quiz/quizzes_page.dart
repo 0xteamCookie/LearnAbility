@@ -1,7 +1,56 @@
-import "package:flutter/material.dart";
-import 'quiz_page.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import '../accessibility_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_first_app/accessibility_model.dart';
+import 'package:my_first_app/utils/constants.dart';
+import 'quiz_page.dart';
+import 'create_quiz_page.dart';
+
+class QuizSummary {
+  final String id;
+  final String title;
+  final String description;
+  final String difficulty;
+  final int questionCount;
+  final String? subjectName;
+  final String? subjectColor;
+  final String? lessonTitle;
+  final int timeLimit;
+  final int passingScore;
+  final String createdAt;
+
+  QuizSummary({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.difficulty,
+    required this.questionCount,
+    this.subjectName,
+    this.subjectColor,
+    this.lessonTitle,
+    required this.timeLimit,
+    required this.passingScore,
+    required this.createdAt,
+  });
+
+  factory QuizSummary.fromJson(Map<String, dynamic> json) {
+    return QuizSummary(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      difficulty: json['difficulty'],
+      questionCount: json['questionCount'],
+      subjectName: json['subjectName'],
+      subjectColor: json['subjectColor'],
+      lessonTitle: json['lessonTitle'],
+      timeLimit: json['timeLimit'],
+      passingScore: json['passingScore'],
+      createdAt: json['createdAt'],
+    );
+  }
+}
 
 class QuizzesPage extends StatefulWidget {
   const QuizzesPage({super.key});
@@ -10,102 +59,249 @@ class QuizzesPage extends StatefulWidget {
   State<QuizzesPage> createState() => _QuizzesPageState();
 }
 
-class _QuizzesPageState extends State<QuizzesPage> {
-  final List<Map<String, dynamic>> _quizCards = [
-    {
-      "subject": "Biology",
-      "topic": "Photosynthesis",
-      "questions": "10",
-      "duration": "15 minutes",
-    },
-    {
-      "subject": "Mathematics",
-      "topic": "Linear Equations",
-      "questions": "12",
-      "duration": "20 minutes",
-    },
-    {
-      "subject": "Chemistry",
-      "topic": "Periodic Table",
-      "questions": "8",
-      "duration": "10 minutes",
-    },
-    {
-      "subject": "Physics",
-      "topic": "Newton's Laws of Motion",
-      "questions": "15",
-      "duration": "25 minutes",
-    },
-    {
-      "subject": "English",
-      "topic": "Grammar and Punctuation",
-      "questions": "10",
-      "duration": "15 minutes",
-    },
-    {
-      "subject": "Computer",
-      "topic": "Programming Basics",
-      "questions": "12",
-      "duration": "20 minutes",
-    },
-  ];
+class _QuizzesPageState extends State<QuizzesPage>
+    with SingleTickerProviderStateMixin {
+  List<QuizSummary> _quizzes = [];
+  bool _isLoading = true;
+  bool _hasError = false;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    fetchQuizzes();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchQuizzes() async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('jwt_token');
+
+    if (token == null || token.isEmpty) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('${Constants.uri}/api/v1/quizzes'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _quizzes =
+              (data['quizzes'] as List)
+                  .map((json) => QuizSummary.fromJson(json))
+                  .toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    } catch (e) {
+      print("Error fetching quizzes: $e");
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+    }
+  }
+
+  Color _getSubjectColor(String? colorName) {
+    if (colorName == null) return Color(0xFF3B82F6); // Default blue
+
+    switch (colorName.toLowerCase()) {
+      case 'blue':
+        return Color(0xFF3B82F6);
+      case 'red':
+        return Color(0xFFEF4444);
+      case 'green':
+        return Color(0xFF10B981);
+      case 'purple':
+        return Color(0xFF8B5CF6);
+      case 'yellow':
+        return Color(0xFFF59E0B);
+      case 'pink':
+        return Color(0xFFEC4899);
+      default:
+        return Color(0xFF3B82F6);
+    }
+  }
+
+  IconData _getSubjectIcon(String? subjectName) {
+    if (subjectName == null) return Icons.quiz;
+
+    switch (subjectName.toLowerCase()) {
+      case 'mathematics':
+        return Icons.calculate;
+      case 'science':
+        return Icons.science;
+      case 'english':
+        return Icons.menu_book;
+      case 'history':
+        return Icons.history_edu;
+      case 'geography':
+        return Icons.public;
+      case 'physics':
+        return Icons.bolt;
+      case 'chemistry':
+        return Icons.science;
+      case 'biology':
+        return Icons.eco;
+      case 'computer science':
+        return Icons.computer;
+      default:
+        return Icons.school;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.grey[100],
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            Row(
-              children: [
-                IconButton(
-                            icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                Text(
-                    'Quizzes',
-                    style: TextStyle(
-                      fontSize: 24 * settings.fontSize, // Updated
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-            ),
-              ],
-            ),
-            const SizedBox(height: 10),
-      
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
+
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          "Quizzes",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20 * settings.fontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: fontFamily(),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh, color: Colors.black),
+            onPressed: fetchQuizzes,
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: Color(0XFF6366F1),
+          unselectedLabelColor: Colors.grey.shade700,
+          indicatorColor: Color(0XFF6366F1),
+          tabs: [
+            Tab(text: "Available", icon: Icon(Icons.quiz)),
+            Tab(text: "Completed", icon: Icon(Icons.check_circle)),
+            Tab(text: "Analytics", icon: Icon(Icons.bar_chart)),
+          ],
+          labelStyle: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: fontFamily(),
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily(),
+          ),
+        ),
+      ),
+      body:
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _hasError
+              ? _buildErrorState(settings, fontFamily())
+              : TabBarView(
+                controller: _tabController,
                 children: [
-                  _buildQuizCategory('Available', settings.fontSize),
-                  _buildQuizCategory('Completed', settings.fontSize),
-                  _buildQuizCategory('Analytics', settings.fontSize),
+                  _buildAvailableQuizzes(settings, fontFamily()),
+                  _buildCompletedQuizzes(settings, fontFamily()),
+                  _buildAnalytics(settings, fontFamily()),
                 ],
               ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateQuizPage()),
+          ).then((_) => fetchQuizzes());
+        },
+        backgroundColor: Color(0XFF6366F1),
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(AccessibilitySettings settings, String fontFamily) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 80, color: Colors.red.shade400),
+            SizedBox(height: 16),
+            Text(
+              "Failed to load quizzes",
+              style: TextStyle(
+                fontSize: 20 * settings.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily,
+                color: Colors.red.shade700,
+              ),
             ),
-            
-      
-            // List of Quiz Cards
-            ListView.builder(
-              shrinkWrap: true, // Allow ListView to shrink-wrap its content
-              physics: const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
-              itemCount: _quizCards.length,
-              itemBuilder: (context, index) {
-                final quiz = _quizCards[index];
-                return _buildQuizItem(
-                  subject: quiz["subject"],
-                  topic: quiz["topic"],
-                  questions: quiz["questions"],
-                  duration: quiz["duration"],
-                  fontSize: settings.fontSize, // Pass fontSize
-                );
-              },
+            SizedBox(height: 8),
+            Text(
+              "There was a problem loading the quizzes. Please try again.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16 * settings.fontSize,
+                fontFamily: fontFamily,
+                color: Colors.grey.shade700,
+              ),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0XFF6366F1),
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: fetchQuizzes,
+              icon: Icon(Icons.refresh),
+              label: Text(
+                "Try Again",
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily,
+                ),
+              ),
             ),
           ],
         ),
@@ -113,133 +309,315 @@ class _QuizzesPageState extends State<QuizzesPage> {
     );
   }
 
-  Widget _buildQuizCategory(String title, double fontSize) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
+  Widget _buildAvailableQuizzes(
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
+    if (_quizzes.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.quiz_outlined, size: 80, color: Colors.grey.shade400),
+            SizedBox(height: 16),
+            Text(
+              "No quizzes available",
+              style: TextStyle(
+                fontSize: 18 * settings.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily,
+                color: Colors.grey.shade700,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Create a new quiz to get started",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16 * settings.fontSize,
+                fontFamily: fontFamily,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0XFF6366F1),
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateQuizPage()),
+                ).then((_) => fetchQuizzes());
+              },
+              icon: Icon(Icons.add),
+              label: Text(
+                "Create Quiz",
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily,
+                ),
+              ),
+            ),
+          ],
         ),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16 * fontSize, // Updated
-            fontWeight: FontWeight.bold,
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: fetchQuizzes,
+      child: ListView.builder(
+        padding: EdgeInsets.all(16),
+        itemCount: _quizzes.length,
+        itemBuilder: (context, index) {
+          final quiz = _quizzes[index];
+          return _buildQuizCard(quiz, settings, fontFamily);
+        },
+      ),
+    );
+  }
+
+  Widget _buildCompletedQuizzes(
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
+    // This would show quizzes the user has completed
+    // For now, we'll show a placeholder
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            size: 80,
+            color: Colors.grey.shade400,
+          ),
+          SizedBox(height: 16),
+          Text(
+            "No completed quizzes",
+            style: TextStyle(
+              fontSize: 18 * settings.fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Complete a quiz to see your results here",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16 * settings.fontSize,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnalytics(AccessibilitySettings settings, String fontFamily) {
+    // This would show analytics about the user's quiz performance
+    // For now, we'll show a placeholder
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.bar_chart, size: 80, color: Colors.grey.shade400),
+          SizedBox(height: 16),
+          Text(
+            "No analytics available",
+            style: TextStyle(
+              fontSize: 18 * settings.fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Complete quizzes to see your performance analytics",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16 * settings.fontSize,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuizCard(
+    QuizSummary quiz,
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
+    final Color subjectColor = _getSubjectColor(quiz.subjectColor);
+    final IconData subjectIcon = _getSubjectIcon(quiz.subjectName);
+
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => QuizPage(quizId: quiz.id)),
+          );
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: subjectColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(subjectIcon, color: subjectColor, size: 32),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      quiz.title,
+                      style: TextStyle(
+                        fontSize: 18 * settings.fontSize,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: fontFamily,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    if (quiz.subjectName != null) ...[
+                      Text(
+                        quiz.subjectName!,
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize,
+                          fontFamily: fontFamily,
+                          color: subjectColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                    ],
+                    Text(
+                      quiz.description,
+                      style: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily,
+                        color: Colors.grey.shade700,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        _buildQuizInfoChip(
+                          "${quiz.questionCount} questions",
+                          Icons.help_outline,
+                          settings,
+                          fontFamily,
+                        ),
+                        SizedBox(width: 8),
+                        _buildQuizInfoChip(
+                          "${quiz.timeLimit} min",
+                          Icons.timer,
+                          settings,
+                          fontFamily,
+                        ),
+                        SizedBox(width: 8),
+                        _buildQuizInfoChip(
+                          quiz.difficulty,
+                          Icons.trending_up,
+                          settings,
+                          fontFamily,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0XFF6366F1),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizPage(quizId: quiz.id),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Start Quiz",
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildQuizItem({
-    required String subject,
-    required String topic,
-    required String questions,
-    required String duration,
-    required double fontSize, // Added fontSize parameter
-  }) {
-    return Card(
-      color: Colors.white,
-      margin: EdgeInsets.only(bottom: 20),
-      elevation: 4,
-      shape: RoundedRectangleBorder(
+  Widget _buildQuizInfoChip(
+    String label,
+    IconData icon,
+    AccessibilitySettings settings,
+    String fontFamily,
+  ) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(13.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              child: Icon(
-                _getSubjectIcon(subject),
-                size: 100 * fontSize, // Updated
-                color: Colors.deepPurple,
-              ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: Colors.grey.shade700),
+          SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12 * settings.fontSize,
+              fontFamily: fontFamily,
+              color: Colors.grey.shade700,
             ),
-            const SizedBox(width: 15.0),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    subject,
-                    style: TextStyle(
-                      fontSize: 20 * fontSize, // Updated
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    topic,
-                    style: TextStyle(
-                      fontSize: 16 * fontSize, // Updated
-                      color: const Color.fromARGB(223, 0, 0, 0),
-                    ),
-                  ),
-                  Text(
-                    '$questions Questions',
-                    style: TextStyle(
-                      fontSize: 14 * fontSize, // Updated
-                      color: const Color.fromARGB(223, 0, 0, 0),
-                    ),
-                  ),
-                  Text(
-                    'Duration: $duration',
-                    style: TextStyle(
-                      fontSize: 14 * fontSize, // Updated
-                      color: const Color.fromARGB(223, 0, 0, 0),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => QuizPage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    ),
-                    child: Text(
-                      'Start Quiz',
-                      style: TextStyle(
-                        fontSize: 16 * fontSize, // Updated
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
-  }
-
-  IconData _getSubjectIcon(String subject) {
-    switch (subject.toLowerCase()) {
-      case 'biology':
-        return Icons.eco;
-      case 'mathematics':
-        return Icons.calculate;
-      case 'chemistry':
-        return Icons.science;
-      case 'computer':
-        return Icons.computer;
-      case 'english':
-        return Icons.menu_book;
-      case 'physics':
-        return Icons.bolt;
-      default:
-        return Icons.book;
-    }
   }
 }
