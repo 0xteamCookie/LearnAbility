@@ -49,6 +49,14 @@ class _SettingPageState extends State<SettingsPage> {
       "key": "browserNotifications",
     },
   ];
+  final List<Map<String, dynamic>> _generalSettings = [
+    {
+      "title": "Select Language",
+      "subtitle": "Select your preferred medium of learning",
+      "value": false,
+      "key": "emailNotifications",
+    },
+  ];
 
   void _saveChanges() {
     logger.d("Changes saved");
@@ -108,6 +116,21 @@ class _SettingPageState extends State<SettingsPage> {
                   ),
                 ],
               ),
+              SizedBox(height: 16),
+              Text(
+                'General Settings',
+                style: TextStyle(
+                  fontSize: 22 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(), // Added fontFamily
+                ),
+              ),
+              SizedBox(height: 16),
+        
+              for (var setting in _generalSettings)
+                _buildGeneralSettingsCard(setting, settings, fontFamily()
+              ),
+
               SizedBox(height: 16),
               Text(
                 'Privacy Settings',
@@ -187,6 +210,98 @@ class _SettingPageState extends State<SettingsPage> {
       ),
     );
   }
+Widget _buildGeneralSettingsCard(
+  Map<String, dynamic> setting,
+  AccessibilitySettings settings,
+  String fontFamily,
+) {
+  if (setting["title"] == "Select Language") {
+    return Card(
+      color: Colors.grey[100],
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        title: Text(
+          setting["title"],
+          style: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily,
+          ),
+        ),
+        subtitle: Text(
+          setting["subtitle"],
+          style: TextStyle(
+            fontSize: 14 * settings.fontSize,
+            fontFamily: fontFamily,
+          ),
+        ),
+        trailing: Consumer<AccessibilitySettings>(
+          builder: (context, settings, child) {
+            return DropdownButton<String>(
+              value: settings.language,
+              items: ["English", "Hindi"]
+                  .map((language) => DropdownMenuItem<String>(
+                        value: language,
+                        child: Text(
+                          language,
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontFamily: fontFamily,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  settings.setLanguage(newValue);
+                }
+              },
+              underline: Container(), // Removes the default underline
+              icon: Icon(Icons.arrow_drop_down, color: Colors.black54),
+              elevation: 2,
+              isDense: true,
+              style: TextStyle(
+                fontSize: 14 * settings.fontSize,
+                fontFamily: fontFamily,
+                color: Colors.black87,
+              ),
+              dropdownColor: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // Keep the switch for other general settings (if any)
+  return Card(
+    color: Colors.grey[100],
+    margin: EdgeInsets.symmetric(vertical: 8),
+    child: SwitchListTile(
+      title: Text(
+        setting["title"],
+        style: TextStyle(
+          fontSize: 14 * settings.fontSize,
+          fontFamily: fontFamily,
+        ),
+      ),
+      subtitle: Text(
+        setting["subtitle"],
+        style: TextStyle(
+          fontSize: 14 * settings.fontSize,
+          fontFamily: fontFamily,
+        ),
+      ),
+      value: setting["value"],
+      onChanged: (value) {
+        _updateSetting(_generalSettings, setting["key"], value);
+      },
+      activeColor: Colors.deepPurple,
+      inactiveTrackColor: Colors.grey[200],
+    ),
+  );
+}
 
   Widget _buildNotificationSettingsCard(
     Map<String, dynamic> setting,

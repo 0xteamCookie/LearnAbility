@@ -9,6 +9,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _breakReminders = false;
   int _selectedColorIndex = 0;
   int _selectedIndexBottomNavBar = 2;
+  String _language = 'English';
 
   double get fontSize => _fontSize;
   bool get openDyslexic => _openDyslexic;
@@ -18,6 +19,8 @@ class AccessibilitySettings extends ChangeNotifier {
   bool get breakReminders => _breakReminders;
   int get selectedColorIndex => _selectedColorIndex;
   int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
+  String get language => _language;
+
 
   void setFontSize(double value) {
     _fontSize = value;
@@ -56,6 +59,11 @@ class AccessibilitySettings extends ChangeNotifier {
 
   void setSelectedIndex(int index) {
     _selectedIndexBottomNavBar = index;
+    notifyListeners();
+  }
+
+  void setLanguage(String newLanguage) {
+    _language = newLanguage;
     notifyListeners();
   }
 }
