@@ -21,11 +21,12 @@ dependencies:
   shared_preferences: ^2.5.2
   url_launcher: ^6.1.11 
   http_parser: ^4.1.2
-  flutter_math_fork: ^0.7.3
   flutter_highlight: ^0.7.0
   collection: ^1.19.1
+  flutter_math_fork: ^0.7.3
+  flutter_markdown: ^0.7.6+2
 
-
+  
 dev_dependencies:
   flutter_launcher_icons: "^0.14.3"
   flutter_test:
