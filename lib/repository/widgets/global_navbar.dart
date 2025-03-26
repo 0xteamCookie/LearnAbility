@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../Lesson/lessons_page.dart';
 import '../../Quiz/quizzes_page.dart';
 import '../../accessibility_model.dart';
 import '../../accessibility_page.dart';

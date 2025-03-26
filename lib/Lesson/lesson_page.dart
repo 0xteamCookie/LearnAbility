@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:my_first_app/domain/constants/appcolors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:my_first_app/accessibility_model.dart';
 import 'package:my_first_app/utils/constants.dart';
 import 'package:collection/collection.dart';
@@ -1190,7 +1189,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
   ) {
     final content = block.data['content'] ?? "";
     final language = block.data['language'] ?? "plaintext";
-    final showLineNumbers = block.data['showLineNumbers'] ?? false;
+    // final showLineNumbers = block.data['showLineNumbers'] ?? false;
 
     return Container(
       margin: EdgeInsets.only(bottom: 16),
