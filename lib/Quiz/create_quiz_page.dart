@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_first_app/domain/constants/appcolors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_first_app/accessibility_model.dart';
@@ -256,16 +257,16 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBackground,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Create Quiz",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20 * settings.fontSize,
             fontWeight: FontWeight.bold,
             fontFamily: fontFamily(),

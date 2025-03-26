@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_first_app/domain/constants/appcolors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -563,16 +564,16 @@ class _QuizzesPageState extends State<QuizzesPage>
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBackground,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Quizzes",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20 * settings.fontSize,
             fontWeight: FontWeight.bold,
             fontFamily: fontFamily(),
@@ -580,7 +581,7 @@ class _QuizzesPageState extends State<QuizzesPage>
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh, color: Colors.black),
+            icon: Icon(Icons.refresh, color: Colors.white),
             onPressed: () {
               fetchQuizzes();
               fetchOverallAnalytics();
@@ -594,9 +595,9 @@ class _QuizzesPageState extends State<QuizzesPage>
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Color(0XFF6366F1),
-          unselectedLabelColor: Colors.grey.shade700,
-          indicatorColor: Color(0XFF6366F1),
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white.withOpacity(0.5),
+          indicatorColor: Colors.white,
           tabs: [
             Tab(text: "Available", icon: Icon(Icons.quiz)),
             Tab(text: "Completed", icon: Icon(Icons.check_circle)),

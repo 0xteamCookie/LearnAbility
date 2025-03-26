@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_first_app/domain/constants/appcolors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_first_app/accessibility_model.dart';
@@ -375,16 +376,16 @@ class _QuizPageState extends State<QuizPage> {
       return Scaffold(
         backgroundColor: Colors.grey.shade50,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.primaryBackground,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
             "Loading Quiz...",
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 20 * settings.fontSize,
               fontWeight: FontWeight.bold,
               fontFamily: fontFamily(),
@@ -467,16 +468,16 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBackground,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Quiz Overview",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20 * settings.fontSize,
             fontWeight: FontWeight.bold,
             fontFamily: fontFamily(),
@@ -814,10 +815,10 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBackground,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: Colors.white),
           onPressed: () {
             showDialog(
               context: context,
@@ -849,11 +850,14 @@ class _QuizPageState extends State<QuizPage> {
                           Navigator.pop(context); // Exit quiz
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red.shade600,
+                          backgroundColor: AppColors.primaryBackground,
                         ),
                         child: Text(
                           "Exit",
-                          style: TextStyle(fontFamily: fontFamily()),
+                          style: TextStyle(
+                            fontFamily: fontFamily(),
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -866,7 +870,7 @@ class _QuizPageState extends State<QuizPage> {
               ? "Quiz Results"
               : "Question ${_currentPage + 1}/${_quiz!.questions.length}",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 18 * settings.fontSize,
             fontWeight: FontWeight.bold,
             fontFamily: fontFamily(),
@@ -882,7 +886,7 @@ class _QuizPageState extends State<QuizPage> {
                   style: TextStyle(
                     fontSize: 16 * settings.fontSize,
                     fontWeight: FontWeight.bold,
-                    color: _timeRemaining < 60 ? Colors.red : Colors.black,
+                    color: _timeRemaining < 60 ? Colors.red : Colors.white,
                     fontFamily: fontFamily(),
                   ),
                 ),
