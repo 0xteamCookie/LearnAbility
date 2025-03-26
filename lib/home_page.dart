@@ -154,17 +154,19 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Uihelper.CustomText(
                           text: "Next Lesson",
+                          fontfamily: fontFamily(),
                           color: Colors.black,
                           fontweight: FontWeight.bold,
-                          fontsize: 18,
+                          fontsize: 18 * settings.fontSize,
                         ),
                         Uihelper.CustomText(
                           text: "See all →",
                           // color: const Color.fromARGB(255, 71, 70, 70),
                           color: Colors.blue,
                           fontweight: FontWeight.bold,
-                          fontsize: 16,
-                        ),
+                          fontsize: 16 * settings.fontSize,
+                          fontfamily: fontFamily(),
+                      ),
                       ],
                     ),
                     Card(
@@ -209,6 +211,8 @@ class _HomePageState extends State<HomePage> {
                                         "Get Started",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 15 * settings.fontSize,
+                                          fontFamily: fontFamily(),
                                         ),
                                       ),
                                       SizedBox(width: 4),
@@ -315,7 +319,8 @@ class _HomePageState extends State<HomePage> {
                           text: "My Materials",
                           color: Colors.black,
                           fontweight: FontWeight.bold,
-                          fontsize: 18,
+                          fontsize: 18 * settings.fontSize,
+                          fontfamily: fontFamily(),
                         ),
                         TextButton(
                           onPressed: () {
@@ -361,6 +366,7 @@ class _HomePageState extends State<HomePage> {
                                         "Ready",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          fontFamily: fontFamily(),
                                         ),
                                       ),
                                       SizedBox(width: 4),
@@ -442,6 +448,7 @@ class _HomePageState extends State<HomePage> {
                                         "Ready",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          fontFamily: fontFamily(),
                                         ),
                                       ),
                                       SizedBox(width: 4),
