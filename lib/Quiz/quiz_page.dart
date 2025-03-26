@@ -33,7 +33,10 @@ class QuizQuestion {
       type: json['type'],
       points: json['points'],
       answers:
-          (json['answers'] as List).map((a) => QuizAnswer.fromJson(a)).toList(),
+          (json['answers'] as List?)
+              ?.map((a) => QuizAnswer.fromJson(a))
+              .toList() ??
+          [],
       difficulty: json['difficulty'],
       explanation: json['explanation'] ?? '',
     );
