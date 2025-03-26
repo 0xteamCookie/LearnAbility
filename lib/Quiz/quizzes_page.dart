@@ -478,114 +478,233 @@ class _QuizzesPageState extends State<QuizzesPage>
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: subjectColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(subjectIcon, color: subjectColor, size: 32),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      quiz.title,
-                      style: TextStyle(
-                        fontSize: 18 * settings.fontSize,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: fontFamily,
+          child:
+              MediaQuery.of(context).size.width > 600
+                  ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: subjectColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(subjectIcon, color: subjectColor, size: 32),
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    if (quiz.subjectName != null) ...[
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              quiz.title,
+                              style: TextStyle(
+                                fontSize: 18 * settings.fontSize,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            if (quiz.subjectName != null) ...[
+                              Text(
+                                quiz.subjectName!,
+                                style: TextStyle(
+                                  fontSize: 14 * settings.fontSize,
+                                  fontFamily: fontFamily,
+                                  color: subjectColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                            ],
+                            Text(
+                              quiz.description,
+                              style: TextStyle(
+                                fontSize: 14 * settings.fontSize,
+                                fontFamily: fontFamily,
+                                color: Colors.grey.shade700,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8, // horizontal space between chips
+                              runSpacing: 8, // vertical space between lines
+                              children: [
+                                _buildQuizInfoChip(
+                                  "${quiz.questionCount} questions",
+                                  Icons.help_outline,
+                                  settings,
+                                  fontFamily,
+                                ),
+                                _buildQuizInfoChip(
+                                  "${quiz.timeLimit} min",
+                                  Icons.timer,
+                                  settings,
+                                  fontFamily,
+                                ),
+                                _buildQuizInfoChip(
+                                  quiz.difficulty,
+                                  Icons.trending_up,
+                                  settings,
+                                  fontFamily,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0XFF6366F1),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              QuizPage(quizId: quiz.id),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Start Quiz",
+                                  style: TextStyle(
+                                    fontSize: 14 * settings.fontSize,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: fontFamily,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                  : Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: subjectColor.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              subjectIcon,
+                              color: subjectColor,
+                              size: 32,
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  quiz.title,
+                                  style: TextStyle(
+                                    fontSize: 18 * settings.fontSize,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: fontFamily,
+                                  ),
+                                ),
+                                if (quiz.subjectName != null) ...[
+                                  Text(
+                                    quiz.subjectName!,
+                                    style: TextStyle(
+                                      fontSize: 14 * settings.fontSize,
+                                      fontFamily: fontFamily,
+                                      color: subjectColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
                       Text(
-                        quiz.subjectName!,
+                        quiz.description,
                         style: TextStyle(
                           fontSize: 14 * settings.fontSize,
                           fontFamily: fontFamily,
-                          color: subjectColor,
-                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade700,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 4),
-                    ],
-                    Text(
-                      quiz.description,
-                      style: TextStyle(
-                        fontSize: 14 * settings.fontSize,
-                        fontFamily: fontFamily,
-                        color: Colors.grey.shade700,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _buildQuizInfoChip(
-                          "${quiz.questionCount} questions",
-                          Icons.help_outline,
-                          settings,
-                          fontFamily,
-                        ),
-                        SizedBox(width: 8),
-                        _buildQuizInfoChip(
-                          "${quiz.timeLimit} min",
-                          Icons.timer,
-                          settings,
-                          fontFamily,
-                        ),
-                        SizedBox(width: 8),
-                        _buildQuizInfoChip(
-                          quiz.difficulty,
-                          Icons.trending_up,
-                          settings,
-                          fontFamily,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0XFF6366F1),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          _buildQuizInfoChip(
+                            "${quiz.questionCount} questions",
+                            Icons.help_outline,
+                            settings,
+                            fontFamily,
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => QuizPage(quizId: quiz.id),
+                          _buildQuizInfoChip(
+                            "${quiz.timeLimit} min",
+                            Icons.timer,
+                            settings,
+                            fontFamily,
+                          ),
+                          _buildQuizInfoChip(
+                            quiz.difficulty,
+                            Icons.trending_up,
+                            settings,
+                            fontFamily,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0XFF6366F1),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        },
-                        child: Text(
-                          "Start Quiz",
-                          style: TextStyle(
-                            fontSize: 14 * settings.fontSize,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: fontFamily,
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => QuizPage(quizId: quiz.id),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Start Quiz",
+                            style: TextStyle(
+                              fontSize: 14 * settings.fontSize,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: fontFamily,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                    ],
+                  ),
         ),
       ),
     );

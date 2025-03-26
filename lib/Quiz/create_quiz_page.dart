@@ -104,6 +104,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
+        print("Subjects: $data");
         setState(() {
           _subjects =
               (data['subjects'] as List)
@@ -155,6 +156,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
+        print("Lessons: $data");
         setState(() {
           _lessons =
               (data['lessons'] as List)
@@ -218,6 +220,8 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
         },
         body: jsonEncode(requestBody),
       );
+
+      print("Create Quiz Response: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         ScaffoldMessenger.of(
@@ -347,51 +351,6 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 fontWeight: FontWeight.bold,
                 fontFamily: fontFamily,
               ),
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: "Quiz Title",
-                hintText: "Enter a title for your quiz",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                prefixIcon: Icon(Icons.title),
-              ),
-              style: TextStyle(
-                fontSize: 16 * settings.fontSize,
-                fontFamily: fontFamily,
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter a title";
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: "Description",
-                hintText: "Enter a description for your quiz",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                prefixIcon: Icon(Icons.description),
-              ),
-              style: TextStyle(
-                fontSize: 16 * settings.fontSize,
-                fontFamily: fontFamily,
-              ),
-              maxLines: 3,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter a description";
-                }
-                return null;
-              },
             ),
             SizedBox(height: 24),
             Text(
