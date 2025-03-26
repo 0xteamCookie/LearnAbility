@@ -654,6 +654,7 @@ class _QuizPageState extends State<QuizPage> {
 
     final isQuizCompleted = _currentPage == _quiz!.questions.length;
     final isLastQuestion = _currentPage == _quiz!.questions.length - 1;
+    print(isLastQuestion);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,

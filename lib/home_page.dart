@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
-import 'Lesson/lessons_page.dart';
-import 'Quiz/quizzes_page.dart';
-import 'accessibility_page.dart';
-import 'ai_assistant_page.dart';
-import 'videos_page.dart';
-import 'articles_page.dart';
-import 'generate_content_page.dart';
-import 'settings_page.dart';
-import 'stats_page.dart';
 import 'package:provider/provider.dart';
 import 'accessibility_model.dart';
 
@@ -26,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final int _selectedIndex = -1;
+  // final int _selectedIndex = -1;
 
   @override
   void initState() {
@@ -122,22 +112,23 @@ class _HomePageState extends State<HomePage> {
                               );
                             }
                           },
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 'logout',
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    LucideIcons.logOut,
-                                    size: 20,
-                                    color: Colors.black,
+                          itemBuilder:
+                              (context) => [
+                                PopupMenuItem(
+                                  value: 'logout',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        LucideIcons.logOut,
+                                        size: 20,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text("Logout"),
+                                    ],
                                   ),
-                                  SizedBox(width: 4),
-                                  Text("Logout"),
-                                ],
-                              ),
-                            ),
-                          ],
+                                ),
+                              ],
                           child: Icon(
                             LucideIcons.user,
                             size: 28,
@@ -166,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                           fontweight: FontWeight.bold,
                           fontsize: 16 * settings.fontSize,
                           fontfamily: fontFamily(),
-                      ),
+                        ),
                       ],
                     ),
                     Card(
@@ -535,12 +526,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0XFFE5E7Eb),
-              blurRadius: 4,
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Color(0XFFE5E7Eb), blurRadius: 4)],
         ),
         padding: EdgeInsets.all(padding),
         child: Column(
@@ -548,11 +534,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Icon(
-                  icon,
-                  color: color,
-                  size: iconSize * settings.fontSize,
-                ),
+                Icon(icon, color: color, size: iconSize * settings.fontSize),
                 SizedBox(width: boxWidth),
                 Flexible(
                   child: Text(
@@ -593,74 +575,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // LESSON CARD WIDGET TEMPLATE
-  Widget _buildLessonCard({
-    required String subject,
-    required String category,
-    required String title,
-    required Color color,
-  }) {
-    final settings = Provider.of<AccessibilitySettings>(context);
-    final bool isDyslexic = settings.openDyslexic;
-
-    String fontFamily() {
-      return isDyslexic ? "OpenDyslexic" : "Roboto";
-    }
-
-    return Card(
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(width: double.infinity),
-            Text(
-              subject,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14.0 * settings.fontSize,
-                fontFamily: fontFamily(),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20.0 * settings.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: fontFamily(),
-              ),
-            ),
-            Text(
-              category,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14.0 * settings.fontSize,
-                fontFamily: fontFamily(),
-              ),
-            ),
-            SizedBox(height: 16.0),
-            TextButton(
-              onPressed: () {
-                // Continue action
-              },
-              child: Text(
-                'Continue',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0 * settings.fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
             ),
           ],
         ),
