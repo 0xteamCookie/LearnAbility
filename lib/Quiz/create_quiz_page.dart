@@ -381,7 +381,11 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                   _subjects.map((subject) {
                     return DropdownMenuItem<String>(
                       value: subject.id,
-                      child: Text(subject.name),
+                      child: Text(
+                        subject.name,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     );
                   }).toList(),
               onChanged: (value) {
@@ -401,6 +405,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             ),
             SizedBox(height: 16),
             DropdownButtonFormField<String>(
+              isExpanded: true, // Add this to make dropdown take full width
               decoration: InputDecoration(
                 labelText: "Lesson",
                 border: OutlineInputBorder(
@@ -418,7 +423,11 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                   _lessons.map((lesson) {
                     return DropdownMenuItem<String>(
                       value: lesson.id,
-                      child: Text(lesson.title),
+                      child: Text(
+                        lesson.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     );
                   }).toList(),
               onChanged: (value) {
