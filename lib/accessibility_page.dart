@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
+import "package:my_first_app/domain/constants/appcolors.dart";
 import "package:my_first_app/repository/widgets/global_navbar.dart";
 import "package:provider/provider.dart";
 
@@ -23,7 +24,10 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     super.initState();
     // Set the correct index when this page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(3);
+      Provider.of<AccessibilitySettings>(
+        context,
+        listen: false,
+      ).setSelectedIndex(3);
     });
   }
 
@@ -59,33 +63,36 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
       return "x";
     }
 
-    return SafeArea(
-      child: GlobalNavBar(
+    return GlobalNavBar(
+      body: Scaffold(
+        backgroundColor: AppColors.scaffoldbackground,
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryBackground,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white, size: 28),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            "Accessibility Settings",
+            style: TextStyle(
+              fontSize: 22 * fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily(),
+              color: Colors.white,
+            ),
+          ),
+        ),
+        // Rest of your scaffold body remains unchanged
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Text(
-                    "Accessibility Settings",
-                    style: TextStyle(
-                      fontSize: 24 * fontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(height: 20),
-      
+
               // Text & Display Section
               Text(
                 "Text & Display",
@@ -115,7 +122,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 },
               ),
               SizedBox(height: 20),
-      
+
               // Color Theme Section
               Text(
                 "Color Theme",
@@ -128,27 +135,30 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: _colorThemes.map((color) {
-                  return GestureDetector(
-                    onTap: () {
-                      settings.setColorIndex(_colorThemes.indexOf(color));
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                        border: selectedColorIndex == _colorThemes.indexOf(color)
-                            ? Border.all(color: Colors.black, width: 2)
-                            : null,
-                      ),
-                    ),
-                  );
-                }).toList(),
+                children:
+                    _colorThemes.map((color) {
+                      return GestureDetector(
+                        onTap: () {
+                          settings.setColorIndex(_colorThemes.indexOf(color));
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                            border:
+                                selectedColorIndex ==
+                                        _colorThemes.indexOf(color)
+                                    ? Border.all(color: Colors.black, width: 2)
+                                    : null,
+                          ),
+                        ),
+                      );
+                    }).toList(),
               ),
               SizedBox(height: 20),
-      
+
               // Speech Rate Section
               Text(
                 "Speech Rate",
@@ -187,7 +197,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ],
               ),
               SizedBox(height: 20),
-      
+
               // Word Prediction Section
               Row(
                 children: [
@@ -208,7 +218,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                 ],
               ),
-      
+
               // Dyslexia friendly font Section
               Row(
                 children: [
@@ -230,7 +240,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ],
               ),
               SizedBox(height: 20),
-      
+
               // Focus & Timers Section
               Text(
                 "Focus & Timers",
@@ -241,7 +251,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                 ),
               ),
               SizedBox(height: 10),
-      
+
               // Visual Timers Section
               Row(
                 children: [
@@ -262,7 +272,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                   ),
                 ],
               ),
-      
+
               // Break Reminders Section
               Row(
                 children: [
