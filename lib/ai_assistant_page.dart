@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'utils/constants.dart';
 import 'domain/constants/appcolors.dart';
+import 'accessibility_model.dart';
 
 class AIAssistantPage extends StatefulWidget {
   const AIAssistantPage({super.key});
@@ -131,6 +133,13 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -141,13 +150,17 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
               child: Icon(
                 Icons.assistant,
                 color: AppColors.primaryBackground,
-                size: 20,
+                size: 20 * settings.fontSize,
               ),
             ),
             const SizedBox(width: 10),
-            const Text(
+            Text(
               'AI Learning Assistant',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(
+                fontSize: 18 * settings.fontSize,
+                color: Colors.white,
+                fontFamily: fontFamily(),
+              ),
             ),
           ],
         ),
@@ -156,7 +169,6 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          // Add a subtle gradient background
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -167,213 +179,216 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
           children: [
             // Chat history display
             Expanded(
-              child:
-                  _chatHistory.isEmpty
-                      ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.chat_bubble_outline,
-                              size: 80,
-                              color: Colors.grey[400],
+              child: _chatHistory.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            size: 80 * settings.fontSize,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            'Your AI Learning Assistant',
+                            style: TextStyle(
+                              fontSize: 20 * settings.fontSize,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                              fontFamily: fontFamily(),
                             ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'Your AI Learning Assistant',
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              'Ask me anything about your courses, assignments, or learning materials!',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[800],
+                                fontSize: 16 * settings.fontSize,
+                                color: Colors.grey[600],
+                                fontFamily: fontFamily(),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Padding(
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.lightbulb_outline),
+                            label: Text(
+                              'Try an example question',
+                              style: TextStyle(fontFamily: fontFamily()
+                              , fontSize: 18 * settings.fontSize),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryBackground,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 40,
+                                horizontal: 20,
+                                vertical: 12,
                               ),
-                              child: Text(
-                                'Ask me anything about your courses, assignments, or learning materials!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            const SizedBox(height: 20),
-                            ElevatedButton.icon(
-                              icon: const Icon(Icons.lightbulb_outline),
-                              label: const Text('Try an example question'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryBackground,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 12,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                            onPressed: () {
+                              _queryController.text =
+                                  "Explain the concept of object-oriented programming";
+                              _sendQuery();
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
+                      itemCount: _chatHistory.length + (_isLoading ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        // Show loading indicator as the last item when loading
+                        if (_isLoading && index == _chatHistory.length) {
+                          return Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                top: 12,
+                                bottom: 12,
+                                right: 80,
                               ),
-                              onPressed: () {
-                                _queryController.text =
-                                    "Explain the concept of object-oriented programming";
-                                _sendQuery();
-                              },
-                            ),
-                          ],
-                        ),
-                      )
-                      : ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 12,
-                        ),
-                        itemCount: _chatHistory.length + (_isLoading ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          // Show loading indicator as the last item when loading
-                          if (_isLoading && index == _chatHistory.length) {
-                            return Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 12,
-                                  bottom: 12,
-                                  right: 80,
-                                ),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(18),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: AppColors.primaryBackground,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Text(
-                                      'Thinking...',
-                                      style: TextStyle(
-                                        color: Colors.grey[800],
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(18),
                               ),
-                            );
-                          }
-
-                          final chat = _chatHistory[index];
-                          final bool isUser = chat['role'] == 'user';
-                          final timestamp = chat['timestamp'] as DateTime;
-
-                          return Column(
-                            crossAxisAlignment:
-                                isUser
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (!isUser)
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 12,
-                                        bottom: 4,
-                                      ),
-                                      child: CircleAvatar(
-                                        backgroundColor: AppColors
-                                            .primaryBackground
-                                            .withOpacity(0.8),
-                                        radius: 12,
-                                        child: const Icon(
-                                          Icons.assistant,
-                                          color: Colors.white,
-                                          size: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: isUser ? 0 : 4,
-                                      right: isUser ? 12 : 0,
-                                      bottom: 4,
-                                    ),
-                                    child: Text(
-                                      isUser ? 'You' : 'Assistant',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey[700],
-                                      ),
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.primaryBackground,
                                     ),
                                   ),
+                                  const SizedBox(width: 12),
                                   Text(
-                                    _formatTimestamp(timestamp),
+                                    'Thinking...',
                                     style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey[500],
+                                      color: Colors.grey[800],
+                                      fontSize: 14 * settings.fontSize,
+                                      fontFamily: fontFamily(),
                                     ),
                                   ),
                                 ],
                               ),
-                              Align(
-                                alignment:
-                                    isUser
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: 16,
-                                    left: isUser ? 80 : 0,
-                                    right: isUser ? 0 : 80,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        isUser
-                                            ? AppColors.primaryBackground
-                                            : Colors.white,
-                                    borderRadius: BorderRadius.circular(18),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        offset: const Offset(0, 2),
-                                        blurRadius: 4,
-                                        color: Colors.black.withOpacity(0.1),
+                            ),
+                          );
+                        }
+
+                        final chat = _chatHistory[index];
+                        final bool isUser = chat['role'] == 'user';
+                        final timestamp = chat['timestamp'] as DateTime;
+
+                        return Column(
+                          crossAxisAlignment: isUser
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (!isUser)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 12,
+                                      bottom: 4,
+                                    ),
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors
+                                          .primaryBackground
+                                          .withOpacity(0.8),
+                                      radius: 12,
+                                      child: const Icon(
+                                        Icons.assistant,
+                                        color: Colors.white,
+                                        size: 14,
                                       ),
-                                    ],
+                                    ),
+                                  ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: isUser ? 0 : 4,
+                                    right: isUser ? 12 : 0,
+                                    bottom: 4,
                                   ),
                                   child: Text(
-                                    chat['message'] ?? '',
+                                    isUser ? 'You' : 'Assistant',
                                     style: TextStyle(
-                                      color:
-                                          isUser
-                                              ? Colors.white
-                                              : Colors.black87,
-                                      fontSize: 15,
-                                      height: 1.4,
+                                      fontSize: 12 * settings.fontSize,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey[700],
+                                      fontFamily: fontFamily(),
                                     ),
                                   ),
                                 ),
+                                Text(
+                                  _formatTimestamp(timestamp),
+                                  style: TextStyle(
+                                    fontSize: 10 * settings.fontSize,
+                                    color: Colors.grey[500],
+                                    fontFamily: fontFamily(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Align(
+                              alignment: isUser
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  bottom: 16,
+                                  left: isUser ? 80 : 0,
+                                  right: isUser ? 0 : 80,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isUser
+                                      ? AppColors.primaryBackground
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(18),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 4,
+                                      color: Colors.black.withOpacity(0.1),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  chat['message'] ?? '',
+                                  style: TextStyle(
+                                    color: isUser
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    fontSize: 15 * settings.fontSize,
+                                    height: 1.4,
+                                    fontFamily: fontFamily(),
+                                  ),
+                                ),
                               ),
-                            ],
-                          );
-                        },
-                      ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
             ),
             // Input area
             Container(
@@ -403,7 +418,11 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                         hintText: 'Ask a question...',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        hintStyle: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14 * settings.fontSize,
+                          fontFamily: fontFamily(),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -441,7 +460,7 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                           child: Icon(
                             Icons.send_rounded,
                             color: Colors.white,
-                            size: 22,
+                            size: 22 * settings.fontSize,
                           ),
                         ),
                       ),
