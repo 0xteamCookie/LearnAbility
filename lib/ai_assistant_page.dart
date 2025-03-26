@@ -89,12 +89,14 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final assistantMessage = data['answer'] ?? 'No response from assistant';
+
         setState(() {
-          _response = data['answer'] ?? 'No response from assistant';
+          _response = assistantMessage;
           // Add AI response to chat history
           _chatHistory.add({
             'role': 'assistant',
-            'message': _response,
+            'message': _formatAssistantResponse(assistantMessage),
             'timestamp': DateTime.now(),
           });
         });
@@ -125,6 +127,22 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
       });
       _scrollToBottom();
     }
+  }
+
+  String _formatAssistantResponse(String response) {
+    // Example logic for formatting the assistant's response
+    if (response.contains('**')) {
+      // Replace '**' with bold formatting
+      response = response.replaceAll('**', '');
+      return '📝 $response'; // Add an icon for emphasis
+    } else if (response.contains('```')) {
+      // Handle code blocks
+      return '💻 Code Snippet:\n$response';
+    } else if (response.contains('http')) {
+      // Handle URLs
+      return '🔗 Link: $response';
+    }
+    return response.trim();
   }
 
   String _formatTimestamp(DateTime timestamp) {

@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_first_app/accessibility_model.dart';
 import 'package:my_first_app/utils/constants.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 // Model classes for the new JSON structure
 class LessonData {
@@ -1074,35 +1076,17 @@ class _LessonContentPageState extends State<LessonContentPage> {
     String fontFamily,
   ) {
     final content = block.data['content'] ?? "";
-    final emphasis = block.data['emphasis'] ?? "none";
-
-    FontWeight fontWeight;
-    FontStyle fontStyle;
-
-    switch (emphasis) {
-      case 'light':
-        fontWeight = FontWeight.w300;
-        fontStyle = FontStyle.italic;
-        break;
-      case 'strong':
-        fontWeight = FontWeight.bold;
-        fontStyle = FontStyle.normal;
-        break;
-      default:
-        fontWeight = FontWeight.normal;
-        fontStyle = FontStyle.normal;
-    }
 
     return Padding(
       padding: EdgeInsets.only(bottom: 16),
-      child: Text(
-        content,
-        style: TextStyle(
-          fontSize: 16 * settings.fontSize,
-          fontWeight: fontWeight,
-          fontStyle: fontStyle,
-          height: 1.5,
-          fontFamily: fontFamily,
+      child: MarkdownBody(
+        data: content,
+        styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+          p: TextStyle(
+            fontSize: 16 * settings.fontSize,
+            fontFamily: fontFamily,
+            height: 1.5,
+          ),
         ),
       ),
     );
@@ -1253,19 +1237,17 @@ class _LessonContentPageState extends State<LessonContentPage> {
     final content = block.data['content'] ?? "";
     final displayMode = block.data['displayMode'] ?? false;
 
-    try {
-      // Try to use flutter_math_fork if available
-      return Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(bottom: 16),
-        padding: EdgeInsets.symmetric(vertical: displayMode ? 16 : 8),
-        alignment: displayMode ? Alignment.center : Alignment.centerLeft,
-        child: _buildMathEquation(content, displayMode, settings.fontSize),
-      );
-    } catch (e) {
-      // Fallback to simple text display
-      return _buildMathEquation(content, displayMode, settings.fontSize);
-    }
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.symmetric(vertical: displayMode ? 16 : 8),
+      alignment: displayMode ? Alignment.center : Alignment.centerLeft,
+      child: Math.tex(
+        content,
+        mathStyle: displayMode ? MathStyle.display : MathStyle.text,
+        textStyle: TextStyle(fontSize: 16 * settings.fontSize),
+      ),
+    );
   }
 
   Widget _buildCalloutBlock(
