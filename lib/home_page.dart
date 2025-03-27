@@ -1,17 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
 import 'package:http/http.dart' as http;
->>>>>>> 2c71b20678b96a058e6403a32250fa67ab1b0805
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
-<<<<<<< HEAD
 import 'package:my_first_app/repository/widgets/uihelper.dart';
-=======
->>>>>>> 2c71b20678b96a058e6403a32250fa67ab1b0805
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'accessibility_model.dart';
@@ -696,153 +690,6 @@ class _HomePageState extends State<HomePage>
             ),
           ),
 
-<<<<<<< HEAD
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      color: Color(0xFFFFF7ED),
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFFFEDD5),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Ready",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 4),
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.black,
-                                        size: 16,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 10),
-
-                            Text(
-                              "Science Syllabus",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              "Today, 16:00",
-                              style: TextStyle(color: Colors.grey[600]),
-                            ),
-
-                            SizedBox(height: 10),
-
-                            Row(
-                              children: [
-                                Text(
-                                  "Science",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      color: Color(0xFFFFF7ED),
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFFFEDD5),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Ready",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 4),
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.black,
-                                        size: 16,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 10),
-
-                            Text(
-                              "English poem",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              "Today, 16:00",
-                              style: TextStyle(color: Colors.grey[600]),
-                            ),
-
-                            SizedBox(height: 10),
-
-                            Row(
-                              children: [
-                                Text(
-                                  "English",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                  ],
-=======
           // Loading indicator
           if (_isLoading)
             Container(
@@ -850,7 +697,6 @@ class _HomePageState extends State<HomePage>
               child: Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
->>>>>>> 2c71b20678b96a058e6403a32250fa67ab1b0805
                 ),
               ),
             ),
