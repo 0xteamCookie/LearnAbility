@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'accessibility_model.dart';
 import 'domain/constants/appcolors.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Subject {
   final String id;
@@ -404,6 +405,8 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
   Future<void> uploadMaterial(String subjectId) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
+      // Ensure we get bytes for web platform
+      withData: kIsWeb,
     );
 
     if (result != null) {
@@ -426,13 +429,27 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
 
         request.headers['Authorization'] = 'Bearer $token';
         request.fields['subjectId'] = subjectId;
-        request.files.add(
-          await http.MultipartFile.fromPath('documents', file.path!),
-        );
+
+        // Platform-specific file handling
+        if (kIsWeb) {
+          // Web platform - use bytes instead of path
+          request.files.add(
+            http.MultipartFile.fromBytes(
+              'documents',
+              file.bytes!,
+              filename: file.name,
+            ),
+          );
+        } else {
+          // Mobile platform - can use path directly
+          request.files.add(
+            await http.MultipartFile.fromPath('documents', file.path!),
+          );
+        }
 
         final response = await request.send();
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Material uploaded successfully")),
           );
