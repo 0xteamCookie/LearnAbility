@@ -5,7 +5,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
-import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'accessibility_model.dart';
