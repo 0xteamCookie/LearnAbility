@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:my_first_app/widgets/stats_dashboard.dart';
+import 'package:my_first_app/videos_page.dart';
 import 'package:provider/provider.dart';
 import '../../Quiz/quizzes_page.dart';
 import '../../accessibility_model.dart';
@@ -48,7 +48,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
 
       // NAVIGATION MENU - Modern, clean design with requested color scheme
       endDrawer: Drawer(
-        backgroundColor: Color(0XFF6366F1),
         elevation: 0,
         width: MediaQuery.of(context).size.width * 0.75,
         shape: RoundedRectangleBorder(
@@ -57,85 +56,99 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             bottomLeft: Radius.circular(20),
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                  children: [
-                    // Main menu section
-                    _buildMenuSection(
-                      'Main Menu',
-                      [
-                        _MenuItem(
-                          icon: LucideIcons.clipboardCheck,
-                          title: 'Quizzes',
-                          index: 3,
-                          onTap: () => _navigateTo(QuizzesPage(), 3),
-                        ),
-                        _MenuItem(
-                          icon: LucideIcons.folderOpen,
-                          title: 'My Materials',
-                          index: 4,
-                          onTap: () => _navigateTo(GenerateContentPage(), 4),
-                        ),
-                        _MenuItem(
-                          icon: LucideIcons.brain,
-                          title: 'AI Learning Assistant',
-                          index: 5,
-                          onTap: () => _navigateTo(AIAssistantPage(), 5),
-                        ),
-                      ],
-                      settings,
-                      fontFamily(),
-                    ),
+        // Wrap the SafeArea with a Container that has the gradient
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0XFF6366F1), Color(0XFF8B5CF6)],
+            ),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    children: [
+                      // Main menu section
+                      _buildMenuSection(
+                        'Main Menu',
+                        [
+                          _MenuItem(
+                            icon: LucideIcons.bookOpen,
+                            title: 'Subjects',
+                            index: 9,
+                            onTap: () => _navigateTo(SubjectsPage(), 9),
+                          ),
+                          _MenuItem(
+                            icon: LucideIcons.folderOpen,
+                            title: 'My Materials',
+                            index: 4,
+                            onTap: () => _navigateTo(GenerateContentPage(), 4),
+                          ),
+                          _MenuItem(
+                            icon: LucideIcons.clipboardCheck,
+                            title: 'Quizzes',
+                            index: 3,
+                            onTap: () => _navigateTo(QuizzesPage(), 3),
+                          ),
+                          _MenuItem(
+                            icon: LucideIcons.brain,
+                            title: 'AI Assistant',
+                            index: 5,
+                            onTap: () => _navigateTo(AIAssistantPage(), 5),
+                          ),
+                        ],
+                        settings,
+                        fontFamily(),
+                      ),
 
-                    SizedBox(height: 24),
+                      SizedBox(height: 24),
 
-                    // Study Materials section
-                    _buildMenuSection(
-                      'Study Materials',
-                      [
-                        _MenuItem(
-                          icon: LucideIcons.bookOpen,
-                          title: 'Subjects',
-                          index: 9,
-                          onTap: () => _navigateTo(SubjectsPage(), 9),
-                        ),
-                        _MenuItem(
-                          icon: LucideIcons.video,
-                          title: 'Videos',
-                          index: 7,
-                          onTap: () => _navigateTo(StatsDashboard(), 7),
-                        ),
-                        _MenuItem(
-                          icon: LucideIcons.fileText,
-                          title: 'Articles',
-                          index: 8,
-                          onTap: () => _navigateTo(ArticlesPage(), 8),
-                        ),
-                      ],
-                      settings,
-                      fontFamily(),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Version info at bottom
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'v1.0.0',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 12 * settings.fontSize,
-                    fontFamily: fontFamily(),
+                      // Study Materials section
+                      _buildMenuSection(
+                        'Study Materials',
+                        [
+                          _MenuItem(
+                            icon: LucideIcons.video,
+                            title: 'Videos',
+                            index: 7,
+                            onTap: () => _navigateTo(VideosPage(), 7),
+                          ),
+                          _MenuItem(
+                            icon: LucideIcons.fileText,
+                            title: 'Articles',
+                            index: 8,
+                            onTap: () => _navigateTo(ArticlesPage(), 8),
+                          ),
+                        ],
+                        settings,
+                        fontFamily(),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+
+                // Version info at bottom
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'v1.0.0',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 12 * settings.fontSize,
+                      fontFamily: fontFamily(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -21,7 +21,6 @@ class AccessibilitySettings extends ChangeNotifier {
   int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
   String get language => _language;
 
-
   void setFontSize(double value) {
     _fontSize = value;
     notifyListeners();
