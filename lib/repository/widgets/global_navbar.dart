@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/widgets/stats_dashboard.dart';
 import 'package:provider/provider.dart';
 import '../../Quiz/quizzes_page.dart';
 import '../../accessibility_model.dart';
@@ -9,7 +10,6 @@ import '../../generate_content_page.dart';
 import '../../home_page.dart';
 import '../../settings_page.dart';
 import '../../stats_page.dart';
-import '../../videos_page.dart';
 import '../../subjects.dart';
 
 class GlobalNavBar extends StatefulWidget {
@@ -151,7 +151,9 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VideosPage()),
+                MaterialPageRoute(
+                  builder: (context) => StatsDashboard(),
+                ), // Testing purpose
               );
             },
           ),

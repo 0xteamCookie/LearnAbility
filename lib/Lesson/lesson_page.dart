@@ -148,28 +148,6 @@ class LessonContentPage extends StatefulWidget {
 
 class _LessonContentPageState extends State<LessonContentPage> {
   // Add this function at the top of the _LessonContentPageState class
-  Widget _buildMathEquation(
-    String equation,
-    bool displayMode,
-    double fontSize,
-  ) {
-    // This is a simple fallback if flutter_math_fork is not available
-    return Container(
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        equation,
-        style: TextStyle(
-          fontSize: displayMode ? 18 * fontSize : 16 * fontSize,
-          fontFamily: 'Courier New',
-        ),
-      ),
-    );
-  }
 
   // Add this function at the top of the _LessonContentPageState class
   Widget _buildHighlightedCode(String code, String language, double fontSize) {
@@ -878,7 +856,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                                     ),
                                   ),
                                 )
-                                .toList(),
+                                ,
                           ],
                         ),
                       ),
@@ -911,7 +889,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                   ...currentPage.blocks
                       .sorted((a, b) => a.order.compareTo(b.order))
                       .map((block) => _buildBlock(block, settings, fontFamily))
-                      .toList(),
+                      ,
                 ],
               ),
             ),
@@ -1487,7 +1465,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                                 ),
                               ),
                             );
-                          }).toList(),
+                          }),
 
                           SizedBox(height: 16),
 
@@ -2016,7 +1994,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                       ),
                     ),
                   )
-                  .toList(),
+                  ,
             ],
           ],
         ),

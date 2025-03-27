@@ -321,8 +321,8 @@ class QuizzesPage extends StatefulWidget {
 class _QuizzesPageState extends State<QuizzesPage>
     with SingleTickerProviderStateMixin {
   List<QuizSummary> _quizzes = [];
-  Map<String, List<QuizAttempt>> _quizAttempts = {};
-  Map<String, QuizAnalytics> _quizAnalytics = {};
+  final Map<String, List<QuizAttempt>> _quizAttempts = {};
+  final Map<String, QuizAnalytics> _quizAnalytics = {};
   OverallQuizAnalytics? _overallAnalytics;
 
   bool _isLoading = true;

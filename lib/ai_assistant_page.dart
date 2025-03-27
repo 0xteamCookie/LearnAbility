@@ -18,7 +18,6 @@ class AIAssistantPage extends StatefulWidget {
 class _AIAssistantPageState extends State<AIAssistantPage> {
   final TextEditingController _queryController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  String _response = '';
   bool _isLoading = false;
   final List<Map<String, dynamic>> _chatHistory = [];
 
@@ -92,7 +91,6 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
         final assistantMessage = data['answer'] ?? 'No response from assistant';
 
         setState(() {
-          _response = assistantMessage;
           // Add AI response to chat history
           _chatHistory.add({
             'role': 'assistant',
@@ -102,7 +100,6 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
         });
       } else {
         setState(() {
-          _response = 'Error: ${response.statusCode}';
           // Add error message to chat history
           _chatHistory.add({
             'role': 'assistant',
@@ -113,7 +110,6 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
       }
     } catch (e) {
       setState(() {
-        _response = 'Error: $e';
         // Add error message to chat history
         _chatHistory.add({
           'role': 'assistant',

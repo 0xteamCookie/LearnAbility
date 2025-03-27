@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Uihelper {
+  // ignore: non_constant_identifier_names
   static CustomImage({required String img}) {
     return Image.asset("assets/images/$img");
   }
 
+  // ignore: non_constant_identifier_names
   static CustomText({
     required String text,
     required Color color,
