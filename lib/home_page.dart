@@ -99,16 +99,16 @@ class Material {
 
   factory Material.fromJson(Map<String, dynamic> json) {
     return Material(
-      id: json['id'],
-      name: json['name'],
-      type: json['type'],
-      fileType: json['fileType'],
-      size: json['size'],
-      uploadDate: json['uploadDate'],
-      subjectId: json['subjectId'],
-      subjectName: json['subjectName'],
-      thumbnail: json['thumbnail'],
-      status: json['status'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      type: json['type'] ?? '',
+      fileType: json['fileType'] ?? '',
+      size: json['size'] ?? 0,
+      uploadDate: json['uploadDate'] ?? '',
+      subjectId: json['subjectId'] ?? '',
+      subjectName: json['subjectName'] ?? '',
+      thumbnail: json['thumbnail'], // Already nullable in the class definition
+      status: json['status'] ?? '',
     );
   }
 }

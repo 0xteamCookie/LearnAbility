@@ -156,6 +156,7 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: Row(
           children: [
             CircleAvatar(
@@ -193,216 +194,225 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
           children: [
             // Chat history display
             Expanded(
-              child: _chatHistory.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 80 * settings.fontSize,
-                            color: Colors.grey[400],
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Your AI Learning Assistant',
-                            style: TextStyle(
-                              fontSize: 20 * settings.fontSize,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800],
-                              fontFamily: fontFamily(),
+              child:
+                  _chatHistory.isEmpty
+                      ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_outline,
+                              size: 80 * settings.fontSize,
+                              color: Colors.grey[400],
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: Text(
-                              'Ask me anything about your courses, assignments, or learning materials!',
-                              textAlign: TextAlign.center,
+                            const SizedBox(height: 20),
+                            Text(
+                              'Your AI Learning Assistant',
                               style: TextStyle(
-                                fontSize: 16 * settings.fontSize,
-                                color: Colors.grey[600],
+                                fontSize: 20 * settings.fontSize,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800],
                                 fontFamily: fontFamily(),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton.icon(
-                            icon: const Icon(Icons.lightbulb_outline),
-                            label: Text(
-                              'Try an example question',
-                              style: TextStyle(fontFamily: fontFamily()
-                              , fontSize: 18 * settings.fontSize),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryBackground,
-                              foregroundColor: Colors.white,
+                            const SizedBox(height: 10),
+                            Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 12,
+                                horizontal: 40,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                              child: Text(
+                                'Ask me anything about your courses, assignments, or learning materials!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16 * settings.fontSize,
+                                  color: Colors.grey[600],
+                                  fontFamily: fontFamily(),
+                                ),
                               ),
                             ),
-                            onPressed: () {
-                              _queryController.text =
-                                  "Explain the concept of object-oriented programming";
-                              _sendQuery();
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 12,
-                      ),
-                      itemCount: _chatHistory.length + (_isLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        // Show loading indicator as the last item when loading
-                        if (_isLoading && index == _chatHistory.length) {
-                          return Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                top: 12,
-                                bottom: 12,
-                                right: 80,
+                            const SizedBox(height: 20),
+                            ElevatedButton.icon(
+                              icon: const Icon(Icons.lightbulb_outline),
+                              label: Text(
+                                'Try an example question',
+                                style: TextStyle(
+                                  fontFamily: fontFamily(),
+                                  fontSize: 18 * settings.fontSize,
+                                ),
                               ),
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(18),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryBackground,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
-                              child: Row(
+                              onPressed: () {
+                                _queryController.text =
+                                    "Explain the concept of object-oriented programming";
+                                _sendQuery();
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                      : ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 12,
+                        ),
+                        itemCount: _chatHistory.length + (_isLoading ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          // Show loading indicator as the last item when loading
+                          if (_isLoading && index == _chatHistory.length) {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 12,
+                                  bottom: 12,
+                                  right: 80,
+                                ),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.primaryBackground,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'Thinking...',
+                                      style: TextStyle(
+                                        color: Colors.grey[800],
+                                        fontSize: 14 * settings.fontSize,
+                                        fontFamily: fontFamily(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+
+                          final chat = _chatHistory[index];
+                          final bool isUser = chat['role'] == 'user';
+                          final timestamp = chat['timestamp'] as DateTime;
+
+                          return Column(
+                            crossAxisAlignment:
+                                isUser
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColors.primaryBackground,
+                                  if (!isUser)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 12,
+                                        bottom: 4,
+                                      ),
+                                      child: CircleAvatar(
+                                        backgroundColor: AppColors
+                                            .primaryBackground
+                                            .withOpacity(0.8),
+                                        radius: 12,
+                                        child: const Icon(
+                                          Icons.assistant,
+                                          color: Colors.white,
+                                          size: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: isUser ? 0 : 4,
+                                      right: isUser ? 12 : 0,
+                                      bottom: 4,
+                                    ),
+                                    child: Text(
+                                      isUser ? 'You' : 'Assistant',
+                                      style: TextStyle(
+                                        fontSize: 12 * settings.fontSize,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey[700],
+                                        fontFamily: fontFamily(),
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
                                   Text(
-                                    'Thinking...',
+                                    _formatTimestamp(timestamp),
                                     style: TextStyle(
-                                      color: Colors.grey[800],
-                                      fontSize: 14 * settings.fontSize,
+                                      fontSize: 10 * settings.fontSize,
+                                      color: Colors.grey[500],
                                       fontFamily: fontFamily(),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          );
-                        }
-
-                        final chat = _chatHistory[index];
-                        final bool isUser = chat['role'] == 'user';
-                        final timestamp = chat['timestamp'] as DateTime;
-
-                        return Column(
-                          crossAxisAlignment: isUser
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (!isUser)
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 12,
-                                      bottom: 4,
-                                    ),
-                                    child: CircleAvatar(
-                                      backgroundColor: AppColors
-                                          .primaryBackground
-                                          .withOpacity(0.8),
-                                      radius: 12,
-                                      child: const Icon(
-                                        Icons.assistant,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                    ),
+                              Align(
+                                alignment:
+                                    isUser
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: 16,
+                                    left: isUser ? 80 : 0,
+                                    right: isUser ? 0 : 80,
                                   ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: isUser ? 0 : 4,
-                                    right: isUser ? 12 : 0,
-                                    bottom: 4,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isUser
+                                            ? AppColors.primaryBackground
+                                            : Colors.white,
+                                    borderRadius: BorderRadius.circular(18),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: const Offset(0, 2),
+                                        blurRadius: 4,
+                                        color: Colors.black.withOpacity(0.1),
+                                      ),
+                                    ],
                                   ),
                                   child: Text(
-                                    isUser ? 'You' : 'Assistant',
+                                    chat['message'] ?? '',
                                     style: TextStyle(
-                                      fontSize: 12 * settings.fontSize,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey[700],
+                                      color:
+                                          isUser
+                                              ? Colors.white
+                                              : Colors.black87,
+                                      fontSize: 15 * settings.fontSize,
+                                      height: 1.4,
                                       fontFamily: fontFamily(),
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  _formatTimestamp(timestamp),
-                                  style: TextStyle(
-                                    fontSize: 10 * settings.fontSize,
-                                    color: Colors.grey[500],
-                                    fontFamily: fontFamily(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Align(
-                              alignment: isUser
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Container(
-                                margin: EdgeInsets.only(
-                                  bottom: 16,
-                                  left: isUser ? 80 : 0,
-                                  right: isUser ? 0 : 80,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isUser
-                                      ? AppColors.primaryBackground
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(18),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: const Offset(0, 2),
-                                      blurRadius: 4,
-                                      color: Colors.black.withOpacity(0.1),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  chat['message'] ?? '',
-                                  style: TextStyle(
-                                    color: isUser
-                                        ? Colors.white
-                                        : Colors.black87,
-                                    fontSize: 15 * settings.fontSize,
-                                    height: 1.4,
-                                    fontFamily: fontFamily(),
-                                  ),
-                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                            ],
+                          );
+                        },
+                      ),
             ),
             // Input area
             Container(
