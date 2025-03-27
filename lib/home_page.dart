@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
-import 'Lesson/lessons_page.dart';
-import 'Quiz/quizzes_page.dart';
-import 'accessibility_page.dart';
-import 'ai_assistant_page.dart';
-import 'videos_page.dart';
-import 'articles_page.dart';
-import 'generate_content_page.dart';
-import 'settings_page.dart';
-import 'stats_page.dart';
 import 'package:provider/provider.dart';
 import 'accessibility_model.dart';
 
@@ -460,7 +450,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 Text(
-                                  "Englis",
+                                  "English",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ],

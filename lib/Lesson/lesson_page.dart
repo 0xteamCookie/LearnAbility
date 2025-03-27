@@ -877,7 +877,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                                     ),
                                   ),
                                 )
-                                .toList(),
+                                ,
                           ],
                         ),
                       ),
@@ -910,7 +910,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                   ...currentPage.blocks
                       .sorted((a, b) => a.order.compareTo(b.order))
                       .map((block) => _buildBlock(block, settings, fontFamily))
-                      .toList(),
+                      ,
                 ],
               ),
             ),
@@ -1506,7 +1506,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                                 ),
                               ),
                             );
-                          }).toList(),
+                          }),
 
                           SizedBox(height: 16),
 
@@ -1896,8 +1896,8 @@ class _LessonContentPageState extends State<LessonContentPage> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
-              dataRowColor: MaterialStateProperty.all(Colors.white),
+              headingRowColor: WidgetStateProperty.all(Colors.grey.shade100),
+              dataRowColor: WidgetStateProperty.all(Colors.white),
               columns:
                   headers
                       .map(
@@ -2035,7 +2035,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
                       ),
                     ),
                   )
-                  .toList(),
+                  ,
             ],
           ],
         ),
