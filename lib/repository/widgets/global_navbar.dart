@@ -108,8 +108,8 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                           _MenuItem(
                             icon: LucideIcons.brain,
                             title: 'AI Voice Assistant',
-                            index: 5,
-                            onTap: () => _navigateTo(VoiceAiChat(), 5),
+                            index: 6,
+                            onTap: () => _navigateTo(VoiceAiChat(), 6),
                           ),
                         ],
                         settings,
