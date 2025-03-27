@@ -132,6 +132,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         final subject = Subject.fromJson(data['subject']);
+        print(subject);
 
         // Update the subject in the list
         int index = subjects.indexWhere((s) => s.id == subjectId);
@@ -824,7 +825,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
         case 'green':
           return Color(0xFF10B981);
         case 'purple':
-          return Color(0xFF8B5CF6);
+          return Color(0XFF6366F1);
         case 'yellow':
           return Color(0xFFF59E0B);
         case 'pink':
@@ -1121,11 +1122,6 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
         default:
           return Colors.grey.shade700;
       }
-    }
-
-    String formatDate(String dateString) {
-      final date = DateTime.parse(dateString);
-      return "${date.day}/${date.month}/${date.year}";
     }
 
     String formatFileSize(int bytes) {

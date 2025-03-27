@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
 import "package:my_first_app/repository/widgets/global_navbar.dart";
 import "package:provider/provider.dart";
+import "package:lucide_icons/lucide_icons.dart";
 
 class AccessibilityPage extends StatefulWidget {
   const AccessibilityPage({super.key});
@@ -18,12 +19,16 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     Colors.yellow,
     Colors.purple,
   ];
+
   @override
   void initState() {
     super.initState();
     // Set the correct index when this page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AccessibilitySettings>(context, listen: false).setSelectedIndex(3);
+      Provider.of<AccessibilitySettings>(
+        context,
+        listen: false,
+      ).setSelectedIndex(3);
     });
   }
 
@@ -59,233 +64,401 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
       return "x";
     }
 
-    return SafeArea(
-      child: GlobalNavBar(
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return GlobalNavBar(
+      body: Stack(
+        children: [
+          Container(decoration: BoxDecoration(color: Colors.white)),
+          Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back, size: 28, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+              // Gradient Header
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0XFF6366F1), Color(0XFF8B5CF6)],
                   ),
-                  Text(
-                    "Accessibility Settings",
-                    style: TextStyle(
-                      fontSize: 24 * fontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily(),
+                ),
+                padding: EdgeInsets.fromLTRB(20, 50, 20, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              LucideIcons.arrowLeft,
+                              size: 22,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Text(
+                          "Accessibility",
+                          style: TextStyle(
+                            fontSize: 24 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: fontFamily(),
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-      
-              // Text & Display Section
-              Text(
-                "Text & Display",
-                style: TextStyle(
-                  fontSize: 20 * fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Font Size",
-                style: TextStyle(
-                  fontSize: 16 * fontSize,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-              Slider(
-                value: fontSize,
-                min: 0.5,
-                max: 1.5,
-                activeColor: Colors.deepPurple,
-                divisions: 4,
-                label: displaySliderValue(fontSize),
-                onChanged: (double value) {
-                  settings.setFontSize(value);
-                },
-              ),
-              SizedBox(height: 20),
-      
-              // Color Theme Section
-              Text(
-                "Color Theme",
-                style: TextStyle(
-                  fontSize: 20 * fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(),
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: _colorThemes.map((color) {
-                  return GestureDetector(
-                    onTap: () {
-                      settings.setColorIndex(_colorThemes.indexOf(color));
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                        border: selectedColorIndex == _colorThemes.indexOf(color)
-                            ? Border.all(color: Colors.black, width: 2)
-                            : null,
+                    SizedBox(height: 8),
+                    Text(
+                      "Customize your learning experience",
+                      style: TextStyle(
+                        fontSize: 16 * settings.fontSize,
+                        color: Colors.white.withOpacity(0.9),
+                        fontFamily: fontFamily(),
                       ),
                     ),
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 20),
-      
-              // Speech Rate Section
-              Text(
-                "Speech Rate",
-                style: TextStyle(
-                  fontSize: 16 * fontSize,
-                  fontFamily: fontFamily(),
+                  ],
                 ),
               ),
-              Slider(
-                value: speechRate,
-                min: 0,
-                max: 1,
-                label: displaySliderValue(speechRate),
-                activeColor: Colors.deepPurple,
-                onChanged: (double value) {
-                  settings.setSpeechRate(value);
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Slow",
-                    style: TextStyle(
-                      fontSize: 14 * fontSize,
-                      fontFamily: fontFamily(),
-                    ),
+
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Text & Display Section
+                      _buildSectionHeader(
+                        "Text & Display",
+                        fontSize,
+                        fontFamily(),
+                      ),
+                      SizedBox(height: 16),
+
+                      // Font Size
+                      _buildSettingCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Font Size",
+                              style: TextStyle(
+                                fontSize: 16 * fontSize,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: fontFamily(),
+                                color: Color(0xFF1F2937),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Icon(
+                                  LucideIcons.type,
+                                  size: 16,
+                                  color: Colors.grey.shade600,
+                                ),
+                                Expanded(
+                                  child: Slider(
+                                    value: fontSize,
+                                    min: 0.5,
+                                    max: 1.5,
+                                    activeColor: Color(0XFF6366F1),
+                                    inactiveColor: Colors.grey.shade200,
+                                    divisions: 4,
+                                    label: displaySliderValue(fontSize),
+                                    onChanged: (double value) {
+                                      settings.setFontSize(value);
+                                    },
+                                  ),
+                                ),
+                                Icon(
+                                  LucideIcons.type,
+                                  size: 22,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Color Theme
+                      _buildSettingCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Color Theme",
+                              style: TextStyle(
+                                fontSize: 16 * fontSize,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: fontFamily(),
+                                color: Color(0xFF1F2937),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children:
+                                  _colorThemes.map((color) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        settings.setColorIndex(
+                                          _colorThemes.indexOf(color),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: color,
+                                          shape: BoxShape.circle,
+                                          border:
+                                              selectedColorIndex ==
+                                                      _colorThemes.indexOf(
+                                                        color,
+                                                      )
+                                                  ? Border.all(
+                                                    color: Colors.white,
+                                                    width: 2,
+                                                  )
+                                                  : null,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.1,
+                                              ),
+                                              blurRadius: 4,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Speech Rate
+                      _buildSettingCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Speech Rate",
+                              style: TextStyle(
+                                fontSize: 16 * fontSize,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: fontFamily(),
+                                color: Color(0xFF1F2937),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Slider(
+                              value: speechRate,
+                              min: 0,
+                              max: 1,
+                              label: displaySliderValue(speechRate),
+                              activeColor: Color(0XFF6366F1),
+                              inactiveColor: Colors.grey.shade200,
+                              onChanged: (double value) {
+                                settings.setSpeechRate(value);
+                              },
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Slow",
+                                  style: TextStyle(
+                                    fontSize: 14 * fontSize,
+                                    fontFamily: fontFamily(),
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                Text(
+                                  "Fast",
+                                  style: TextStyle(
+                                    fontSize: 14 * fontSize,
+                                    fontFamily: fontFamily(),
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Word Prediction & Dyslexia Font
+                      _buildSettingCard(
+                        child: Column(
+                          children: [
+                            _buildSwitchSetting(
+                              "Word Prediction",
+                              wordPrediction,
+                              (value) => settings.setWordPrediction(value),
+                              fontSize,
+                              fontFamily(),
+                              LucideIcons.type,
+                            ),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade100,
+                            ),
+                            _buildSwitchSetting(
+                              "Dyslexia friendly font",
+                              openDyslexic,
+                              (value) => settings.setDyslexic(value),
+                              fontSize,
+                              fontFamily(),
+                              LucideIcons.textSelect,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 24),
+
+                      // Focus & Timers Section
+                      _buildSectionHeader(
+                        "Focus & Timers",
+                        fontSize,
+                        fontFamily(),
+                      ),
+                      SizedBox(height: 16),
+
+                      // Visual Timers & Break Reminders
+                      _buildSettingCard(
+                        child: Column(
+                          children: [
+                            _buildSwitchSetting(
+                              "Visual Timers",
+                              visualTimers,
+                              (value) => settings.setVisualTimers(value),
+                              fontSize,
+                              fontFamily(),
+                              LucideIcons.timer,
+                            ),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade100,
+                            ),
+                            _buildSwitchSetting(
+                              "Break Reminders",
+                              breakReminders,
+                              (value) => settings.setBreakReminders(value),
+                              fontSize,
+                              fontFamily(),
+                              LucideIcons.bellRing,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Add extra padding at the bottom for the floating navbar
+                      SizedBox(height: 100),
+                    ],
                   ),
-                  Text(
-                    "Fast",
-                    style: TextStyle(
-                      fontSize: 14 * fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-      
-              // Word Prediction Section
-              Row(
-                children: [
-                  Text(
-                    "Word Prediction",
-                    style: TextStyle(
-                      fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  Spacer(),
-                  Switch(
-                    value: wordPrediction,
-                    activeColor: Colors.deepPurple,
-                    onChanged: (bool value) {
-                      settings.setWordPrediction(value);
-                    },
-                  ),
-                ],
-              ),
-      
-              // Dyslexia friendly font Section
-              Row(
-                children: [
-                  Text(
-                    "Dyslexia friendly font",
-                    style: TextStyle(
-                      fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  Spacer(),
-                  Switch(
-                    value: openDyslexic,
-                    activeColor: Colors.deepPurple,
-                    onChanged: (bool value) {
-                      settings.setDyslexic(value);
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-      
-              // Focus & Timers Section
-              Text(
-                "Focus & Timers",
-                style: TextStyle(
-                  fontSize: 20 * fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: fontFamily(),
                 ),
-              ),
-              SizedBox(height: 10),
-      
-              // Visual Timers Section
-              Row(
-                children: [
-                  Text(
-                    "Visual Timers",
-                    style: TextStyle(
-                      fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  Spacer(),
-                  Switch(
-                    value: visualTimers,
-                    activeColor: Colors.deepPurple,
-                    onChanged: (bool value) {
-                      settings.setVisualTimers(value);
-                    },
-                  ),
-                ],
-              ),
-      
-              // Break Reminders Section
-              Row(
-                children: [
-                  Text(
-                    "Break Reminders",
-                    style: TextStyle(
-                      fontSize: 16 * fontSize,
-                      fontFamily: fontFamily(),
-                    ),
-                  ),
-                  Spacer(),
-                  Switch(
-                    value: breakReminders,
-                    activeColor: Colors.deepPurple,
-                    onChanged: (bool value) {
-                      settings.setBreakReminders(value);
-                    },
-                  ),
-                ],
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, double fontSize, String fontFamily) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 20 * fontSize,
+          fontWeight: FontWeight.bold,
+          fontFamily: fontFamily,
+          color: Color(0xFF1F2937),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSettingCard({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(16),
+      child: child,
+    );
+  }
+
+  Widget _buildSwitchSetting(
+    String title,
+    bool value,
+    Function(bool) onChanged,
+    double fontSize,
+    String fontFamily,
+    IconData icon,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Color(0xFFE0E7FF),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 18, color: Color(0XFF6366F1)),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16 * fontSize,
+                fontWeight: FontWeight.w500,
+                fontFamily: fontFamily,
+                color: Color(0xFF1F2937),
+              ),
+            ),
+          ),
+          Switch(
+            value: value,
+            activeColor: Color(0XFF6366F1),
+            inactiveTrackColor: Colors.grey.shade200,
+            onChanged: onChanged,
+          ),
+        ],
       ),
     );
   }

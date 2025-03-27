@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'utils/constants.dart';
 import 'domain/constants/appcolors.dart';
+import 'accessibility_model.dart';
 
 class AIAssistantPage extends StatefulWidget {
   const AIAssistantPage({super.key});
@@ -16,7 +18,6 @@ class AIAssistantPage extends StatefulWidget {
 class _AIAssistantPageState extends State<AIAssistantPage> {
   final TextEditingController _queryController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  String _response = '';
   bool _isLoading = false;
   final List<Map<String, dynamic>> _chatHistory = [];
 
@@ -87,18 +88,18 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final assistantMessage = data['answer'] ?? 'No response from assistant';
+
         setState(() {
-          _response = data['answer'] ?? 'No response from assistant';
           // Add AI response to chat history
           _chatHistory.add({
             'role': 'assistant',
-            'message': _response,
+            'message': _formatAssistantResponse(assistantMessage),
             'timestamp': DateTime.now(),
           });
         });
       } else {
         setState(() {
-          _response = 'Error: ${response.statusCode}';
           // Add error message to chat history
           _chatHistory.add({
             'role': 'assistant',
@@ -109,7 +110,6 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
       }
     } catch (e) {
       setState(() {
-        _response = 'Error: $e';
         // Add error message to chat history
         _chatHistory.add({
           'role': 'assistant',
@@ -125,14 +125,38 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
     }
   }
 
+  String _formatAssistantResponse(String response) {
+    // Example logic for formatting the assistant's response
+    if (response.contains('**')) {
+      // Replace '**' with bold formatting
+      response = response.replaceAll('**', '');
+      return '📝 $response'; // Add an icon for emphasis
+    } else if (response.contains('```')) {
+      // Handle code blocks
+      return '💻 Code Snippet:\n$response';
+    } else if (response.contains('http')) {
+      // Handle URLs
+      return '🔗 Link: $response';
+    }
+    return response.trim();
+  }
+
   String _formatTimestamp(DateTime timestamp) {
     return DateFormat('h:mm a').format(timestamp);
   }
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+
+    String fontFamily() {
+      return isDyslexic ? "OpenDyslexic" : "Roboto";
+    }
+
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: Row(
           children: [
             CircleAvatar(
@@ -141,13 +165,17 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
               child: Icon(
                 Icons.assistant,
                 color: AppColors.primaryBackground,
-                size: 20,
+                size: 20 * settings.fontSize,
               ),
             ),
             const SizedBox(width: 10),
-            const Text(
+            Text(
               'AI Learning Assistant',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(
+                fontSize: 18 * settings.fontSize,
+                color: Colors.white,
+                fontFamily: fontFamily(),
+              ),
             ),
           ],
         ),
@@ -156,7 +184,6 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          // Add a subtle gradient background
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -175,16 +202,17 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                           children: [
                             Icon(
                               Icons.chat_bubble_outline,
-                              size: 80,
+                              size: 80 * settings.fontSize,
                               color: Colors.grey[400],
                             ),
                             const SizedBox(height: 20),
                             Text(
                               'Your AI Learning Assistant',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 20 * settings.fontSize,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey[800],
+                                fontFamily: fontFamily(),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -196,15 +224,22 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                                 'Ask me anything about your courses, assignments, or learning materials!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 16 * settings.fontSize,
                                   color: Colors.grey[600],
+                                  fontFamily: fontFamily(),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 20),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.lightbulb_outline),
-                              label: const Text('Try an example question'),
+                              label: Text(
+                                'Try an example question',
+                                style: TextStyle(
+                                  fontFamily: fontFamily(),
+                                  fontSize: 18 * settings.fontSize,
+                                ),
+                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryBackground,
                                 foregroundColor: Colors.white,
@@ -264,7 +299,8 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                                       'Thinking...',
                                       style: TextStyle(
                                         color: Colors.grey[800],
-                                        fontSize: 14,
+                                        fontSize: 14 * settings.fontSize,
+                                        fontFamily: fontFamily(),
                                       ),
                                     ),
                                   ],
@@ -313,17 +349,19 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                                     child: Text(
                                       isUser ? 'You' : 'Assistant',
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 12 * settings.fontSize,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.grey[700],
+                                        fontFamily: fontFamily(),
                                       ),
                                     ),
                                   ),
                                   Text(
                                     _formatTimestamp(timestamp),
                                     style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 10 * settings.fontSize,
                                       color: Colors.grey[500],
+                                      fontFamily: fontFamily(),
                                     ),
                                   ),
                                 ],
@@ -364,8 +402,9 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                                           isUser
                                               ? Colors.white
                                               : Colors.black87,
-                                      fontSize: 15,
+                                      fontSize: 15 * settings.fontSize,
                                       height: 1.4,
+                                      fontFamily: fontFamily(),
                                     ),
                                   ),
                                 ),
@@ -403,7 +442,11 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                         hintText: 'Ask a question...',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        hintStyle: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14 * settings.fontSize,
+                          fontFamily: fontFamily(),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -441,7 +484,7 @@ class _AIAssistantPageState extends State<AIAssistantPage> {
                           child: Icon(
                             Icons.send_rounded,
                             color: Colors.white,
-                            size: 22,
+                            size: 22 * settings.fontSize,
                           ),
                         ),
                       ),
