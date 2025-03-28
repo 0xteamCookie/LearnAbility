@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:my_first_app/ai_voice_page.dart';
 import 'package:my_first_app/videos_page.dart';
 import 'package:provider/provider.dart';
 import '../../Quiz/quizzes_page.dart';
@@ -104,12 +103,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                             title: 'AI Assistant',
                             index: 5,
                             onTap: () => _navigateTo(AIAssistantPage(), 5),
-                          ),
-                          _MenuItem(
-                            icon: LucideIcons.brain,
-                            title: 'AI Voice Assistant',
-                            index: 6,
-                            onTap: () => _navigateTo(VoiceAiChat(), 6),
                           ),
                         ],
                         settings,
