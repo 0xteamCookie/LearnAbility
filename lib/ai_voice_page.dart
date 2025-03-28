@@ -289,7 +289,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   // Define route mapping
   final Map<String, Widget Function(BuildContext)> routeMap = {
     // "/dashboard": (context) => (),
-    "/settings": (context) => SettingsPage(),
+    "settings": (context) => SettingsPage(),
     // "/pyos": (context) => PyosPage(),
     // "/calendar": (context) => CalendarPage(),
     // "/assistant": (context) => AIAssistantPage(),
@@ -298,8 +298,8 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
 
   _VoiceAiChatState() {
     vapi.onEvent.listen((event) {
-      print("Received Event: ${event.label}");
-      print("Raw Event Data: ${event.value}");
+      // print("Received Event: ${event.label}");
+      // print("Raw Event Data: ${event.value}");
 
       try {
         final Map<String, dynamic> messageData = jsonDecode(event.value);
@@ -314,7 +314,11 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           });
         }
 
-        if (messageData["type"] == "function_call" &&
+        if (messageData["type"] == "function-call") {
+          print("FUNCTION CALLLL");
+          print(event.value);
+        }
+        if (messageData["type"] == "function-call" &&
             messageData["functionCall"]["name"] == "navigate") {
           String path = messageData["functionCall"]["parameters"]["path"];
           _navigateToPage(path);
