@@ -289,7 +289,8 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   // Define route mapping
   final Map<String, Widget Function(BuildContext)> routeMap = {
     // "/dashboard": (context) => (),
-    "settings": (context) => SettingsPage(),
+    "/dashboard": (context) => SettingsPage(),
+    "dashboard": (context) => SettingsPage(),
     // "/pyos": (context) => PyosPage(),
     // "/calendar": (context) => CalendarPage(),
     // "/assistant": (context) => AIAssistantPage(),
