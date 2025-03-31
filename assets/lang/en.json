@@ -13,6 +13,7 @@
     "articles": "Articles",
   
     "grade": "grade",
+    "lets_continue_learning":"Let's continue learning",
     "next_lesson": "Next lesson",
     "see_all": "See all",
     "get_started": "Get Started",
@@ -64,10 +65,13 @@
     "save_changes": "Save Changes",
   
     "accessibility_settings": "Accessibility Settings",
+    "accessibility":"Accessibility",
     "text_and_display": "Text & Display",
     "font_size": "Font Size",
     "color_theme": "Color Theme",
     "speech_rate": "Speech Rate",
+    "word_prediction":"Word Prediction",
+    "visual_timers":"Visual Timers",
     "slow": "Slow",
     "fast": "Fast",
     "dyslexia_friendly_font": "Dyslexia friendly font",

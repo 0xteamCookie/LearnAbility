@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:my_first_app/accessibility_model.dart";
 import "package:my_first_app/repository/widgets/global_navbar.dart";
 import "package:provider/provider.dart";
+import 'package:easy_localization/easy_localization.dart';
 import "package:lucide_icons/lucide_icons.dart";
 
 class AccessibilityPage extends StatefulWidget {
@@ -104,7 +105,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                         ),
                         SizedBox(width: 16),
                         Text(
-                          "Accessibility",
+                          "accessibility".tr(),
                           style: TextStyle(
                             fontSize: 24 * settings.fontSize,
                             fontWeight: FontWeight.bold,
@@ -116,7 +117,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      "Customize your learning experience",
+                      "customize_learning".tr(),
                       style: TextStyle(
                         fontSize: 16 * settings.fontSize,
                         color: Colors.white.withOpacity(0.9),
@@ -136,7 +137,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                     children: [
                       // Text & Display Section
                       _buildSectionHeader(
-                        "Text & Display",
+                        "text_and_display".tr(),
                         fontSize,
                         fontFamily(),
                       ),
@@ -148,7 +149,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Font Size",
+                              "font_size".tr(),
                               style: TextStyle(
                                 fontSize: 16 * fontSize,
                                 fontWeight: FontWeight.w500,
@@ -197,7 +198,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Color Theme",
+                              "color_theme".tr(),
                               style: TextStyle(
                                 fontSize: 16 * fontSize,
                                 fontWeight: FontWeight.w500,
@@ -258,7 +259,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Speech Rate",
+                              "speech_rate".tr(),
                               style: TextStyle(
                                 fontSize: 16 * fontSize,
                                 fontWeight: FontWeight.w500,
@@ -310,7 +311,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                         child: Column(
                           children: [
                             _buildSwitchSetting(
-                              "Word Prediction",
+                              "word_prediction".tr(),
                               wordPrediction,
                               (value) => settings.setWordPrediction(value),
                               fontSize,
@@ -323,7 +324,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               color: Colors.grey.shade100,
                             ),
                             _buildSwitchSetting(
-                              "Dyslexia friendly font",
+                              "dyslexia_friendly_font".tr(),
                               openDyslexic,
                               (value) => settings.setDyslexic(value),
                               fontSize,
@@ -338,7 +339,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
 
                       // Focus & Timers Section
                       _buildSectionHeader(
-                        "Focus & Timers",
+                        "focus_and_timers".tr(),
                         fontSize,
                         fontFamily(),
                       ),
@@ -349,7 +350,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                         child: Column(
                           children: [
                             _buildSwitchSetting(
-                              "Visual Timers",
+                              "visual_timers".tr(),
                               visualTimers,
                               (value) => settings.setVisualTimers(value),
                               fontSize,
@@ -362,7 +363,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               color: Colors.grey.shade100,
                             ),
                             _buildSwitchSetting(
-                              "Break Reminders",
+                              "break_reminders".tr(),
                               breakReminders,
                               (value) => settings.setBreakReminders(value),
                               fontSize,

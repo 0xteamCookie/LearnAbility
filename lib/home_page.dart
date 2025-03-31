@@ -8,6 +8,7 @@ import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'accessibility_model.dart';
 import 'utils/constants.dart';
 import 'subjects.dart';
@@ -487,7 +488,7 @@ class _HomePageState extends State<HomePage>
                         SizedBox(height: 8),
                         // Motivational message
                         Text(
-                          "Let's continue learning",
+                          "lets_continue_learning".tr(),
                           style: TextStyle(
                             fontSize: 16 * settings.fontSize,
                             color: Colors.white.withOpacity(0.9),
@@ -554,7 +555,7 @@ class _HomePageState extends State<HomePage>
                           childAspectRatio: 1.5,
                           children: [
                             _buildSimpleActionCard(
-                              "Subjects",
+                              "subjects".tr(),
                               Icons.book,
                               Color(0xFFE0E7FF),
                               Color(0xFF6366F1),

@@ -13,6 +13,7 @@
   "articles": "लेख",
 
   "grade": "कक्षा",
+  "lets_continue_learning":"आइए सीखना जारी रखें",
   "next_lesson": "अगला पाठ",
   "see_all": "सभी देखें",
   "get_started": "शुरू करें",
@@ -64,6 +65,8 @@
   "save_changes": "परिवर्तन सहेजें",
 
   "accessibility_settings": "सुगम्यता सेटिंग्स",
+  "accessibility":"सुगम्यता",
+  "word_prediction":"शब्द पूर्वानुमान",
   "text_and_display": "अक्षर और प्रदर्शन",
   "font_size": "अक्षर आकार",
   "color_theme": "रंग विषय",
@@ -94,6 +97,7 @@
   "computer": "कंप्यूटर",
   "programming_basics": "प्रोग्रामिंग मूल बातें",
   "time_limit": "समय सीमा",
+  "visual_timers":"टाइमर",
   "instructions": "निर्देश",
   "read_each_question_carefully_before_answering": "उत्तर देने से पहले प्रत्येक प्रश्न को ध्यान से पढ़ें",
   "you_can_navigate_between_questions_using_the_previous_and_next_buttons": "आप पिछले और अगले बटन का उपयोग करके प्रश्नों के बीच नेविगेट कर सकते हैं",
