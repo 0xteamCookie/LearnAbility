@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
+import 'package:my_first_app/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'accessibility_model.dart';
@@ -429,9 +430,13 @@ class _HomePageState extends State<HomePage>
                                                   fontFamily: fontFamily(),
                                                 ),
                                               ),
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                                // Navigate to settings page when implemented
+                                              onTap: () {            
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => SettingsPage(),
+                                                  ),
+                                                ); 
                                               },
                                             ),
                                             Divider(),
