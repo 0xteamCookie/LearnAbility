@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: "LearnAbility",
       debugShowCheckedModeBanner: false,
-      locale: context.locale, // Apply selected locale
+      locale: context.locale,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       home: SplashScreen(),

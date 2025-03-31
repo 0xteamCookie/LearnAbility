@@ -411,7 +411,7 @@ class _HomePageState extends State<HomePage>
                                             ListTile(
                                               leading: Icon(LucideIcons.user),
                                               title: Text(
-                                                "Profile",
+                                                "profile".tr(),
                                                 style: TextStyle(
                                                   fontFamily: fontFamily(),
                                                 ),
@@ -426,7 +426,7 @@ class _HomePageState extends State<HomePage>
                                                 LucideIcons.settings,
                                               ),
                                               title: Text(
-                                                "Settings",
+                                                "settings".tr(),
                                                 style: TextStyle(
                                                   fontFamily: fontFamily(),
                                                 ),
@@ -444,7 +444,7 @@ class _HomePageState extends State<HomePage>
                                             ListTile(
                                               leading: Icon(LucideIcons.logOut),
                                               title: Text(
-                                                "Logout",
+                                                "logout".tr(),
                                                 style: TextStyle(
                                                   fontFamily: fontFamily(),
                                                 ),
@@ -503,21 +503,21 @@ class _HomePageState extends State<HomePage>
                           children: [
                             _buildSimpleStat(
                               "${_userStats?.studyStreak ?? 0}",
-                              "Streak",
+                              "streak".tr(),
                               Icons.local_fire_department,
                               settings,
                               fontFamily(),
                             ),
                             _buildSimpleStat(
                               "${_userStats?.completedLessons ?? 0}",
-                              "Lessons",
+                              "lessons".tr(),
                               Icons.school,
                               settings,
                               fontFamily(),
                             ),
                             _buildSimpleStat(
                               "${_userStats?.quizAverage?.toStringAsFixed(1) ?? 0}%",
-                              "Average",
+                              "average".tr(),
                               Icons.analytics,
                               settings,
                               fontFamily(),
@@ -535,7 +535,7 @@ class _HomePageState extends State<HomePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Quick Actions",
+                          "quick_actions".tr(),
                           style: TextStyle(
                             fontSize: 20 * settings.fontSize,
                             fontWeight: FontWeight.bold,
@@ -571,7 +571,7 @@ class _HomePageState extends State<HomePage>
                               fontFamily(),
                             ),
                             _buildSimpleActionCard(
-                              "Quizzes",
+                              "quizzes".tr(),
                               Icons.quiz,
                               Color(0xFFDCFCE7),
                               Color(0xFF10B981),
@@ -587,7 +587,7 @@ class _HomePageState extends State<HomePage>
                               fontFamily(),
                             ),
                             _buildSimpleActionCard(
-                              "Materials",
+                              "materials".tr(),
                               Icons.folder,
                               Color(0xFFFFF7ED),
                               Color(0xFFEA580C),
@@ -603,7 +603,7 @@ class _HomePageState extends State<HomePage>
                               fontFamily(),
                             ),
                             _buildSimpleActionCard(
-                              "Progress",
+                              "progress".tr(),
                               Icons.insights,
                               Color(0xFFDBEAFE),
                               Color(0xFF3B82F6),
@@ -620,7 +620,7 @@ class _HomePageState extends State<HomePage>
 
                         // Continue Learning Section
                         Text(
-                          "Continue Learning",
+                          "continue_learning".tr(),
                           style: TextStyle(
                             fontSize: 20 * settings.fontSize,
                             fontWeight: FontWeight.bold,
@@ -641,7 +641,7 @@ class _HomePageState extends State<HomePage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Recent Materials",
+                              "recent_materials".tr(),
                               style: TextStyle(
                                 fontSize: 20 * settings.fontSize,
                                 fontWeight: FontWeight.bold,
@@ -659,7 +659,7 @@ class _HomePageState extends State<HomePage>
                                 );
                               },
                               child: Text(
-                                "See all",
+                                "see_all".tr(),
                                 style: TextStyle(
                                   color: Color(0XFF6366F1),
                                   fontSize: 16 * settings.fontSize,
@@ -1094,7 +1094,7 @@ class _HomePageState extends State<HomePage>
           Icon(Icons.school_outlined, size: 48, color: Colors.grey.shade400),
           SizedBox(height: 16),
           Text(
-            "No lessons available",
+            "no_lessons_available".tr(),
             style: TextStyle(
               fontSize: 18 * settings.fontSize,
               fontWeight: FontWeight.bold,
@@ -1103,7 +1103,7 @@ class _HomePageState extends State<HomePage>
           ),
           SizedBox(height: 8),
           Text(
-            "Explore subjects to find lessons",
+            "explore_subjects_to_find_lessons".tr(),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16 * settings.fontSize,
@@ -1128,7 +1128,7 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             child: Text(
-              "Explore Subjects",
+              "explore_subjects".tr(),
               style: TextStyle(
                 fontSize: 16 * settings.fontSize,
                 fontFamily: fontFamily,
@@ -1205,11 +1205,11 @@ class _HomePageState extends State<HomePage>
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return "Good morning,";
+      return "good_morning".tr();
     } else if (hour < 17) {
-      return "Good afternoon,";
+      return "good_afternoon".tr();
     } else {
-      return "Good evening,";
+      return "good_evening".tr();
     }
   }
 }

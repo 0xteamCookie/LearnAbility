@@ -283,7 +283,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Slow",
+                                  "slow".tr(),
                                   style: TextStyle(
                                     fontSize: 14 * fontSize,
                                     fontFamily: fontFamily(),
@@ -291,7 +291,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                                   ),
                                 ),
                                 Text(
-                                  "Fast",
+                                  "fast".tr(),
                                   style: TextStyle(
                                     fontSize: 14 * fontSize,
                                     fontFamily: fontFamily(),
