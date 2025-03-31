@@ -207,7 +207,7 @@ class _SettingPageState extends State<SettingsPage> {
 
   Widget _buildLanguageSelector(AccessibilitySettings settings, String Function() fontFamily) {
     // Get the current language in lowercase to match dropdown values
-    final currentLanguage = settings.language?.toLowerCase() ?? 'english';
+    final currentLanguage = settings.language.toLowerCase();
     
     return Card(
       child: ListTile(

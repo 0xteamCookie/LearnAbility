@@ -11,6 +11,7 @@ import '../../articles_page.dart';
 import '../../generate_content_page.dart';
 import '../../home_page.dart';
 import '../../settings_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../stats_page.dart';
 import '../../subjects.dart';
 
@@ -208,7 +209,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
         children: [
           _buildNavItem(
             icon: LucideIcons.settings,
-            label: 'Settings',
+            label: 'settings'.tr(),
             isSelected: currentIndex == 0,
             onTap: () {
               settings.setSelectedIndex(0);
@@ -222,7 +223,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.barChart,
-            label: 'Stats',
+            label: 'stats'.tr(),
             isSelected: currentIndex == 1,
             onTap: () {
               settings.setSelectedIndex(1);
@@ -236,7 +237,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.home,
-            label: 'Home',
+            label: 'home'.tr(),
             isSelected: currentIndex == 2,
             onTap: () {
               settings.setSelectedIndex(2);
@@ -250,7 +251,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.accessibility,
-            label: 'Access',
+            label: 'access'.tr(),
             isSelected: currentIndex == 3,
             onTap: () {
               settings.setSelectedIndex(3);
@@ -264,7 +265,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.menu,
-            label: 'Menu',
+            label: 'menu'.tr(),
             isSelected: currentIndex == 4,
             onTap: () {
               settings.setSelectedIndex(4);
