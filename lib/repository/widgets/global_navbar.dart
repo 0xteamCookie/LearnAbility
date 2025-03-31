@@ -84,31 +84,31 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                         [
                           _MenuItem(
                             icon: LucideIcons.bookOpen,
-                            title: 'Subjects',
+                            title: 'subjects'.tr(),
                             index: 9,
                             onTap: () => _navigateTo(SubjectsPage(), 9),
                           ),
                           _MenuItem(
                             icon: LucideIcons.folderOpen,
-                            title: 'My Materials',
+                            title: 'my_materials'.tr(),
                             index: 4,
                             onTap: () => _navigateTo(GenerateContentPage(), 4),
                           ),
                           _MenuItem(
                             icon: LucideIcons.clipboardCheck,
-                            title: 'Quizzes',
+                            title: 'quizzes'.tr(),
                             index: 3,
                             onTap: () => _navigateTo(QuizzesPage(), 3),
                           ),
                           _MenuItem(
                             icon: LucideIcons.brain,
-                            title: 'AI Assistant',
+                            title: 'ai_assistant'.tr(),
                             index: 5,
                             onTap: () => _navigateTo(AIAssistantPage(), 5),
                           ),
                           _MenuItem(
                             icon: LucideIcons.brain,
-                            title: 'AI Voice Assistant',
+                            title: 'ai_voice_assistant'.tr(),
                             index: 6,
                             onTap: () => _navigateTo(VoiceAiChat(), 6),
                           ),
@@ -125,13 +125,13 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                         [
                           _MenuItem(
                             icon: LucideIcons.video,
-                            title: 'Videos',
+                            title: 'videos'.tr(),
                             index: 7,
                             onTap: () => _navigateTo(VideosPage(), 7),
                           ),
                           _MenuItem(
                             icon: LucideIcons.fileText,
-                            title: 'Articles',
+                            title: 'articles'.tr(),
                             index: 8,
                             onTap: () => _navigateTo(ArticlesPage(), 8),
                           ),
