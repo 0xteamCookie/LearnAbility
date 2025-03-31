@@ -1,94 +1,108 @@
-# LearnAbility (Frontend Application)
+![LearnAbility Banner](https://github.com/user-attachments/assets/97f0e1ca-e42a-46ec-a676-7f4500e8b718)
 
-LearnAbility is a comprehensive learning platform designed to provide an accessible, personalized, and inclusive educational experience for all users—especially underserved communities and students with disabilities.
+# LearnAbility: Personalized & Accessible Learning 🚀
 
-## Overview
+[![Platforms](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-blue?logo=flutter)](https://flutter.dev) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![GitHub stars](https://img.shields.io/github/stars/0xteamCookie/LearnAbility?style=social)](https://github.com/0xteamCookie/LearnAbility) [![GitHub forks](https://img.shields.io/github/forks/0xteamCookie/LearnAbility?style=social)](https://github.com/0xteamCookie/LearnAbility)
 
-LearnAbility addresses the lack of access to quality education in underserved communities by leveraging AI-powered personalization and robust accessibility features. Our platform is tailored to support diverse learners, including those with visual, auditory, and cognitive challenges, ensuring every student has a fair opportunity to excel.
+**Important Backend Notice:**
+> The backend code (API, database setup, AI service integration) resides in its own repository. Please refer to the [**LearnAbility Backend Repository**](https://github.com/0xteamCookie/LearnAbility-backend) for backend setup instructions and code. You will need to have the backend services running for the frontend application to function fully.
 
-## Problem Statement
+**Google Solution Challenge Submission | Addressing UN SDG 4: Quality Education 🌍**
 
-- Lack of Access to Quality Education in Underserved Communities
+---
 
-## Features
+## 🤔 The Challenge: Education for All
 
-### Authentication & User Management
+Access to quality education remains a challenge for many, especially in underserved communities and for students with diverse learning needs. Limited resources and one-size-fits-all approaches hinder potential. Our goal is to help bridge this gap, aligning with **UN SDG 4**.
 
-- **User Registration & Login:** Secure email/password-based authentication.
-- **Persistent Sessions:** Automatically remembers user sessions across app restarts.
-- **Profile Management:** Easy management of user accounts and settings.
+## ✨ Our Solution: LearnAbility
 
-### Accessibility Enhancements
+Meet LearnAbility – your personalized learning co-pilot! 🧑‍✈️ We're transforming how students learn using AI to turn standard course materials (notes, PDFs, etc.) into tailored, interactive lessons.
 
-- **Dyslexia-Friendly Font:** Toggle between standard and OpenDyslexic fonts to improve readability.
-- **Adjustable Text Size:** Fine-tune text size throughout the app.
-- **High Contrast & Custom Color Themes:** Select between dark/light modes and multiple color schemes for improved visibility.
-- **Voice Navigation:** Navigate the platform using speech commands, ideal for users with mobility or visual impairments.
+**Key Ideas:**
+*   🧠 **Personalized Paths:** Content adapts to individual learning styles and pace.
+*   ♿ **Accessibility Core:** Built with features for visual, auditory, and cognitive accessibility.
+*   📱 **Mobile First:** Delivered through a cross-platform Flutter application.
 
-### Learning Materials & Interaction
+We aim to provide an equitable and engaging learning experience for every student.
 
-- **Subject-Based Organization:** Lessons are categorized by academic subjects for streamlined learning.
-- **Interactive Lessons:** Engaging content with progress tracking, estimated durations, and clear learning objectives.
-- **Prerequisite Indicators:** Visual cues indicate necessary foundational knowledge.
-- **Multimedia Integration:** Access articles, video tutorials, and interactive lessons seamlessly.
+## 🌟 Core Features
 
-### Quiz & Assessment Tools
+*   🤖 **AI Content Generation:** Automatically creates lessons, quizzes, and summaries from your uploaded materials (notes, PDFs, etc.).
+*   📈 **Adaptive Learning:** Intelligently adjusts content difficulty and provides personalized feedback based on your progress.
+*   ♿ **Accessibility Suite:** Includes high-contrast themes, adjustable text sizes, dyslexia-friendly fonts (like OpenDyslexic), text-to-speech output, and potential for voice navigation.
+*   🎮 **Interactive Learning:** Offers engaging lesson formats, dynamic quizzes, and visual progress tracking to keep you motivated.
+*   🔍 **Smart Search:** Leverages vector search (Milvus) to quickly find the most relevant information within your study materials.
 
-- **Dynamic Quiz System:** Offers interactive quizzes with multiple question types and adjustable difficulty levels.
-- **Custom Quiz Creation:** Educators can create tailored assessments directly within the app.
-- **Timed Assessments & Detailed Feedback:** Optional time limits with comprehensive performance tracking and feedback.
+## ✨ App Showcase
 
-### AI-Powered Enhancements
+*(Add your screenshots and GIFs here!)*
 
-- **Voice AI Assistant:** Provides a speech-based interface to assist with learning.
-- **Text-Based AI Chat:** Offers real-time support for understanding complex concepts.
-- **AI-Generated Personalized Content:** Adapts lesson plans based on individual learning patterns.
+## 🛠️ Technology Stack
 
-## Getting Started
+*   **Frontend:** Flutter, Dart 📱
+*   **Backend:** Node.js, Express.js, TypeScript ⚙️
+*   **Database:** PostgreSQL, Milvus (Vector DB) 💾
+*   **AI:** Google Vertex AI (Gemini API, RAG) 🧠
+*   **Validation:** Zod (Backend) ✅
+*   **Authentication:** JWT 🔑
+*   **Containerization:** Docker & Docker Compose (for Backend Services) 🐳
 
-### Prerequisites
+## 🏗️ Architecture Overview
 
-- [Flutter SDK](https://flutter.dev/) (Version 2.10.0 or higher)
-- [Dart SDK](https://dart.dev/) (Version 2.16.0 or higher)
-- Code Editor (e.g., [Android Studio](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/) with Flutter extensions)
+The application consists of a Flutter frontend communicating with a Node.js backend API. The backend handles business logic, data storage, and AI interactions.
 
-### Installation
+```mermaid
+flowchart LR
+    User[User via Flutter App] --> API[Backend Express API]
+    API --> Auth[Auth Middleware]
+    Auth --> Routes[API Routes]
+    Routes --> Handlers[Request Handlers]
+    Handlers --> Services[Business Logic Services]
+    Services --> Gemini[Gemini AI Service]
+    Services --> Milvus[Milvus Service]
+    Services --> Prisma[Prisma ORM]
+    Prisma --> DB[(PostgreSQL DB)]
+    Milvus --> MilvusDB[(Milvus Vector DB)]
+    Gemini --> VertexAI[Google Vertex AI]
 
-1. **Clone the repository:**
+    style API fill:#f9f,stroke:#333,stroke-width:2px
+    style DB fill:#ccf,stroke:#333,stroke-width:2px
+    style MilvusDB fill:#cdf,stroke:#333,stroke-width:2px
+    style VertexAI fill:#fca,stroke:#333,stroke-width:2px
+```
+*   The backend uses Prisma ORM for PostgreSQL, Milvus for vector search, and Google Vertex AI (Gemini) for AI tasks.
 
-   ```bash
-   git clone https://github.com/0xteamCookie/LearnAbility.git
-   ```
+## 🚀 Getting Started (Overview)
 
-2. **Navigate to the project directory:**
+This repository contains the **Flutter Frontend** for LearnAbility. The backend service is maintained in a separate repository.
 
-   ```bash
-   cd learnability-frontend
-   ```
+**Important Backend Notice:**
+> The backend code (API, database setup, AI service integration) resides in its own repository. Please refer to the [**LearnAbility Backend Repository**](https://github.com/0xteamCookie/LearnAbility-backend) for backend setup instructions and code. You will need to have the backend services running for the frontend application to function fully.
 
-3. **Install dependencies:**
+**Frontend Setup:**
 
-   ```bash
-   flutter pub get
-   ```
+1.  Ensure you have the [Flutter SDK](https://flutter.dev/) installed.
+2.  Clone this repository: `git clone https://github.com/0xteamCookie/LearnAbility.git`
+3.  Navigate to the project directory: `cd LearnAbility`
+4.  Install dependencies: `flutter pub get`
+5.  **Ensure the backend services are running** (see the [Backend Repository](https://github.com/0xteamCookie/LearnAbility-backend) for instructions).
+6.  Run the Flutter application: `flutter run` (select your target device/emulator).
 
-4. **Run the application:**
-   ```bash
-   flutter run
-   ```
+*(Prerequisites: Flutter, Dart, Git. See backend repository for its prerequisites like Node.js, Docker)*
 
-## Frontend Technologies Used
+## 🔗 Project Repositories
 
-- **Flutter & Dart:** For building the cross-platform mobile application.
-- **Provider:** For state management.
-- **HTTP:** For API communication.
-- **SharedPreferences:** For local data storage.
-- **Custom Accessibility Implementations:** Enhancing usability for differently-abled users.
+*   **Frontend (This Repository):** [https://github.com/0xteamCookie/LearnAbility](https://github.com/0xteamCookie/LearnAbility)
+*   **Backend Repository:** [https://github.com/0xteamCookie/LearnAbility-backend](https://github.com/0xteamCookie/LearnAbility-backend)
 
-## License
+## 🍪 Meet the Team: teamCookie()
 
-This project is licensed under the [MIT License](LICENSE)
+*   **[shaunakc11](https://github.com/shaunakc11)** - Full Stack Developer | AI Engineer
+*   **[0xPixelNinja](https://github.com/0xPixelNinja)** - Backend Developer
+*   **[Kathrina-dev](https://github.com/Kathrina-dev)** - Frontend and UI/UX Designer
+*   **[pranjal-kumar-0](https://github.com/pranjal-kumar-0)** - Frontend and UI/UX Designer
 
-## Contact & Further Information
+## 📜 License
 
-For any questions or further details regarding the frontend application, please contact us at [teamcookie@rkr.cx](mailto:teamcookie@rkr.cx)
+Licensed under the **GNU General Public License v3.0**.
