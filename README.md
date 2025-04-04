@@ -36,8 +36,6 @@ We aim to provide an equitable and engaging learning experience for every studen
 ### 🚀 Live Demo
 
 🔗 [**Click here to try the app**](https://web-la.rkr.cx:8443/)  
-> **Username**: `rakesh@kumar.com`  
-> **Password**: `rakesh@kumar.com`
 
 ---
 
