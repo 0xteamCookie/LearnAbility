@@ -3,7 +3,7 @@
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <application
-        android:label="my_first_app"
+        android:label="LearnAbility"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

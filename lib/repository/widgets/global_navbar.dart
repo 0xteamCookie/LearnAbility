@@ -10,6 +10,7 @@ import '../../articles_page.dart';
 import '../../generate_content_page.dart';
 import '../../home_page.dart';
 import '../../settings_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../stats_page.dart';
 import '../../subjects.dart';
 
@@ -82,25 +83,25 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                         [
                           _MenuItem(
                             icon: LucideIcons.bookOpen,
-                            title: 'Subjects',
+                            title: 'subjects'.tr(),
                             index: 9,
                             onTap: () => _navigateTo(SubjectsPage(), 9),
                           ),
                           _MenuItem(
                             icon: LucideIcons.folderOpen,
-                            title: 'My Materials',
+                            title: 'my_materials'.tr(),
                             index: 4,
                             onTap: () => _navigateTo(GenerateContentPage(), 4),
                           ),
                           _MenuItem(
                             icon: LucideIcons.clipboardCheck,
-                            title: 'Quizzes',
+                            title: 'quizzes'.tr(),
                             index: 3,
                             onTap: () => _navigateTo(QuizzesPage(), 3),
                           ),
                           _MenuItem(
                             icon: LucideIcons.brain,
-                            title: 'AI Assistant',
+                            title: 'ai_assistant'.tr(),
                             index: 5,
                             onTap: () => _navigateTo(AIAssistantPage(), 5),
                           ),
@@ -117,13 +118,13 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                         [
                           _MenuItem(
                             icon: LucideIcons.video,
-                            title: 'Videos',
+                            title: 'videos'.tr(),
                             index: 7,
                             onTap: () => _navigateTo(VideosPage(), 7),
                           ),
                           _MenuItem(
                             icon: LucideIcons.fileText,
-                            title: 'Articles',
+                            title: 'articles'.tr(),
                             index: 8,
                             onTap: () => _navigateTo(ArticlesPage(), 8),
                           ),
@@ -201,7 +202,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
         children: [
           _buildNavItem(
             icon: LucideIcons.settings,
-            label: 'Settings',
+            label: 'settings'.tr(),
             isSelected: currentIndex == 0,
             onTap: () {
               settings.setSelectedIndex(0);
@@ -215,7 +216,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.barChart,
-            label: 'Stats',
+            label: 'stats'.tr(),
             isSelected: currentIndex == 1,
             onTap: () {
               settings.setSelectedIndex(1);
@@ -229,7 +230,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.home,
-            label: 'Home',
+            label: 'home'.tr(),
             isSelected: currentIndex == 2,
             onTap: () {
               settings.setSelectedIndex(2);
@@ -243,7 +244,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.accessibility,
-            label: 'Access',
+            label: 'access'.tr(),
             isSelected: currentIndex == 3,
             onTap: () {
               settings.setSelectedIndex(3);
@@ -257,7 +258,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
           _buildNavItem(
             icon: LucideIcons.menu,
-            label: 'Menu',
+            label: 'menu'.tr(),
             isSelected: currentIndex == 4,
             onTap: () {
               settings.setSelectedIndex(4);
