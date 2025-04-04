@@ -34,6 +34,15 @@ We aim to provide an equitable and engaging learning experience for every studen
 *   🎮 **Interactive Learning:** Offers engaging lesson formats, dynamic quizzes, and visual progress tracking to keep you motivated.
 *   🔍 **Smart Search:** Leverages vector search (Milvus) to quickly find the most relevant information within your study materials.
 
+## 🌍 Our Commitment to Quality Education (UN SDG 4)
+
+LearnAbility is built with the **UN Sustainable Development Goal 4: Quality Education** in mind. Our goal is to make learning inclusive, fair, and available to all.
+
+*   **Learning for Everyone:** Not everyone learns the same way. LearnAbility adapts to *your* pace and style, making sure no one gets left behind. This is especially helpful for students who find standard methods challenging.
+*   **Breaking Down Barriers:** We've included features like dyslexia-friendly fonts (like OpenDyslexic), adjustable text sizes, and text-to-speech. It's about making sure the platform is usable and comfortable for learners with different needs.
+*   **Smarter Learning, Not Just More Studying:** Using AI, we turn your notes and materials into engaging lessons and quizzes. It's about understanding concepts better, not just memorizing facts. The adaptive feedback helps you focus where you need it most.
+*   **Learning Beyond the Classroom:** Education doesn't stop after school. LearnAbility lets you use your own materials, supporting continuous learning and skill development throughout life.
+
 ## ✨ App Showcase
 
 *(Add your screenshots and GIFs here!)*
