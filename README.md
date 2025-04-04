@@ -45,7 +45,8 @@ LearnAbility is built with the **UN Sustainable Development Goal 4: Quality Educ
 
 ## ✨ App Showcase
 
-*(Add your screenshots and GIFs here!)*
+![App Showcase](https://github.com/user-attachments/assets/1b25feed-4714-4844-ac09-2a1c537ec550)
+
 
 ## 🛠️ Technology Stack
 
