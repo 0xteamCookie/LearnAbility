@@ -7,6 +7,7 @@ import 'package:vapinew/vapinew.dart';
 import 'accessibility_model.dart';
 import 'domain/constants/appcolors.dart';
 
+// ignore: constant_identifier_names
 const VAPI_PUBLIC_KEY = '012585dc-1191-46c5-abe6-8daf08aa841d';
 
 void main() {
@@ -17,6 +18,7 @@ class VoiceAiChat extends StatefulWidget {
   const VoiceAiChat({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _VoiceAiChatState createState() => _VoiceAiChatState();
 }
 

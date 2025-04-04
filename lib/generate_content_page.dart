@@ -369,9 +369,23 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
 
         request.headers['Authorization'] = 'Bearer $token';
         request.fields['subjectId'] = subjectId;
-        request.files.add(
-          await http.MultipartFile.fromPath('document', file.path!),
-        );
+
+        // Platform-specific file handling
+        if (kIsWeb) {
+          // Web platform - use bytes instead of path
+          request.files.add(
+            http.MultipartFile.fromBytes(
+              'document',
+              file.bytes!,
+              filename: file.name,
+            ),
+          );
+        } else {
+          // Mobile platform - can use path directly
+          request.files.add(
+            await http.MultipartFile.fromPath('document', file.path!),
+          );
+        }
 
         final response = await request.send();
 
