@@ -956,143 +956,166 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green.shade100,
-                          foregroundColor: Colors.green.shade800,
-                          elevation: 0,
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                    if (subject.syllabusFileName == null)
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade100,
+                            foregroundColor: Colors.green.shade800,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () => uploadSyllabus(subject.id),
+                          icon: const Icon(Icons.book, size: 18),
+                          label: Text(
+                            "Add Syllabus",
+                            style: TextStyle(
+                              fontSize: 14 * settings.fontSize,
+                              fontFamily: fontFamily(),
+                            ),
                           ),
                         ),
-                        onPressed: () => uploadSyllabus(subject.id),
-                        icon: Icon(Icons.book, size: 18),
-                        label: Text(
-                          subject.syllabusFileName != null
-                              ? "Update Syllabus"
-                              : "Add Syllabus",
-                          style: TextStyle(
-                            fontSize: 14 * settings.fontSize,
-                            fontFamily: fontFamily(),
+                      )
+                    else ...[
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade100,
+                            foregroundColor: Colors.green.shade800,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () => uploadSyllabus(subject.id),
+                          icon: const Icon(Icons.book, size: 18),
+                          label: Text(
+                            "Update Syllabus",
+                            style: TextStyle(
+                              fontSize: 14 * settings.fontSize,
+                              fontFamily: fontFamily(),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF06B6D4).withOpacity(0.2),
-                          foregroundColor: Color(0xFF06B6D4),
-                          elevation: 0,
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF06B6D4).withOpacity(0.2),
+                            foregroundColor: const Color(0xFF06B6D4),
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                        ),
-                        onPressed: () => uploadMaterial(subject.id),
-                        icon: Icon(Icons.upload_file, size: 18),
-                        label: Text(
-                          "Add Material",
-                          style: TextStyle(
-                            fontSize: 14 * settings.fontSize,
-                            fontFamily: fontFamily(),
+                          onPressed: () => uploadMaterial(subject.id),
+                          icon: const Icon(Icons.upload_file, size: 18),
+                          label: Text(
+                            "Add Material",
+                            style: TextStyle(
+                              fontSize: 14 * settings.fontSize,
+                              fontFamily: fontFamily(),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ]
                   ],
-                ),
-                if (subject.syllabusFileName != null) ...[
-                  SizedBox(height: 16),
-                  Container(
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.green.shade200),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.book,
-                          color: Colors.green.shade700,
-                          size: 20,
-                        ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Syllabus",
-                                style: TextStyle(
-                                  fontSize: 14 * settings.fontSize,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: fontFamily(),
-                                  color: Colors.green.shade800,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                subject.syllabusFileName!,
-                                style: TextStyle(
-                                  fontSize: 12 * settings.fontSize,
-                                  fontFamily: fontFamily(),
-                                  color: Colors.green.shade700,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                )
+              ],
+              if (subject.syllabusFileName != null) ...[
                 SizedBox(height: 16),
-                Text(
-                  "Materials",
-                  style: TextStyle(
-                    fontSize: 16 * settings.fontSize,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: fontFamily(),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.green.shade200),
                   ),
-                ),
-                SizedBox(height: 8),
-                if (materials.isEmpty)
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "No materials added yet",
-                        style: TextStyle(
-                          fontSize: 14 * settings.fontSize,
-                          fontFamily: fontFamily(),
-                          color: Colors.grey.shade600,
-                          fontStyle: FontStyle.italic,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.book,
+                        color: Colors.green.shade700,
+                        size: 20,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Syllabus",
+                              style: TextStyle(
+                                fontSize: 14 * settings.fontSize,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily(),
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              subject.syllabusFileName!,
+                              style: TextStyle(
+                                fontSize: 12 * settings.fontSize,
+                                fontFamily: fontFamily(),
+                                color: Colors.green.shade700,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  )
-                else
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: materials.length,
-                    itemBuilder: (context, index) {
-                      final material = materials[index];
-                      return _buildMaterialItem(material);
-                    },
+                    ],
                   ),
+                ),
               ],
+              SizedBox(height: 16),
+              Text(
+                "Materials",
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: fontFamily(),
+                ),
+              ),
+              SizedBox(height: 8),
+              if (materials.isEmpty)
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "No materials added yet",
+                      style: TextStyle(
+                        fontSize: 14 * settings.fontSize,
+                        fontFamily: fontFamily(),
+                        color: Colors.grey.shade600,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: materials.length,
+                  itemBuilder: (context, index) {
+                    final material = materials[index];
+                    return _buildMaterialItem(material);
+                  },
+                ),
             ],
           ),
         ),
