@@ -9,8 +9,9 @@ import 'package:my_first_app/utils/constants.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
-// Model classes for the new JSON structure
+enum TtsState { playing, stopped }
 class LessonData {
   final String id;
   final String title;
@@ -147,9 +148,19 @@ class LessonContentPage extends StatefulWidget {
 }
 
 class _LessonContentPageState extends State<LessonContentPage> {
-  // Add this function at the top of the _LessonContentPageState class
+  late FlutterTts flutterTts;
+  TtsState ttsState = TtsState.stopped;
+  double volume = 0.8;
+  double pitch = 1.0;
+  double rate = 0.6;
 
-  // Add this function at the top of the _LessonContentPageState class
+  @override
+  void initState() {
+    super.initState();
+    initTts();
+    fetchLessonData();
+  }
+
   Widget _buildHighlightedCode(String code, String language, double fontSize) {
     // This is a simple fallback if flutter_highlight is not available
     return Container(
@@ -165,7 +176,6 @@ class _LessonContentPageState extends State<LessonContentPage> {
       ),
     );
   }
-
   LessonData? lessonData;
   bool isLoading = true;
   bool hasError = false;
@@ -474,11 +484,9 @@ class _LessonContentPageState extends State<LessonContentPage> {
 }
 ''';
 
-  @override
-  void initState() {
-    super.initState();
-    fetchLessonData();
-  }
+
+  
+
 
   Future<void> fetchLessonData() async {
     setState(() {
@@ -607,6 +615,39 @@ class _LessonContentPageState extends State<LessonContentPage> {
     });
   }
 
+  Widget _buildTtsControls() {
+  return ExpansionTile(
+    title: Text("Speech Settings"),
+    children: [
+      Column(
+        children: [
+          Text("Volume"),
+          Slider(
+            value: volume,
+            onChanged: (value) => setState(() => volume = value),
+            min: 0.0,
+            max: 1.0,
+          ),
+          Text("Pitch"),
+          Slider(
+            value: pitch,
+            onChanged: (value) => setState(() => pitch = value),
+            min: 0.5,
+            max: 2.0,
+          ),
+          Text("Rate"),
+          Slider(
+            value: rate,
+            onChanged: (value) => setState(() => rate = value),
+            min: 0.0,
+            max: 1.0,
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
@@ -631,6 +672,23 @@ class _LessonContentPageState extends State<LessonContentPage> {
             fontFamily: fontFamily(),
           ),
         ),
+        actions: [
+    if (!isLoading && !hasError)
+      IconButton(
+        icon: Icon(
+          ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          if (ttsState == TtsState.playing) {
+            _stop();
+          } else {
+            _readCurrentPageContent();
+          }
+        },
+      ),
+  ],
+
       ),
       body:
           isLoading
@@ -756,11 +814,16 @@ class _LessonContentPageState extends State<LessonContentPage> {
                   ),
                 ),
               ),
+              _buildTtsControls(),
             ],
           ),
+          
         ),
+        
       );
+      
     }
+    
 
     final currentPage = lessonData!.pages[currentPageIndex];
 
@@ -950,6 +1013,91 @@ class _LessonContentPageState extends State<LessonContentPage> {
         ),
       ],
     );
+  }
+  void initTts() {
+    flutterTts = FlutterTts();
+
+    flutterTts.setStartHandler(() {
+      setState(() {
+        ttsState = TtsState.playing;
+      });
+    });
+
+    flutterTts.setCompletionHandler(() {
+      setState(() {
+        ttsState = TtsState.stopped;
+      });
+    });
+
+    flutterTts.setErrorHandler((msg) {
+      setState(() {
+        ttsState = TtsState.stopped;
+      });
+    });
+  }
+
+  Future<void> _speak(String text) async {
+    await flutterTts.setVolume(volume);
+    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setPitch(pitch);
+    
+    if (text.isNotEmpty) {
+      await flutterTts.speak(text);
+    }
+  }
+
+  Future<void> _stop() async {
+    await flutterTts.stop();
+    setState(() => ttsState = TtsState.stopped);
+  }
+
+  void _readCurrentPageContent() {
+    if (lessonData == null || lessonData!.pages.isEmpty) return;
+
+    final currentPage = lessonData!.pages[currentPageIndex];
+    final buffer = StringBuffer();
+
+    buffer.writeln(currentPage.title);
+    
+    for (final block in currentPage.blocks) {
+      switch (block.type) {
+        case 'heading':
+          buffer.writeln(block.data['content'] ?? "");
+          break;
+        case 'text':
+          buffer.writeln(block.data['content'] ?? "");
+          break;
+        case 'list':
+          final items = List<String>.from(block.data['items'] ?? []);
+          for (final item in items) {
+            buffer.writeln(item);
+          }
+          break;
+        case 'definition':
+          buffer.writeln("Definition of ${block.data['term'] ?? ""}");
+          buffer.writeln(block.data['definition'] ?? "");
+          break;
+        case 'quiz':
+          final questions = (block.data['questions'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+          for (final question in questions) {
+            buffer.writeln(question['question'] ?? "");
+          }
+          break;
+        case 'callout':
+          buffer.writeln(block.data['title'] ?? "");
+          buffer.writeln(block.data['content'] ?? "");
+          break;
+        case 'exercise':
+          buffer.writeln(block.data['instructions'] ?? "");
+          break;
+        case 'checkpoint':
+          buffer.writeln(block.data['title'] ?? "");
+          buffer.writeln(block.data['description'] ?? "");
+          break;
+      }
+    }
+
+    _speak(buffer.toString());
   }
 
   Widget _buildBlock(
@@ -2000,5 +2148,10 @@ class _LessonContentPageState extends State<LessonContentPage> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    flutterTts.stop();  // Stops any ongoing speech
+    super.dispose();    // Calls the parent's dispose method
   }
 }
