@@ -87,6 +87,7 @@
     "color_theme": "Color Theme",
     "speech_rate": "Speech Rate",
     "word_prediction":"Word Prediction",
+    "text_to_speech":"Text to Speech",
     "visual_timers":"Visual Timers",
     "slow": "Slow",
     "fast": "Fast",

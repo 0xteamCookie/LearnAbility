@@ -652,6 +652,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
     final bool isDyslexic = settings.openDyslexic;
+    final bool isTextToSpeech = settings.textToSpeech;
     String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
 
     return Scaffold(
@@ -673,7 +674,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
           ),
         ),
         actions: [
-    if (!isLoading && !hasError)
+    if (!isLoading && !hasError && isTextToSpeech)
       IconButton(
         icon: Icon(
           ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
