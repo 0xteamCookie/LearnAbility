@@ -49,6 +49,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     bool visualTimers = settings.visualTimers;
     bool breakReminders = settings.breakReminders;
     int selectedColorIndex = settings.selectedColorIndex;
+    bool textToSpeech = settings.textToSpeech;
 
     String displaySliderValue(double value) {
       if (value == 1.0) {
@@ -327,6 +328,19 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               "dyslexia_friendly_font".tr(),
                               openDyslexic,
                               (value) => settings.setDyslexic(value),
+                              fontSize,
+                              fontFamily(),
+                              LucideIcons.textSelect,
+                            ),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade100,
+                            ),
+                            _buildSwitchSetting(
+                              "text_to_speech".tr(),
+                              textToSpeech,
+                              (value) => settings.setTextToSpeech(value),
                               fontSize,
                               fontFamily(),
                               LucideIcons.textSelect,

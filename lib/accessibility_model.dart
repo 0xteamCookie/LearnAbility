@@ -7,6 +7,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _wordPrediction = false;
   bool _visualTimers = false;
   bool _breakReminders = false;
+  bool _textToSpeech = false;
   int _selectedColorIndex = 0;
   int _selectedIndexBottomNavBar = 2;
   String _language = 'English';
@@ -15,6 +16,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool get openDyslexic => _openDyslexic;
   double get speechRate => _speechRate;
   bool get wordPrediction => _wordPrediction;
+  bool get textToSpeech => _textToSpeech;
   bool get visualTimers => _visualTimers;
   bool get breakReminders => _breakReminders;
   int get selectedColorIndex => _selectedColorIndex;
@@ -28,6 +30,11 @@ class AccessibilitySettings extends ChangeNotifier {
 
   void setDyslexic(bool value) {
     _openDyslexic = value;
+    notifyListeners();
+  }
+
+  void setTextToSpeech(bool value) {
+    _textToSpeech = value;
     notifyListeners();
   }
 
