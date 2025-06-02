@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
+import 'package:my_first_app/repository/screens/onboarding/onboardingscreen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -78,6 +79,12 @@ class _SignupScreenState extends State<SignupScreen> {
       print(
         "Signing up with: $name - $email - $password - $selectedStandard - $interests",
       );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OnboardingScreen()),
+);
+
     }
   }
 
