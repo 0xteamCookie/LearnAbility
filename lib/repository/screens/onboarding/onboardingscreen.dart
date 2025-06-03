@@ -65,7 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     print("Accessibility needs: $selectedNeeds");
   }
 
-  Widget buildCard(Map<String, String> item) {
+  Widget buildCard(Map<String, dynamic> item) {
     final isSelected = selectedNeeds.contains(item['title']);
     return GestureDetector(
       onTap: () {
@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(IconsMap[item['icon']] ?? Icons.help, size: 36, color: Colors.blue),
+              Icon(iconsMap[item['icon']] ?? Icons.help, size: 36, color: Colors.blue),
               SizedBox(height: 8),
               Text(item['title']!, style: TextStyle(fontWeight: FontWeight.bold)),
               SizedBox(height: 4),
@@ -94,7 +94,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  static const Map<String, IconData> IconsMap = {
+  static const Map<String, IconData> iconsMap = {
     'visibility': Icons.visibility,
     'hearing': Icons.hearing,
     'accessibility': Icons.accessibility,
@@ -141,7 +141,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
                     childAspectRatio: 1.1,
-                    children: accessibilityOptions.map(buildCard).toList(),
+                    children: accessibilityOptions.map(buildCard).toList().cast<Widget>(),
                   ),
                 ),
                 ElevatedButton(onPressed: _submit, child: Text("Finish"))
