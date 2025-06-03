@@ -246,11 +246,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
     } catch (e) {
       print("Error fetching subjects: $e");
     } finally {
-      if(token==null){
-        if(!mounted) return;
-        setState(() => isLoading = false);
-        return;
-      }
+      
     }
   }
 

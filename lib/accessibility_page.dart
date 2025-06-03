@@ -45,7 +45,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     double fontSize = settings.fontSize;
     bool openDyslexic = settings.openDyslexic;
     double speechRate = settings.speechRate;
-    bool wordPrediction = settings.wordPrediction;
     bool visualTimers = settings.visualTimers;
     bool breakReminders = settings.breakReminders;
     int selectedColorIndex = settings.selectedColorIndex;
@@ -253,7 +252,6 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                       ),
 
                       SizedBox(height: 16),
-
                       // Speech Rate
                       _buildSettingCard(
                         child: Column(
@@ -269,35 +267,31 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               ),
                             ),
                             SizedBox(height: 16),
-                            Slider(
-                              value: speechRate,
-                              min: 0,
-                              max: 1,
-                              label: displaySliderValue(speechRate),
-                              activeColor: Color(0XFF6366F1),
-                              inactiveColor: Colors.grey.shade200,
-                              onChanged: (double value) {
-                                settings.setSpeechRate(value);
-                              },
-                            ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "slow".tr(),
-                                  style: TextStyle(
-                                    fontSize: 14 * fontSize,
-                                    fontFamily: fontFamily(),
-                                    color: Colors.grey.shade600,
+                                Icon(
+                                  LucideIcons.type,
+                                  size: 16,
+                                  color: Colors.grey.shade600,
+                                ),
+                                Expanded(
+                                  child: Slider(
+                                    value: speechRate,
+                                    min: 0.5,
+                                    max: 1.5,
+                                    activeColor: Color(0XFF6366F1),
+                                    inactiveColor: Colors.grey.shade200,
+                                    divisions: 4,
+                                    label: displaySliderValue(speechRate),
+                                    onChanged: (double value) {
+                                      settings.setSpeechRate(value);
+                                    },
                                   ),
                                 ),
-                                Text(
-                                  "fast".tr(),
-                                  style: TextStyle(
-                                    fontSize: 14 * fontSize,
-                                    fontFamily: fontFamily(),
-                                    color: Colors.grey.shade600,
-                                  ),
+                                Icon(
+                                  LucideIcons.type,
+                                  size: 22,
+                                  color: Colors.grey.shade600,
                                 ),
                               ],
                             ),
@@ -311,19 +305,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                       _buildSettingCard(
                         child: Column(
                           children: [
-                            _buildSwitchSetting(
-                              "word_prediction".tr(),
-                              wordPrediction,
-                              (value) => settings.setWordPrediction(value),
-                              fontSize,
-                              fontFamily(),
-                              LucideIcons.type,
-                            ),
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              color: Colors.grey.shade100,
-                            ),
+                            
                             _buildSwitchSetting(
                               "dyslexia_friendly_font".tr(),
                               openDyslexic,

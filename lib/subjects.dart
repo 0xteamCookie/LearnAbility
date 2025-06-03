@@ -105,6 +105,7 @@ class _SubjectsPageState extends State<SubjectsPage> {
         });
       }
     } catch (e) {
+      if(!mounted) return;
       setState(() {
         isLoading = false;
         hasError = true;

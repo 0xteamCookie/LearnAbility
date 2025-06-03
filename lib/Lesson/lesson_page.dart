@@ -615,38 +615,6 @@ class _LessonContentPageState extends State<LessonContentPage> {
     });
   }
 
-  Widget _buildTtsControls() {
-  return ExpansionTile(
-    title: Text("Speech Settings"),
-    children: [
-      Column(
-        children: [
-          Text("Volume"),
-          Slider(
-            value: volume,
-            onChanged: (value) => setState(() => volume = value),
-            min: 0.0,
-            max: 1.0,
-          ),
-          Text("Pitch"),
-          Slider(
-            value: pitch,
-            onChanged: (value) => setState(() => pitch = value),
-            min: 0.5,
-            max: 2.0,
-          ),
-          Text("Rate"),
-          Slider(
-            value: rate,
-            onChanged: (value) => setState(() => rate = value),
-            min: 0.0,
-            max: 1.0,
-          ),
-        ],
-      ),
-    ],
-  );
-}
 
   @override
   Widget build(BuildContext context) {
@@ -815,7 +783,6 @@ class _LessonContentPageState extends State<LessonContentPage> {
                   ),
                 ),
               ),
-              _buildTtsControls(),
             ],
           ),
           
@@ -1038,8 +1005,10 @@ class _LessonContentPageState extends State<LessonContentPage> {
   }
 
   Future<void> _speak(String text) async {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final double speechRate = settings.speechRate;
     await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setPitch(pitch);
     
     if (text.isNotEmpty) {
