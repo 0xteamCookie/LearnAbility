@@ -357,11 +357,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 child: Text(language),
                               );
                             }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedLanguage = value;
-                                 context.setLocale(value == "English" ? const Locale('en') : const Locale('hi'));
-                              });
+                           onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  settings.setLanguage(value);
+                                  context.setLocale(value == "english" ? const Locale('en') : const Locale('hi'));
+                                });
+                              }
                             },
                             validator: (value) =>
                                 value == null ? "Please select your preferred language" : null,
