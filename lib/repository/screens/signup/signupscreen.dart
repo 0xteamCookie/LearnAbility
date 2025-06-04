@@ -7,6 +7,7 @@ import '../../../subjects.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
 import "package:my_first_app/accessibility_model.dart";
+import 'package:easy_localization/easy_localization.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -176,12 +177,11 @@ class _SignupScreenState extends State<SignupScreen> {
         setState(() {
 
           if (item['title'] == 'Dyslexia') {
-          settings.setDyslexic(!isSelected);
+          settings.setDyslexic(true);
         } else if (item['title'] == 'Visual Impairment'){
           settings.setFontSize(1.25);
-        
+          settings.setTextToSpeech(true);
         }
-
           isSelected ? selectedNeeds.remove(item['title']) : selectedNeeds.add(item['title']!);
         });
       },
@@ -217,6 +217,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -264,6 +265,7 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 20),
 
               Container(
+                
                 height: 530,
                 child: PageView(
                   controller: _pageController,
@@ -358,6 +360,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             onChanged: (value) {
                               setState(() {
                                 selectedLanguage = value;
+                                 context.setLocale(value == "English" ? const Locale('en') : const Locale('hi'));
                               });
                             },
                             validator: (value) =>
