@@ -21,14 +21,56 @@ void main() async {
           ),
           ChangeNotifierProvider(create: (context) => AccessibilitySettings()),
         ],
-        child: const MyApp(),
+        child: MyApp(),
       ),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final ThemeData globalTheme = ThemeData(
+    primarySwatch: Colors.blue,
+    primaryColor: Colors.blue,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.blue,
+      brightness: Brightness.light,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.blue),
+      ),
+      labelStyle: TextStyle(color: Colors.black),
+      focusColor: Colors.blue,
+      prefixIconColor: Colors.blue,
+      suffixIconColor: Colors.blue,
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.blue),
+      )
+    ),
+    
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.black,        
+      selectionColor: Colors.blue[100],
+      selectionHandleColor: Colors.blue,
+    ),
+
+    dropdownMenuTheme: DropdownMenuThemeData(
+      inputDecorationTheme: InputDecorationTheme(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+      ),
+      menuStyle: MenuStyle(
+        backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+      ),
+    ),
+
+    textTheme: TextTheme(
+      bodyLarge: TextStyle(color: Colors.black),
+      bodyMedium: TextStyle(color: Colors.blue),
+    ),
+  );
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -43,6 +85,7 @@ class _MyAppState extends State<MyApp> {
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
+      theme: widget.globalTheme,
       home: SplashScreen(),
     );
   }

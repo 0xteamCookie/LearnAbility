@@ -89,7 +89,9 @@ class AuthServices {
     required String email,
     required String password,
     required String standard,
-    required List<String> interests,
+    required String language,
+    required List<String> subjects,
+    required List<String> selectedNeeds,
     required BuildContext context,
   }) async {
     try {
@@ -101,7 +103,9 @@ class AuthServices {
           'email': email,
           'password': password,
           'standard': standard,
-          'interests': interests,
+          'language': language,
+          'subjects': subjects,
+          'selectedNeeds': selectedNeeds,
         }),
       );
 
