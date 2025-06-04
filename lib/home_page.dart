@@ -6,6 +6,7 @@ import 'package:my_first_app/repository/widgets/global_navbar.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/settings_page.dart';
+import 'package:my_first_app/stats_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -608,7 +609,12 @@ class _HomePageState extends State<HomePage>
                               Color(0xFFDBEAFE),
                               Color(0xFF3B82F6),
                               () {
-                                // Progress page will be implemented later
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StatsPage(),
+                                  ),
+                                );
                               },
                               settings,
                               fontFamily(),

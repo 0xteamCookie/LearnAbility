@@ -162,6 +162,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
     String? token = prefs.getString('jwt_token');
 
     if (token == null) {
+      if (!mounted) return;
       setState(() => isLoading = false);
       return;
     }
@@ -211,6 +212,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
 
     if (token == null || token.isEmpty) {
       print("JWT token not found");
+      if (!mounted) return;
       setState(() => isLoading = false);
       return;
     }
@@ -244,7 +246,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
     } catch (e) {
       print("Error fetching subjects: $e");
     } finally {
-      setState(() => isLoading = false);
+      
     }
   }
 
@@ -299,6 +301,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
     String? token = prefs.getString('jwt_token');
 
     if (token == null || token.isEmpty) {
+      if (!mounted) return;
       setState(() => isCreatingSubject = false);
       return;
     }
@@ -356,6 +359,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
       String? token = prefs.getString('jwt_token');
 
       if (token == null) {
+        if (!mounted) return;
         setState(() => isLoading = false);
         return;
       }
@@ -430,6 +434,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
       String? token = prefs.getString('jwt_token');
 
       if (token == null) {
+        if (!mounted) return;
         setState(() => isLoading = false);
         return;
       }
@@ -492,6 +497,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
     String? token = prefs.getString('jwt_token');
 
     if (token == null) {
+      if (!mounted) return;
       setState(() => isLoading = false);
       return;
     }
