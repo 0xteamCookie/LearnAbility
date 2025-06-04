@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
+import '../../../accessibility_page.dart';
+import "package:provider/provider.dart";
+import '../../../subjects.dart';
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
+import "package:my_first_app/accessibility_model.dart";
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -168,7 +172,16 @@ class _SignupScreenState extends State<SignupScreen> {
     final isSelected = selectedNeeds.contains(item['title']);
     return GestureDetector(
       onTap: () {
+        final settings = Provider.of<AccessibilitySettings>(context, listen: false);
         setState(() {
+
+          if (item['title'] == 'Dyslexia') {
+          settings.setDyslexic(!isSelected);
+        } else if (item['title'] == 'Visual Impairment'){
+          settings.setFontSize(1.25);
+        
+        }
+
           isSelected ? selectedNeeds.remove(item['title']) : selectedNeeds.add(item['title']!);
         });
       },
@@ -455,8 +468,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       backgroundColor: MaterialStateProperty.all(Colors.blue),
                       foregroundColor: MaterialStateProperty.all(Colors.white),
                     ),
-                    onPressed: _nextPage,
                     child: Text("Sign up"),
+                    onPressed: () {
+                      signupUser();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                      );
+                    },
                   )
                 ],
               ),

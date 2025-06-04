@@ -178,7 +178,11 @@ class _SettingPageState extends State<SettingsPage> {
 
     final String key = setting["key"]!;
     return Card(
+      color: Colors.white,
+      elevation: 2,
       child: SwitchListTile(
+        inactiveThumbColor: Colors.grey,
+        inactiveTrackColor: Colors.white,
         title: Text(
           setting["title"]!.tr(),
           style: TextStyle(
@@ -210,6 +214,8 @@ class _SettingPageState extends State<SettingsPage> {
     final currentLanguage = settings.language.toLowerCase();
     
     return Card(
+      color: const Color.fromARGB(255, 255, 255, 255),
+      elevation: 2,
       child: ListTile(
         title: Text(
           "select_language".tr(),
