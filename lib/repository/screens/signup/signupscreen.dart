@@ -35,7 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   // Standard selection
   String? selectedStandard;
-  List<String> standards = ["10th", "11th", "12th", "College"];
+  List<String> standards = ["6th", "7th", "8th", "9th", "10th", "11th", "12th", "College"];
   String? selectedLanguage;
   List<String> languages = ["English", "Hindi"];
 
@@ -74,24 +74,6 @@ class _SignupScreenState extends State<SignupScreen> {
     },
   ];
 
-  // Subjects list
-  List<String> subjects = [];
-
-  void addSubject() {
-    if (subjectController.text.isNotEmpty) {
-      setState(() {
-        subjects.add(subjectController.text.trim());
-        subjectController.clear();
-      });
-    }
-  }
-
-  void removeSubject(int index) {
-    setState(() {
-      subjects.removeAt(index);
-    });
-  }
-
   void _nextPage() {
     bool isValid = true;
     switch (_currentPage) {
@@ -127,7 +109,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void signupUser() {
     if (_page3FormKey.currentState!.validate()) {
-      if (subjects.isEmpty) {
+      final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+
+      if (settings.subjects.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Please add at least one subject")),
         );
@@ -158,13 +142,13 @@ class _SignupScreenState extends State<SignupScreen> {
         password: password,
         standard: selectedStandard!,
         language: selectedLanguage!,
-        subjects: subjects,
+        subjects: settings.subjects,
         selectedNeeds: selectedNeeds,
         context: context,
       );
 
       print(
-        "Signing up with: $name - $email - $password - $selectedStandard - $selectedLanguage - $subjects - $selectedNeeds",
+        "Signing up with: $name - $email - $password - $selectedStandard - $selectedLanguage - $settings.subjects - $selectedNeeds",
       );
     }
   }
@@ -265,11 +249,10 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 20),
 
               Container(
-                
-                height: 530,
+                height: 500,
                 child: PageView(
                   controller: _pageController,
-                  physics: NeverScrollableScrollPhysics(), // Disable swipe
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     // Page 1: Basic Information
                     Form(
@@ -378,7 +361,14 @@ class _SignupScreenState extends State<SignupScreen> {
                               labelText: "Enter your Subjects",
                               suffixIcon: IconButton(
                                 icon: Icon(LucideIcons.plusCircle),
-                                onPressed: addSubject,
+                                onPressed: (){
+                                  if (subjectController.text.isNotEmpty) {
+                                    setState(() {
+                                      settings.addSubject(subjectController.text.trim());
+                                      subjectController.clear();
+                                    });
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -387,11 +377,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Display Subjects List
                           Wrap(
                             spacing: 8,
-                            children: subjects.map((subject) {
-                              int index = subjects.indexOf(subject);
+                            children: settings.subjects.map((subject) {
                               return Chip(
                                 label: Text(subject),
-                                onDeleted: () => removeSubject(index),
+                                onDeleted: () {
+                                  setState(() {
+                                    settings.removeSubject(subject);
+                                  });
+                                },
                               );
                             }).toList(),
                           ),
