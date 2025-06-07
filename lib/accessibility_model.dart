@@ -11,7 +11,6 @@ class AccessibilitySettings extends ChangeNotifier {
   int _selectedColorIndex = 0;
   int _selectedIndexBottomNavBar = 2;
   String _language = 'English';
-  List<String> _subjects = [];
 
   double get fontSize => _fontSize;
   bool get openDyslexic => _openDyslexic;
@@ -23,7 +22,6 @@ class AccessibilitySettings extends ChangeNotifier {
   int get selectedColorIndex => _selectedColorIndex;
   int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
   String get language => _language;
-  List<String> get subjects => _subjects;
 
   void setFontSize(double value) {
     _fontSize = value;
@@ -72,18 +70,6 @@ class AccessibilitySettings extends ChangeNotifier {
 
   void setLanguage(String newLanguage) {
     _language = newLanguage;
-    notifyListeners();
-  }
-
-  //add subject
-  void addSubject(String subject) {
-    _subjects.add(subject);
-    notifyListeners();
-  }
-
-  //remove subject
-  void removeSubject(String subject) {
-    _subjects.remove(subject);
     notifyListeners();
   }
 

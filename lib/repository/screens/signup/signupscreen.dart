@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:my_first_app/repository/screens/login/loginscreen.dart';
-import '../../../accessibility_page.dart';
-import "package:provider/provider.dart";
 import '../../../subjects.dart';
+import "package:provider/provider.dart";
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
 import "package:my_first_app/accessibility_model.dart";
@@ -36,8 +34,28 @@ class _SignupScreenState extends State<SignupScreen> {
   // Standard selection
   String? selectedStandard;
   List<String> standards = ["6th", "7th", "8th", "9th", "10th", "11th", "12th", "College"];
+
+  //Language selection
   String? selectedLanguage;
   List<String> languages = ["English", "Hindi"];
+
+  //Subject list
+  List<String> subjects = [];
+
+  void addSubject() {
+    if (subjectController.text.isNotEmpty) {
+      setState(() {
+        subjects.add(subjectController.text.trim());
+        subjectController.clear();
+      });
+    }
+  }
+
+  void removeSubject(int index) {
+    setState(() {
+      subjects.removeAt(index);
+    });
+  }
 
   //Special Needs list
   List<String> selectedNeeds = [];
@@ -53,11 +71,6 @@ class _SignupScreenState extends State<SignupScreen> {
       'icon': 'hearing',
     },
     {
-      'title': 'Down Syndrome',
-      'desc': 'Simplified interfaces, visual instructions, adaptive content',
-      'icon': 'accessibility',
-    },
-    {
       'title': 'Dyslexia',
       'desc': 'Special fonts, word prediction, color overlays',
       'icon': 'spellcheck',
@@ -71,6 +84,11 @@ class _SignupScreenState extends State<SignupScreen> {
       'title': 'Autism',
       'desc': 'Predictable routines, sensory adjustments, clear instructions',
       'icon': 'emoji_people',
+    },
+    {
+      'title': 'Down Syndrome',
+      'desc': 'Simplified interfaces, visual instructions, adaptive content',
+      'icon': 'accessibility',
     },
   ];
 
@@ -109,9 +127,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void signupUser() {
     if (_page3FormKey.currentState!.validate()) {
-      final settings = Provider.of<AccessibilitySettings>(context, listen: false);
-
-      if (settings.subjects.isEmpty) {
+      if (subjects.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Please add at least one subject")),
         );
@@ -142,13 +158,13 @@ class _SignupScreenState extends State<SignupScreen> {
         password: password,
         standard: selectedStandard!,
         language: selectedLanguage!,
-        subjects: settings.subjects,
+        subjects: subjects,
         selectedNeeds: selectedNeeds,
         context: context,
       );
 
       print(
-        "Signing up with: $name - $email - $password - $selectedStandard - $selectedLanguage - $settings.subjects - $selectedNeeds",
+        "Signing up with: $name - $email - $password - $selectedStandard - $selectedLanguage - $subjects - $selectedNeeds",
       );
     }
   }
@@ -361,14 +377,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               labelText: "Enter your Subjects",
                               suffixIcon: IconButton(
                                 icon: Icon(LucideIcons.plusCircle),
-                                onPressed: (){
-                                  if (subjectController.text.isNotEmpty) {
-                                    setState(() {
-                                      settings.addSubject(subjectController.text.trim());
-                                      subjectController.clear();
-                                    });
-                                  }
-                                },
+                                onPressed: addSubject,
                               ),
                             ),
                           ),
@@ -377,14 +386,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Display Subjects List
                           Wrap(
                             spacing: 8,
-                            children: settings.subjects.map((subject) {
+                            children: subjects.map((subject) {
+                               int index = subjects.indexOf(subject);
                               return Chip(
                                 label: Text(subject),
-                                onDeleted: () {
-                                  setState(() {
-                                    settings.removeSubject(subject);
-                                  });
-                                },
+                                onDeleted: () => removeSubject(index),
                               );
                             }).toList(),
                           ),
@@ -471,7 +477,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       signupUser();
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                        MaterialPageRoute(builder: (context) => SubjectsPage()),
                       );
                     },
                   )
