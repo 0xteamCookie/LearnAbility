@@ -90,7 +90,7 @@ class AuthServices {
     required String password,
     required String standard,
     required String language,
-    required List<String> subjects,
+    required List<String> interests,
     required List<String> selectedNeeds,
     required BuildContext context,
   }) async {
@@ -104,7 +104,7 @@ class AuthServices {
           'password': password,
           'standard': standard,
           'language': language,
-          'subjects': subjects,
+          'interests': interests,
           'selectedNeeds': selectedNeeds,
         }),
       );

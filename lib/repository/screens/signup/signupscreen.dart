@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../../subjects.dart';
 import "package:provider/provider.dart";
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
@@ -24,7 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController subjectController = TextEditingController();
+  final TextEditingController interestController = TextEditingController();
 
   // GlobalKey for form validation
   final GlobalKey<FormState> _page1FormKey = GlobalKey<FormState>();
@@ -40,20 +39,20 @@ class _SignupScreenState extends State<SignupScreen> {
   List<String> languages = ["English", "Hindi"];
 
   //Subject list
-  List<String> subjects = [];
+  List<String> interests = [];
 
-  void addSubject() {
-    if (subjectController.text.isNotEmpty) {
+  void addInterest() {
+    if (interestController.text.isNotEmpty) {
       setState(() {
-        subjects.add(subjectController.text.trim());
-        subjectController.clear();
+        interests.add(interestController.text.trim());
+        interestController.clear();
       });
     }
   }
 
-  void removeSubject(int index) {
+  void removeInterest(int index) {
     setState(() {
-      subjects.removeAt(index);
+      interests.removeAt(index);
     });
   }
 
@@ -127,9 +126,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void signupUser() {
     if (_page3FormKey.currentState!.validate()) {
-      if (subjects.isEmpty) {
+      if (interests.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Please add at least one subject")),
+          SnackBar(content: Text("Please add at least one interest")),
         );
         return;
       }
@@ -158,13 +157,13 @@ class _SignupScreenState extends State<SignupScreen> {
         password: password,
         standard: selectedStandard!,
         language: selectedLanguage!,
-        subjects: subjects,
+        interests: interests,
         selectedNeeds: selectedNeeds,
         context: context,
       );
 
       print(
-        "Signing up with: $name - $email - $password - $selectedStandard - $selectedLanguage - $subjects - $selectedNeeds",
+        "Signing up with: $name - $email - $password - $selectedStandard - $selectedLanguage - $interests - $selectedNeeds",
       );
     }
   }
@@ -264,6 +263,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 20),
 
+              // ignore: sized_box_for_whitespace
               Container(
                 height: 500,
                 child: PageView(
@@ -359,8 +359,9 @@ class _SignupScreenState extends State<SignupScreen> {
                            onChanged: (value) {
                               if (value != null) {
                                 setState(() {
+                                  selectedLanguage = value; // Set selectedLanguage here
                                   settings.setLanguage(value);
-                                  context.setLocale(value == "english" ? const Locale('en') : const Locale('hi'));
+                                  context.setLocale(value == "English" ? const Locale('en') : const Locale('hi'));
                                 });
                               }
                             },
@@ -369,28 +370,28 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           SizedBox(height: 16),
 
-                          // Subjects Input
+                          // Interests Input
                           TextFormField(
-                            controller: subjectController,
+                            controller: interestController,
                             decoration: InputDecoration(
                               prefixIcon: Icon(LucideIcons.library),
-                              labelText: "Enter your Subjects",
+                              labelText: "Enter your Interests",
                               suffixIcon: IconButton(
                                 icon: Icon(LucideIcons.plusCircle),
-                                onPressed: addSubject,
+                                onPressed: addInterest,
                               ),
                             ),
                           ),
                           SizedBox(height: 16),
 
-                          // Display Subjects List
+                          // Display Interests List
                           Wrap(
                             spacing: 8,
-                            children: subjects.map((subject) {
-                               int index = subjects.indexOf(subject);
+                            children: interests.map((interest) {
+                               int index = interests.indexOf(interest);
                               return Chip(
-                                label: Text(subject),
-                                onDeleted: () => removeSubject(index),
+                                label: Text(interest),
+                                onDeleted: () => removeInterest(index),
                               );
                             }).toList(),
                           ),
@@ -475,10 +476,6 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: Text("Sign up"),
                     onPressed: () {
                       signupUser();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SubjectsPage()),
-                      );
                     },
                   )
                 ],
