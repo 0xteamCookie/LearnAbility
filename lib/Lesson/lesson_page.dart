@@ -642,29 +642,28 @@ class _LessonContentPageState extends State<LessonContentPage> {
           ),
         ),
         actions: [
-    if (!isLoading && !hasError && isTextToSpeech)
-      IconButton(
-        icon: Icon(
-          ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          if (ttsState == TtsState.playing) {
-            _stop();
-          } else {
-            _readCurrentPageContent();
-          }
-        },
-      ),
-  ],
-
+          if (!isLoading && !hasError && isTextToSpeech)
+            IconButton(
+              icon: Icon(
+                ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                if (ttsState == TtsState.playing) {
+                  _stop();
+                } else {
+                  _readCurrentPageContent();
+                }
+              },
+            ),
+        ],
       ),
       body:
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : hasError
-              ? _buildErrorState(settings, fontFamily())
-              : _buildLessonContent(settings, fontFamily()),
+        isLoading
+          ? Center(child: CircularProgressIndicator())
+          : hasError
+          ? _buildErrorState(settings, fontFamily())
+          : _buildLessonContent(settings, fontFamily()),
     );
   }
 
