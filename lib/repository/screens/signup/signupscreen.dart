@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:my_first_app/repository/screens/login/loginscreen.dart';
-import '../../../accessibility_page.dart';
-import "package:provider/provider.dart";
 import '../../../subjects.dart';
+import "package:provider/provider.dart";
 import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
 import "package:my_first_app/accessibility_model.dart";
@@ -35,46 +33,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   // Standard selection
   String? selectedStandard;
-  List<String> standards = ["10th", "11th", "12th", "College"];
+  List<String> standards = ["6th", "7th", "8th", "9th", "10th", "11th", "12th", "College"];
+
+  //Language selection
   String? selectedLanguage;
   List<String> languages = ["English", "Hindi"];
 
-  //Special Needs list
-  List<String> selectedNeeds = [];
-  List<Map<String, dynamic>> accessibilityOptions = [
-    {
-      'title': 'Visual Impairment',
-      'desc': 'Screen magnification, text-to-speech, high-contrast options',
-      'icon': 'visibility',
-    },
-    {
-      'title': 'Auditory Processing',
-      'desc': 'Visual aids, transcripts, and captions',
-      'icon': 'hearing',
-    },
-    {
-      'title': 'Down Syndrome',
-      'desc': 'Simplified interfaces, visual instructions, adaptive content',
-      'icon': 'accessibility',
-    },
-    {
-      'title': 'Dyslexia',
-      'desc': 'Special fonts, word prediction, color overlays',
-      'icon': 'spellcheck',
-    },
-    {
-      'title': 'ADHD',
-      'desc': 'Visual timers, reminders, distraction-free interfaces',
-      'icon': 'alarm',
-    },
-    {
-      'title': 'Autism',
-      'desc': 'Predictable routines, sensory adjustments, clear instructions',
-      'icon': 'emoji_people',
-    },
-  ];
-
-  // Subjects list
+  //Subject list
   List<String> subjects = [];
 
   void addSubject() {
@@ -91,6 +56,41 @@ class _SignupScreenState extends State<SignupScreen> {
       subjects.removeAt(index);
     });
   }
+
+  //Special Needs list
+  List<String> selectedNeeds = [];
+  List<Map<String, dynamic>> accessibilityOptions = [
+    {
+      'title': 'Visual Impairment',
+      'desc': 'Screen magnification, text-to-speech, high-contrast options',
+      'icon': 'visibility',
+    },
+    {
+      'title': 'Auditory Processing',
+      'desc': 'Visual aids, transcripts, and captions',
+      'icon': 'hearing',
+    },
+    {
+      'title': 'Dyslexia',
+      'desc': 'Special fonts, word prediction, color overlays',
+      'icon': 'spellcheck',
+    },
+    {
+      'title': 'ADHD',
+      'desc': 'Visual timers, reminders, distraction-free interfaces',
+      'icon': 'alarm',
+    },
+    {
+      'title': 'Autism',
+      'desc': 'Predictable routines, sensory adjustments, clear instructions',
+      'icon': 'emoji_people',
+    },
+    {
+      'title': 'Down Syndrome',
+      'desc': 'Simplified interfaces, visual instructions, adaptive content',
+      'icon': 'accessibility',
+    },
+  ];
 
   void _nextPage() {
     bool isValid = true;
@@ -265,11 +265,10 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 20),
 
               Container(
-                
-                height: 530,
+                height: 500,
                 child: PageView(
                   controller: _pageController,
-                  physics: NeverScrollableScrollPhysics(), // Disable swipe
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     // Page 1: Basic Information
                     Form(
@@ -388,7 +387,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           Wrap(
                             spacing: 8,
                             children: subjects.map((subject) {
-                              int index = subjects.indexOf(subject);
+                               int index = subjects.indexOf(subject);
                               return Chip(
                                 label: Text(subject),
                                 onDeleted: () => removeSubject(index),
@@ -478,7 +477,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       signupUser();
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AccessibilityPage()),
+                        MaterialPageRoute(builder: (context) => SubjectsPage()),
                       );
                     },
                   )

@@ -72,4 +72,5 @@ class AccessibilitySettings extends ChangeNotifier {
     _language = newLanguage;
     notifyListeners();
   }
+
 }
