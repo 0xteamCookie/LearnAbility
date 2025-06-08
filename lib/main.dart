@@ -68,7 +68,7 @@ class MyApp extends StatefulWidget {
 
     textTheme: TextTheme(
       bodyLarge: TextStyle(color: Colors.black),
-      bodyMedium: TextStyle(color: Colors.blue),
+      bodyMedium: TextStyle(color: Colors.black),
     ),
   );
 

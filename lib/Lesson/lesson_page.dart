@@ -10,6 +10,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'package:vibration/vibration.dart';
 
 enum TtsState { playing, stopped }
 class LessonData {
@@ -147,6 +149,9 @@ class LessonContentPage extends StatefulWidget {
   State<LessonContentPage> createState() => _LessonContentPageState();
 }
 
+Timer? _focusReminderTimer;
+bool _showFocusReminder = false;
+
 class _LessonContentPageState extends State<LessonContentPage> {
   late FlutterTts flutterTts;
   TtsState ttsState = TtsState.stopped;
@@ -159,6 +164,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
     super.initState();
     initTts();
     fetchLessonData();
+    _startFocusReminderTimer();
   }
 
   Widget _buildHighlightedCode(String code, String language, double fontSize) {
@@ -550,6 +556,33 @@ class _LessonContentPageState extends State<LessonContentPage> {
       _loadDemoData();
     }
   }
+  
+  void _startFocusReminderTimer() {
+  _focusReminderTimer?.cancel();
+  _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
+    if (mounted) {
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(pattern: [0, 500, 100, 500, 100, 500]);
+      }
+      setState(() => _showFocusReminder = true);
+    }
+  });
+}
+
+
+void _stopFocusReminderTimer({bool allowSetState = true}) {
+  _focusReminderTimer?.cancel();
+  _focusReminderTimer = null;
+
+  if (allowSetState && mounted) {
+    setState(() => _showFocusReminder = false);
+  }
+}
+
+void _dismissFocusReminder() {
+  setState(() => _showFocusReminder = false);
+  _startFocusReminderTimer(); // Restart the timer
+}
 
   void _loadDemoData() {
     try {
@@ -614,6 +647,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
       quizSubmitted[questionId] = true;
     });
   }
+  
 
 
   @override
@@ -621,7 +655,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
     final settings = Provider.of<AccessibilitySettings>(context);
     final bool isDyslexic = settings.openDyslexic;
     final bool isTextToSpeech = settings.textToSpeech;
-    String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
+    final String fontFamily = isDyslexic ? "OpenDyslexic" : "Roboto";
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -638,33 +672,63 @@ class _LessonContentPageState extends State<LessonContentPage> {
             color: Colors.white,
             fontSize: 20 * settings.fontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: fontFamily(),
+            fontFamily: fontFamily, // Removed parentheses
           ),
         ),
         actions: [
-    if (!isLoading && !hasError && isTextToSpeech)
-      IconButton(
-        icon: Icon(
-          ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          if (ttsState == TtsState.playing) {
-            _stop();
-          } else {
-            _readCurrentPageContent();
-          }
-        },
+          if (!isLoading && !hasError && isTextToSpeech)
+            IconButton(
+              icon: Icon(
+                ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                if (ttsState == TtsState.playing) {
+                  _stop();
+                } else {
+                  _readCurrentPageContent();
+                }
+              },
+            ),
+        ],
       ),
-  ],
-
-      ),
-      body:
+      body: Stack(
+        children: [
           isLoading
-              ? Center(child: CircularProgressIndicator())
-              : hasError
-              ? _buildErrorState(settings, fontFamily())
-              : _buildLessonContent(settings, fontFamily()),
+            ? Center(child: CircularProgressIndicator())
+            : hasError
+              ? _buildErrorState(settings, fontFamily) // Removed parentheses
+              : _buildLessonContent(settings, fontFamily), // Removed parentheses
+          
+          if (_showFocusReminder)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                  child: AlertDialog(
+                    title: Text(
+                      "Focus Check",
+                      style: TextStyle(fontSize: 20 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
+                    ),
+                    content: Text(
+                      "Are you still focusing?",
+                      style: TextStyle(fontSize: 16 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: _dismissFocusReminder,
+                        child: Text(
+                          "Yes, I'm focused",
+                          style: TextStyle(fontSize: 16 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -2119,9 +2183,12 @@ class _LessonContentPageState extends State<LessonContentPage> {
       ),
     );
   }
+  
   @override
   void dispose() {
+    
+    _stopFocusReminderTimer(allowSetState: false); // stops timer
     flutterTts.stop();  // Stops any ongoing speech
-    super.dispose();    // Calls the parent's dispose method
+    super.dispose();   
   }
 }
