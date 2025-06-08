@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_first_app/domain/constants/appcolors.dart';
@@ -9,11 +10,13 @@ import 'package:my_first_app/utils/constants.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 import 'package:vibration/vibration.dart';
 
+
 enum TtsState { playing, stopped }
+
 class LessonData {
   final String id;
   final String title;
@@ -135,6 +138,173 @@ class QuizQuestion {
   }
 }
 
+class PomodoroTimer extends StatefulWidget {
+  final double fontSize;
+  final String fontFamily;
+
+  const PomodoroTimer({super.key, required this.fontSize, required this.fontFamily});
+
+  @override
+  State<PomodoroTimer> createState() => _PomodoroTimerState();
+}
+
+class _PomodoroTimerState extends State<PomodoroTimer> {
+  static const int studyDuration = 25 * 60;
+  static const int breakDuration = 5 * 60;
+  int remainingTime = studyDuration;
+  Timer? timer;
+  bool isRunning = false;
+  bool isBreak = false;
+  int pomodoroCount = 0;
+  bool isExpanded = false;
+
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void startTimer() {
+    if (isRunning) return;
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      if (remainingTime > 0) {
+        setState(() => remainingTime--);
+      } else {
+        timer?.cancel();
+        setState(() {
+          isRunning = false;
+        });
+        playSound();
+        handleSessionSwitch();
+      }
+    });
+    setState(() => isRunning = true);
+  }
+
+  void resetTimer() {
+    timer?.cancel();
+    setState(() {
+      isRunning = false;
+      isBreak = false;
+      remainingTime = studyDuration;
+      pomodoroCount = 0;
+    });
+  }
+
+  void handleSessionSwitch() {
+    setState(() {
+      if (isBreak) {
+        remainingTime = studyDuration;
+        isBreak = false;
+        pomodoroCount++;
+      } else {
+        remainingTime = breakDuration;
+        isBreak = true;
+      }
+    });
+    startTimer();
+  }
+
+  void playSound() async {
+    await audioPlayer.play(AssetSource('audio/pomodoro_notif_sound.wav'));
+  }
+
+  String formatTime(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$secs";
+  }
+
+  void toggleExpanded() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isExpanded
+        ? Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              width: 200,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isBreak ? "Break Time" : "Pomodoro",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16 * widget.fontSize,
+                      fontFamily: widget.fontFamily,
+                      color: isBreak ? Colors.teal : Color(0xFF6366F1),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    formatTime(remainingTime),
+                    style: TextStyle(
+                      fontSize: 24 * widget.fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: widget.fontFamily,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(isRunning ? Icons.pause : Icons.play_arrow),
+                        onPressed: isRunning ? resetTimer : startTimer,
+                        color: isRunning ? Colors.green : Colors.red,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: toggleExpanded,
+                        color: Colors.grey.shade700,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Completed: $pomodoroCount cycles",
+                    style: TextStyle(
+                      fontSize: 12 * widget.fontSize,
+                      fontFamily: widget.fontFamily,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : IconButton(
+            icon: Container(
+              padding: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(159, 51, 170, 55),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.timer,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+            onPressed: toggleExpanded,
+          );
+  }
+}
+
 class LessonContentPage extends StatefulWidget {
   final String lessonId;
   final String subjectId;
@@ -149,9 +319,6 @@ class LessonContentPage extends StatefulWidget {
   State<LessonContentPage> createState() => _LessonContentPageState();
 }
 
-Timer? _focusReminderTimer;
-bool _showFocusReminder = false;
-
 class _LessonContentPageState extends State<LessonContentPage> {
   late FlutterTts flutterTts;
   TtsState ttsState = TtsState.stopped;
@@ -159,12 +326,17 @@ class _LessonContentPageState extends State<LessonContentPage> {
   double pitch = 1.0;
   double rate = 0.6;
 
+  Timer? _focusReminderTimer;
+  bool _showFocusReminder = false;
+  Timer? _inactivityTimer;
+  bool _isActive = true;
+
   @override
   void initState() {
     super.initState();
     initTts();
     fetchLessonData();
-    _startFocusReminderTimer();
+    _startTimers();
   }
 
   Widget _buildHighlightedCode(String code, String language, double fontSize) {
@@ -182,6 +354,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
       ),
     );
   }
+
   LessonData? lessonData;
   bool isLoading = true;
   bool hasError = false;
@@ -490,10 +663,6 @@ class _LessonContentPageState extends State<LessonContentPage> {
 }
 ''';
 
-
-  
-
-
   Future<void> fetchLessonData() async {
     setState(() {
       isLoading = true;
@@ -556,33 +725,77 @@ class _LessonContentPageState extends State<LessonContentPage> {
       _loadDemoData();
     }
   }
-  
-  void _startFocusReminderTimer() {
-  _focusReminderTimer?.cancel();
-  _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
-    if (mounted) {
-      if (await Vibration.hasVibrator()) {
-        Vibration.vibrate(pattern: [0, 500, 100, 500, 100, 500]);
+
+  void _startTimers() {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isReminders = settings.reminders;
+
+    // Cancel any existing timers first
+    _focusReminderTimer?.cancel();
+    _inactivityTimer?.cancel();
+
+    // Start the 5-minute periodic timer
+      if (isReminders) {
+        _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) {
+          _showFocusPopup();
+      });
+      // Start the inactivity timer
+      _resetInactivityTimer();
+  }
+  }
+
+  void _resetInactivityTimer() {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isReminders = settings.reminders;
+
+    if (!isReminders) return;
+
+    _inactivityTimer?.cancel();
+    _inactivityTimer = Timer(Duration(minutes: 1), () {
+      if (mounted && _isActive) {
+        _showFocusPopup();
       }
+    });
+    _isActive = true;
+  }
+
+  void _showFocusPopup() async {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isReminders = settings.reminders;
+    if (!isReminders) return;
+
+    _isActive = false; // Mark as inactive to prevent multiple popups
+
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(pattern: [0, 500, 100, 500, 100, 500]);
+    }
+
+    if (mounted) {
       setState(() => _showFocusReminder = true);
     }
-  });
-}
-
-
-void _stopFocusReminderTimer({bool allowSetState = true}) {
-  _focusReminderTimer?.cancel();
-  _focusReminderTimer = null;
-
-  if (allowSetState && mounted) {
-    setState(() => _showFocusReminder = false);
   }
-}
 
-void _dismissFocusReminder() {
-  setState(() => _showFocusReminder = false);
-  _startFocusReminderTimer(); // Restart the timer
-}
+  void _stopFocusReminderTimer({bool allowSetState = true}) {
+    _focusReminderTimer?.cancel();
+    _focusReminderTimer = null;
+
+    if (allowSetState && mounted) {
+      setState(() => _showFocusReminder = false);
+    }
+  }
+
+  void _dismissFocusReminder() {
+    setState(() => _showFocusReminder = false);
+    _startTimers(); // Restart the timer
+  }
+  
+  void _stopTimers() {
+    _focusReminderTimer?.cancel();
+    _focusReminderTimer = null;
+    _inactivityTimer?.cancel();
+    _inactivityTimer = null;
+  }
+
 
   void _loadDemoData() {
     try {
@@ -647,91 +860,110 @@ void _dismissFocusReminder() {
       quizSubmitted[questionId] = true;
     });
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isReminders = settings.reminders;
     final bool isDyslexic = settings.openDyslexic;
     final bool isTextToSpeech = settings.textToSpeech;
     final String fontFamily = isDyslexic ? "OpenDyslexic" : "Roboto";
 
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryBackground,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          isLoading ? "Loading Lesson..." : lessonData?.title ?? "Lesson",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20 * settings.fontSize,
-            fontWeight: FontWeight.bold,
-            fontFamily: fontFamily, // Removed parentheses
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: isReminders ? _resetInactivityTimer : null,
+      onPanUpdate: isReminders ? (_) => _resetInactivityTimer() : null,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade50,
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryBackground,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              _resetInactivityTimer(); // Reset timer on back button press
+              Navigator.pop(context);
+            },
           ),
-        ),
-        actions: [
-          if (!isLoading && !hasError && isTextToSpeech)
-            IconButton(
-              icon: Icon(
-                ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (ttsState == TtsState.playing) {
-                  _stop();
-                } else {
-                  _readCurrentPageContent();
-                }
-              },
+          title: Text(
+            isLoading ? "Loading Lesson..." : lessonData?.title ?? "Lesson",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20 * settings.fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
             ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          isLoading
-            ? Center(child: CircularProgressIndicator())
-            : hasError
-              ? _buildErrorState(settings, fontFamily) // Removed parentheses
-              : _buildLessonContent(settings, fontFamily), // Removed parentheses
-          
-          if (_showFocusReminder)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: AlertDialog(
-                    title: Text(
-                      "Focus Check",
-                      style: TextStyle(fontSize: 20 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
-                    ),
-                    content: Text(
-                      "Are you still focusing?",
-                      style: TextStyle(fontSize: 16 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: _dismissFocusReminder,
-                        child: Text(
-                          "Yes, I'm focused",
-                          style: TextStyle(fontSize: 16 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
+          ),
+          actions: [
+            if (!isLoading && !hasError && isTextToSpeech)
+              IconButton(
+                icon: Icon(
+                  ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _resetInactivityTimer(); // Reset timer on TTS button press
+                  if (ttsState == TtsState.playing) {
+                    _stop();
+                  } else {
+                    _readCurrentPageContent();
+                  }
+                },
+              ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : hasError
+                    ? _buildErrorState(settings, fontFamily)
+                    : _buildLessonContent(settings, fontFamily),
+
+            if (_showFocusReminder && isReminders)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: AlertDialog(
+                      title: Text(
+                        "Focus Check",
+                        style: TextStyle(
+                          fontSize: 20 * settings.fontSize,
+                          fontFamily: fontFamily,
                         ),
                       ),
-                    ],
+                      content: Text(
+                        "Are you still focusing?",
+                        style: TextStyle(
+                          fontSize: 16 * settings.fontSize,
+                          fontFamily: fontFamily,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            _dismissFocusReminder();
+                            _resetInactivityTimer(); // Also reset when dismissing
+                          },
+                          child: Text(
+                            "Yes, I'm focused",
+                            style: TextStyle(
+                              fontSize: 16 * settings.fontSize,
+                              fontFamily: fontFamily,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
   Widget _buildErrorState(AccessibilitySettings settings, String fontFamily) {
     return Center(
       child: Padding(
@@ -849,133 +1081,193 @@ void _dismissFocusReminder() {
               ),
             ],
           ),
-          
         ),
-        
       );
-      
     }
-    
 
     final currentPage = lessonData!.pages[currentPageIndex];
 
-    return Column(
+    return Stack(
       children: [
-        // Progress bar
-        LinearProgressIndicator(
-          value: (currentPageIndex + 1) / lessonData!.pages.length,
-          backgroundColor: Colors.grey.shade300,
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF6366F1)),
-        ),
+        Column(
+          children: [
+            // Progress bar
+            LinearProgressIndicator(
+              value: (currentPageIndex + 1) / lessonData!.pages.length,
+              backgroundColor: Colors.grey.shade300,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF6366F1)),
+            ),
 
-        // Page content
-        Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Lesson title and description (only on first page)
-                  if (currentPageIndex == 0) ...[
-                    Text(
-                      lessonData!.title,
-                      style: TextStyle(
-                        fontSize: 24 * settings.fontSize,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: fontFamily,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      lessonData!.description,
-                      style: TextStyle(
-                        fontSize: 16 * settings.fontSize,
-                        color: Colors.grey.shade700,
-                        fontFamily: fontFamily,
-                      ),
-                    ),
-                    SizedBox(height: 16),
+            // Page content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Lesson title and description (only on first page)
+                      if (currentPageIndex == 0) ...[
+                        Text(
+                          lessonData!.title,
+                          style: TextStyle(
+                            fontSize: 24 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          lessonData!.description,
+                          style: TextStyle(
+                            fontSize: 16 * settings.fontSize,
+                            color: Colors.grey.shade700,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                        SizedBox(height: 16),
 
-                    // Learning objectives
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                        // Learning objectives
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.lightbulb, color: Color(0XFF6366F1)),
-                                SizedBox(width: 8),
-                                Text(
-                                  "Learning Objectives",
-                                  style: TextStyle(
-                                    fontSize: 18 * settings.fontSize,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: fontFamily,
-                                    color: Color(0XFF6366F1),
-                                  ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.lightbulb, color: Color(0XFF6366F1)),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Learning Objectives",
+                                      style: TextStyle(
+                                        fontSize: 18 * settings.fontSize,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: fontFamily,
+                                        color: Color(0XFF6366F1),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+
+                                SizedBox(height: 12),
+                                ...lessonData!.learningObjectives
+                                    .map(
+                                      (objective) => Padding(
+                                        padding: EdgeInsets.only(bottom: 8),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle,
+                                              size: 18,
+                                              color: Colors.green.shade600,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                objective,
+                                                style: TextStyle(
+                                                  fontSize: 14 * settings.fontSize,
+                                                  fontFamily: fontFamily,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                    ,
                               ],
                             ),
-                            SizedBox(height: 12),
-                            ...lessonData!.learningObjectives
-                                .map(
-                                  (objective) => Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.check_circle,
-                                          size: 18,
-                                          color: Colors.green.shade600,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            objective,
-                                            style: TextStyle(
-                                              fontSize: 14 * settings.fontSize,
-                                              fontFamily: fontFamily,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                                ,
-                          ],
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                      ],
+                      Text(
+                        currentPage.title,
+                        style: TextStyle(
+                          fontSize: 22 * settings.fontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: fontFamily,
+                          color: Color(0XFF6366F1),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 24),
-                  ],
+                      SizedBox(height: 4),
+                      Text(
+                        "Estimated time: ${currentPage.estimatedTime}",
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize,
+                          color: Colors.grey.shade600,
+                          fontFamily: fontFamily,
+                        ),
+                      ),
+                      SizedBox(height: 16),
 
-                  // Page title
-                  Text(
-                    currentPage.title,
-                    style: TextStyle(
-                      fontSize: 22 * settings.fontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily,
-                      color: Color(0XFF6366F1),
+                      // Page blocks
+                      ...currentPage.blocks
+                          .sorted((a, b) => a.order.compareTo(b.order))
+                          .map((block) => _buildBlock(block, settings, fontFamily))
+                          ,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Navigation controls
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 5,
+                    offset: Offset(0, -3),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: currentPageIndex > 0 ? goToPreviousPage : null,
+                    icon: Icon(Icons.arrow_back),
+                    label: Text("Previous"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade200,
+                      foregroundColor: Colors.black,
+                      disabledBackgroundColor: Colors.grey.shade100,
+                      disabledForegroundColor: Colors.grey.shade400,
                     ),
                   ),
-                  SizedBox(height: 4),
                   Text(
-                    "Estimated time: ${currentPage.estimatedTime}",
+                    'Page ${currentPageIndex + 1} of ${lessonData!.pages.length}',
                     style: TextStyle(
                       fontSize: 14 * settings.fontSize,
                       color: Colors.grey.shade600,
                       fontFamily: fontFamily,
+                    ),
+                  ),
+                  
+                  ElevatedButton.icon(
+                    onPressed:
+                        currentPageIndex < lessonData!.pages.length - 1
+                            ? goToNextPage
+                            : null,
+                    icon: Icon(Icons.arrow_forward),
+                    label: Text("Next"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBackground,
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor: Colors.grey.shade100,
+                      disabledForegroundColor: Colors.grey.shade400,
                     ),
                   ),
                   SizedBox(height: 16),
@@ -983,69 +1275,26 @@ void _dismissFocusReminder() {
                   // Page blocks
                   ...currentPage.blocks
                       .sorted((a, b) => a.order.compareTo(b.order))
-                      .map((block) => _buildBlock(block, settings, fontFamily))
-                      ,
+                      .map((block) => _buildBlock(block, settings, fontFamily)),
                 ],
               ),
             ),
-          ),
+          ],
         ),
 
-        // Navigation controls
-        Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 5,
-                offset: Offset(0, -3),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton.icon(
-                onPressed: currentPageIndex > 0 ? goToPreviousPage : null,
-                icon: Icon(Icons.arrow_back),
-                label: Text("Previous"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade200,
-                  foregroundColor: Colors.black,
-                  disabledBackgroundColor: Colors.grey.shade100,
-                  disabledForegroundColor: Colors.grey.shade400,
-                ),
-              ),
-              Text(
-                'Page ${currentPageIndex + 1} of ${lessonData!.pages.length}',
-                style: TextStyle(
-                  fontSize: 14 * settings.fontSize,
-                  color: Colors.grey.shade600,
-                  fontFamily: fontFamily,
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed:
-                    currentPageIndex < lessonData!.pages.length - 1
-                        ? goToNextPage
-                        : null,
-                icon: Icon(Icons.arrow_forward),
-                label: Text("Next"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBackground,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.grey.shade100,
-                  disabledForegroundColor: Colors.grey.shade400,
-                ),
-              ),
-            ],
+        //Pomodoro Timer
+        Positioned(
+          right: 10,
+          top: MediaQuery.of(context).size.height / 2 - 100,
+          child: PomodoroTimer(
+            fontSize: settings.fontSize,
+            fontFamily: fontFamily,
           ),
         ),
       ],
     );
   }
+
   void initTts() {
     flutterTts = FlutterTts();
 
@@ -1074,7 +1323,7 @@ void _dismissFocusReminder() {
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setPitch(pitch);
-    
+
     if (text.isNotEmpty) {
       await flutterTts.speak(text);
     }
@@ -1092,7 +1341,7 @@ void _dismissFocusReminder() {
     final buffer = StringBuffer();
 
     buffer.writeln(currentPage.title);
-    
+
     for (final block in currentPage.blocks) {
       switch (block.type) {
         case 'heading':
@@ -1112,7 +1361,10 @@ void _dismissFocusReminder() {
           buffer.writeln(block.data['definition'] ?? "");
           break;
         case 'quiz':
-          final questions = (block.data['questions'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+          final questions =
+              (block.data['questions'] as List?)
+                  ?.cast<Map<String, dynamic>>() ??
+              [];
           for (final question in questions) {
             buffer.writeln(question['question'] ?? "");
           }
@@ -2146,49 +2398,47 @@ void _dismissFocusReminder() {
                 ),
               ),
               SizedBox(height: 4),
-              ...examples
-                  .map(
-                    (example) => Padding(
-                      padding: EdgeInsets.only(bottom: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "•",
-                            style: TextStyle(
-                              fontSize: 16 * settings.fontSize,
-                              fontFamily: fontFamily,
-                              color: Colors.purple.shade700,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              example,
-                              style: TextStyle(
-                                fontSize: 14 * settings.fontSize,
-                                fontStyle: FontStyle.italic,
-                                fontFamily: fontFamily,
-                              ),
-                            ),
-                          ),
-                        ],
+              ...examples.map(
+                (example) => Padding(
+                  padding: EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "•",
+                        style: TextStyle(
+                          fontSize: 16 * settings.fontSize,
+                          fontFamily: fontFamily,
+                          color: Colors.purple.shade700,
+                        ),
                       ),
-                    ),
-                  )
-                  ,
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          example,
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontStyle: FontStyle.italic,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ],
         ),
       ),
     );
   }
-  
+
   @override
   void dispose() {
-    
-    _stopFocusReminderTimer(allowSetState: false); // stops timer
-    flutterTts.stop();  // Stops any ongoing speech
-    super.dispose();   
+    _stopFocusReminderTimer(allowSetState: false);
+    _stopTimers();// tops timer
+    flutterTts.stop(); // Stops any ongoing speech
+    super.dispose();
   }
 }
