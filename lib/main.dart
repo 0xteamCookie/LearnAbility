@@ -4,16 +4,57 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:my_first_app/providers/auth_provider.dart';
 import 'package:my_first_app/accessibility_model.dart';
 import 'package:my_first_app/repository/screens/splash/splashscreen.dart';
+// import 'app.dart'; // Removed incorrect import
+import 'localization/hybrid_asset_loader.dart'; // Import the new hybrid loader
 
-void main() async {
+// Helper function to parse language codes into Locale objects
+List<Locale> _generateSupportedLocales() {
+  const List<String> supportedLanguageCodes = [
+    'ar', 'bn', 'bg', 'zh-CN', 'zh-TW', 'hr', 'cs', 'da', 'nl', 'en',
+    'et', 'fa', 'fi', 'fr', 'de', 'el', 'gu', 'he', 'hi', 'hu',
+    'id', 'it', 'ja', 'kn', 'ko', 'lv', 'lt', 'ms', 'ml', 'mr',
+    'no', 'pl', 'pt', 'ro', 'ru', 'sr', 'sk', 'sl', 'es', 'sw',
+    'sv', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi'
+  ];
+
+  List<Locale> locales = [];
+  for (String code in supportedLanguageCodes) {
+    if (code.contains('-')) {
+      var parts = code.split('-');
+      locales.add(Locale(parts[0], parts[1]));
+    } else {
+      locales.add(Locale(code));
+    }
+  }
+  return locales;
+}
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  final List<Locale> supportedLocales = _generateSupportedLocales();
+
+  // Determine a sensible start and fallback locale.
+  // For example, English or the first in your supported list if English isn't there.
+  Locale startLocale = const Locale('en'); // Default to English
+  if (!supportedLocales.contains(startLocale)) {
+    if (supportedLocales.isNotEmpty) {
+        startLocale = supportedLocales.first;
+    } else {
+        // Fallback if supportedLocales is somehow empty - though it shouldn't be with the hardcoded list
+        startLocale = const Locale('en'); 
+    }
+  }
+
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('hi')],
-      path: 'assets/lang',
-      fallbackLocale: Locale('en'),
+      supportedLocales: supportedLocales,
+      // This path should now point to your bundled assets folder for en.json
+      path: 'assets/lang', // IMPORTANT: Ensure en.json is in la-app/assets/lang/en.json
+      fallbackLocale: startLocale, 
+      startLocale: startLocale, 
+      assetLoader: const HybridAssetLoader(), // Use the new hybrid loader
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
