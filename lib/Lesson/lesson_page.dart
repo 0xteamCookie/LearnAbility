@@ -13,7 +13,9 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:async';
 import 'package:vibration/vibration.dart';
 
+
 enum TtsState { playing, stopped }
+
 class LessonData {
   final String id;
   final String title;
@@ -149,9 +151,6 @@ class LessonContentPage extends StatefulWidget {
   State<LessonContentPage> createState() => _LessonContentPageState();
 }
 
-Timer? _focusReminderTimer;
-bool _showFocusReminder = false;
-
 class _LessonContentPageState extends State<LessonContentPage> {
   late FlutterTts flutterTts;
   TtsState ttsState = TtsState.stopped;
@@ -159,12 +158,17 @@ class _LessonContentPageState extends State<LessonContentPage> {
   double pitch = 1.0;
   double rate = 0.6;
 
+  Timer? _focusReminderTimer;
+  bool _showFocusReminder = false;
+  Timer? _inactivityTimer;
+  bool _isActive = true;
+
   @override
   void initState() {
     super.initState();
     initTts();
     fetchLessonData();
-    _startFocusReminderTimer();
+    _startTimers();
   }
 
   Widget _buildHighlightedCode(String code, String language, double fontSize) {
@@ -182,6 +186,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
       ),
     );
   }
+
   LessonData? lessonData;
   bool isLoading = true;
   bool hasError = false;
@@ -490,10 +495,6 @@ class _LessonContentPageState extends State<LessonContentPage> {
 }
 ''';
 
-
-  
-
-
   Future<void> fetchLessonData() async {
     setState(() {
       isLoading = true;
@@ -556,33 +557,77 @@ class _LessonContentPageState extends State<LessonContentPage> {
       _loadDemoData();
     }
   }
-  
-  void _startFocusReminderTimer() {
-  _focusReminderTimer?.cancel();
-  _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
-    if (mounted) {
-      if (await Vibration.hasVibrator()) {
-        Vibration.vibrate(pattern: [0, 500, 100, 500, 100, 500]);
+
+  void _startTimers() {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isReminders = settings.reminders;
+
+    // Cancel any existing timers first
+    _focusReminderTimer?.cancel();
+    _inactivityTimer?.cancel();
+
+    // Start the 5-minute periodic timer
+      if (isReminders) {
+        _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) {
+          _showFocusPopup();
+      });
+      // Start the inactivity timer
+      _resetInactivityTimer();
+  }
+  }
+
+  void _resetInactivityTimer() {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isReminders = settings.reminders;
+
+    if (!isReminders) return;
+
+    _inactivityTimer?.cancel();
+    _inactivityTimer = Timer(Duration(minutes: 1), () {
+      if (mounted && _isActive) {
+        _showFocusPopup();
       }
+    });
+    _isActive = true;
+  }
+
+  void _showFocusPopup() async {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool isReminders = settings.reminders;
+    if (!isReminders) return;
+
+    _isActive = false; // Mark as inactive to prevent multiple popups
+
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(pattern: [0, 500, 100, 500, 100, 500]);
+    }
+
+    if (mounted) {
       setState(() => _showFocusReminder = true);
     }
-  });
-}
-
-
-void _stopFocusReminderTimer({bool allowSetState = true}) {
-  _focusReminderTimer?.cancel();
-  _focusReminderTimer = null;
-
-  if (allowSetState && mounted) {
-    setState(() => _showFocusReminder = false);
   }
-}
 
-void _dismissFocusReminder() {
-  setState(() => _showFocusReminder = false);
-  _startFocusReminderTimer(); // Restart the timer
-}
+  void _stopFocusReminderTimer({bool allowSetState = true}) {
+    _focusReminderTimer?.cancel();
+    _focusReminderTimer = null;
+
+    if (allowSetState && mounted) {
+      setState(() => _showFocusReminder = false);
+    }
+  }
+
+  void _dismissFocusReminder() {
+    setState(() => _showFocusReminder = false);
+    _startTimers(); // Restart the timer
+  }
+  
+  void _stopTimers() {
+    _focusReminderTimer?.cancel();
+    _focusReminderTimer = null;
+    _inactivityTimer?.cancel();
+    _inactivityTimer = null;
+  }
+
 
   void _loadDemoData() {
     try {
@@ -647,91 +692,110 @@ void _dismissFocusReminder() {
       quizSubmitted[questionId] = true;
     });
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isReminders = settings.reminders;
     final bool isDyslexic = settings.openDyslexic;
     final bool isTextToSpeech = settings.textToSpeech;
     final String fontFamily = isDyslexic ? "OpenDyslexic" : "Roboto";
 
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryBackground,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          isLoading ? "Loading Lesson..." : lessonData?.title ?? "Lesson",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20 * settings.fontSize,
-            fontWeight: FontWeight.bold,
-            fontFamily: fontFamily, // Removed parentheses
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: isReminders ? _resetInactivityTimer : null,
+      onPanUpdate: isReminders ? (_) => _resetInactivityTimer() : null,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade50,
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryBackground,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              _resetInactivityTimer(); // Reset timer on back button press
+              Navigator.pop(context);
+            },
           ),
-        ),
-        actions: [
-          if (!isLoading && !hasError && isTextToSpeech)
-            IconButton(
-              icon: Icon(
-                ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (ttsState == TtsState.playing) {
-                  _stop();
-                } else {
-                  _readCurrentPageContent();
-                }
-              },
+          title: Text(
+            isLoading ? "Loading Lesson..." : lessonData?.title ?? "Lesson",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20 * settings.fontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
             ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          isLoading
-            ? Center(child: CircularProgressIndicator())
-            : hasError
-              ? _buildErrorState(settings, fontFamily) // Removed parentheses
-              : _buildLessonContent(settings, fontFamily), // Removed parentheses
-          
-          if (_showFocusReminder)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: AlertDialog(
-                    title: Text(
-                      "Focus Check",
-                      style: TextStyle(fontSize: 20 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
-                    ),
-                    content: Text(
-                      "Are you still focusing?",
-                      style: TextStyle(fontSize: 16 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: _dismissFocusReminder,
-                        child: Text(
-                          "Yes, I'm focused",
-                          style: TextStyle(fontSize: 16 * settings.fontSize, fontFamily: fontFamily), // Removed parentheses
+          ),
+          actions: [
+            if (!isLoading && !hasError && isTextToSpeech)
+              IconButton(
+                icon: Icon(
+                  ttsState == TtsState.playing ? Icons.volume_off : Icons.volume_up,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _resetInactivityTimer(); // Reset timer on TTS button press
+                  if (ttsState == TtsState.playing) {
+                    _stop();
+                  } else {
+                    _readCurrentPageContent();
+                  }
+                },
+              ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : hasError
+                    ? _buildErrorState(settings, fontFamily)
+                    : _buildLessonContent(settings, fontFamily),
+
+            if (_showFocusReminder && isReminders)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: AlertDialog(
+                      title: Text(
+                        "Focus Check",
+                        style: TextStyle(
+                          fontSize: 20 * settings.fontSize,
+                          fontFamily: fontFamily,
                         ),
                       ),
-                    ],
+                      content: Text(
+                        "Are you still focusing?",
+                        style: TextStyle(
+                          fontSize: 16 * settings.fontSize,
+                          fontFamily: fontFamily,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            _dismissFocusReminder();
+                            _resetInactivityTimer(); // Also reset when dismissing
+                          },
+                          child: Text(
+                            "Yes, I'm focused",
+                            style: TextStyle(
+                              fontSize: 16 * settings.fontSize,
+                              fontFamily: fontFamily,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
   Widget _buildErrorState(AccessibilitySettings settings, String fontFamily) {
     return Center(
       child: Padding(
@@ -849,13 +913,9 @@ void _dismissFocusReminder() {
               ),
             ],
           ),
-          
         ),
-        
       );
-      
     }
-    
 
     final currentPage = lessonData!.pages[currentPageIndex];
 
@@ -924,34 +984,31 @@ void _dismissFocusReminder() {
                               ],
                             ),
                             SizedBox(height: 12),
-                            ...lessonData!.learningObjectives
-                                .map(
-                                  (objective) => Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.check_circle,
-                                          size: 18,
-                                          color: Colors.green.shade600,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            objective,
-                                            style: TextStyle(
-                                              fontSize: 14 * settings.fontSize,
-                                              fontFamily: fontFamily,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                            ...lessonData!.learningObjectives.map(
+                              (objective) => Padding(
+                                padding: EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      size: 18,
+                                      color: Colors.green.shade600,
                                     ),
-                                  ),
-                                )
-                                ,
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        objective,
+                                        style: TextStyle(
+                                          fontSize: 14 * settings.fontSize,
+                                          fontFamily: fontFamily,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -983,8 +1040,7 @@ void _dismissFocusReminder() {
                   // Page blocks
                   ...currentPage.blocks
                       .sorted((a, b) => a.order.compareTo(b.order))
-                      .map((block) => _buildBlock(block, settings, fontFamily))
-                      ,
+                      .map((block) => _buildBlock(block, settings, fontFamily)),
                 ],
               ),
             ),
@@ -1046,6 +1102,7 @@ void _dismissFocusReminder() {
       ],
     );
   }
+
   void initTts() {
     flutterTts = FlutterTts();
 
@@ -1074,7 +1131,7 @@ void _dismissFocusReminder() {
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setPitch(pitch);
-    
+
     if (text.isNotEmpty) {
       await flutterTts.speak(text);
     }
@@ -1092,7 +1149,7 @@ void _dismissFocusReminder() {
     final buffer = StringBuffer();
 
     buffer.writeln(currentPage.title);
-    
+
     for (final block in currentPage.blocks) {
       switch (block.type) {
         case 'heading':
@@ -1112,7 +1169,10 @@ void _dismissFocusReminder() {
           buffer.writeln(block.data['definition'] ?? "");
           break;
         case 'quiz':
-          final questions = (block.data['questions'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+          final questions =
+              (block.data['questions'] as List?)
+                  ?.cast<Map<String, dynamic>>() ??
+              [];
           for (final question in questions) {
             buffer.writeln(question['question'] ?? "");
           }
@@ -2146,49 +2206,47 @@ void _dismissFocusReminder() {
                 ),
               ),
               SizedBox(height: 4),
-              ...examples
-                  .map(
-                    (example) => Padding(
-                      padding: EdgeInsets.only(bottom: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "•",
-                            style: TextStyle(
-                              fontSize: 16 * settings.fontSize,
-                              fontFamily: fontFamily,
-                              color: Colors.purple.shade700,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              example,
-                              style: TextStyle(
-                                fontSize: 14 * settings.fontSize,
-                                fontStyle: FontStyle.italic,
-                                fontFamily: fontFamily,
-                              ),
-                            ),
-                          ),
-                        ],
+              ...examples.map(
+                (example) => Padding(
+                  padding: EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "•",
+                        style: TextStyle(
+                          fontSize: 16 * settings.fontSize,
+                          fontFamily: fontFamily,
+                          color: Colors.purple.shade700,
+                        ),
                       ),
-                    ),
-                  )
-                  ,
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          example,
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontStyle: FontStyle.italic,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ],
         ),
       ),
     );
   }
-  
+
   @override
   void dispose() {
-    
-    _stopFocusReminderTimer(allowSetState: false); // stops timer
-    flutterTts.stop();  // Stops any ongoing speech
-    super.dispose();   
+    _stopFocusReminderTimer(allowSetState: false);
+    _stopTimers();// tops timer
+    flutterTts.stop(); // Stops any ongoing speech
+    super.dispose();
   }
 }
