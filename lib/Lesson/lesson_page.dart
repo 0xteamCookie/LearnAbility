@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_first_app/domain/constants/appcolors.dart';
@@ -9,7 +10,7 @@ import 'package:my_first_app/utils/constants.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 import 'package:vibration/vibration.dart';
 
@@ -134,6 +135,173 @@ class QuizQuestion {
       correctAnswer: json['correctAnswer'],
       explanation: json['explanation'],
     );
+  }
+}
+
+class PomodoroTimer extends StatefulWidget {
+  final double fontSize;
+  final String fontFamily;
+
+  const PomodoroTimer({super.key, required this.fontSize, required this.fontFamily});
+
+  @override
+  State<PomodoroTimer> createState() => _PomodoroTimerState();
+}
+
+class _PomodoroTimerState extends State<PomodoroTimer> {
+  static const int studyDuration = 25 * 60;
+  static const int breakDuration = 5 * 60;
+  int remainingTime = studyDuration;
+  Timer? timer;
+  bool isRunning = false;
+  bool isBreak = false;
+  int pomodoroCount = 0;
+  bool isExpanded = false;
+
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void startTimer() {
+    if (isRunning) return;
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      if (remainingTime > 0) {
+        setState(() => remainingTime--);
+      } else {
+        timer?.cancel();
+        setState(() {
+          isRunning = false;
+        });
+        playSound();
+        handleSessionSwitch();
+      }
+    });
+    setState(() => isRunning = true);
+  }
+
+  void resetTimer() {
+    timer?.cancel();
+    setState(() {
+      isRunning = false;
+      isBreak = false;
+      remainingTime = studyDuration;
+      pomodoroCount = 0;
+    });
+  }
+
+  void handleSessionSwitch() {
+    setState(() {
+      if (isBreak) {
+        remainingTime = studyDuration;
+        isBreak = false;
+        pomodoroCount++;
+      } else {
+        remainingTime = breakDuration;
+        isBreak = true;
+      }
+    });
+    startTimer();
+  }
+
+  void playSound() async {
+    await audioPlayer.play(AssetSource('audio/pomodoro_notif_sound.wav'));
+  }
+
+  String formatTime(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$secs";
+  }
+
+  void toggleExpanded() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isExpanded
+        ? Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              width: 200,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isBreak ? "Break Time" : "Pomodoro",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16 * widget.fontSize,
+                      fontFamily: widget.fontFamily,
+                      color: isBreak ? Colors.teal : Color(0xFF6366F1),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    formatTime(remainingTime),
+                    style: TextStyle(
+                      fontSize: 24 * widget.fontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: widget.fontFamily,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(isRunning ? Icons.pause : Icons.play_arrow),
+                        onPressed: isRunning ? resetTimer : startTimer,
+                        color: isRunning ? Colors.green : Colors.red,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: toggleExpanded,
+                        color: Colors.grey.shade700,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Completed: $pomodoroCount cycles",
+                    style: TextStyle(
+                      fontSize: 12 * widget.fontSize,
+                      fontFamily: widget.fontFamily,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : IconButton(
+            icon: Container(
+              padding: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(159, 51, 170, 55),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.timer,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+            onPressed: toggleExpanded,
+          );
   }
 }
 
@@ -919,120 +1087,187 @@ class _LessonContentPageState extends State<LessonContentPage> {
 
     final currentPage = lessonData!.pages[currentPageIndex];
 
-    return Column(
+    return Stack(
       children: [
-        // Progress bar
-        LinearProgressIndicator(
-          value: (currentPageIndex + 1) / lessonData!.pages.length,
-          backgroundColor: Colors.grey.shade300,
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF6366F1)),
-        ),
+        Column(
+          children: [
+            // Progress bar
+            LinearProgressIndicator(
+              value: (currentPageIndex + 1) / lessonData!.pages.length,
+              backgroundColor: Colors.grey.shade300,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF6366F1)),
+            ),
 
-        // Page content
-        Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Lesson title and description (only on first page)
-                  if (currentPageIndex == 0) ...[
-                    Text(
-                      lessonData!.title,
-                      style: TextStyle(
-                        fontSize: 24 * settings.fontSize,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: fontFamily,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      lessonData!.description,
-                      style: TextStyle(
-                        fontSize: 16 * settings.fontSize,
-                        color: Colors.grey.shade700,
-                        fontFamily: fontFamily,
-                      ),
-                    ),
-                    SizedBox(height: 16),
+            // Page content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Lesson title and description (only on first page)
+                      if (currentPageIndex == 0) ...[
+                        Text(
+                          lessonData!.title,
+                          style: TextStyle(
+                            fontSize: 24 * settings.fontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          lessonData!.description,
+                          style: TextStyle(
+                            fontSize: 16 * settings.fontSize,
+                            color: Colors.grey.shade700,
+                            fontFamily: fontFamily,
+                          ),
+                        ),
+                        SizedBox(height: 16),
 
-                    // Learning objectives
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                        // Learning objectives
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.lightbulb, color: Color(0XFF6366F1)),
-                                SizedBox(width: 8),
-                                Text(
-                                  "Learning Objectives",
-                                  style: TextStyle(
-                                    fontSize: 18 * settings.fontSize,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: fontFamily,
-                                    color: Color(0XFF6366F1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12),
-                            ...lessonData!.learningObjectives.map(
-                              (objective) => Padding(
-                                padding: EdgeInsets.only(bottom: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
                                   children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      size: 18,
-                                      color: Colors.green.shade600,
-                                    ),
+                                    Icon(Icons.lightbulb, color: Color(0XFF6366F1)),
                                     SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        objective,
-                                        style: TextStyle(
-                                          fontSize: 14 * settings.fontSize,
-                                          fontFamily: fontFamily,
-                                        ),
+                                    Text(
+                                      "Learning Objectives",
+                                      style: TextStyle(
+                                        fontSize: 18 * settings.fontSize,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: fontFamily,
+                                        color: Color(0XFF6366F1),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
+
+                                SizedBox(height: 12),
+                                ...lessonData!.learningObjectives
+                                    .map(
+                                      (objective) => Padding(
+                                        padding: EdgeInsets.only(bottom: 8),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle,
+                                              size: 18,
+                                              color: Colors.green.shade600,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                objective,
+                                                style: TextStyle(
+                                                  fontSize: 14 * settings.fontSize,
+                                                  fontFamily: fontFamily,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                    ,
+                              ],
                             ),
-                          ],
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                      ],
+                      Text(
+                        currentPage.title,
+                        style: TextStyle(
+                          fontSize: 22 * settings.fontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: fontFamily,
+                          color: Color(0XFF6366F1),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 24),
-                  ],
+                      SizedBox(height: 4),
+                      Text(
+                        "Estimated time: ${currentPage.estimatedTime}",
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize,
+                          color: Colors.grey.shade600,
+                          fontFamily: fontFamily,
+                        ),
+                      ),
+                      SizedBox(height: 16),
 
-                  // Page title
-                  Text(
-                    currentPage.title,
-                    style: TextStyle(
-                      fontSize: 22 * settings.fontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily,
-                      color: Color(0XFF6366F1),
+                      // Page blocks
+                      ...currentPage.blocks
+                          .sorted((a, b) => a.order.compareTo(b.order))
+                          .map((block) => _buildBlock(block, settings, fontFamily))
+                          ,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Navigation controls
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 5,
+                    offset: Offset(0, -3),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: currentPageIndex > 0 ? goToPreviousPage : null,
+                    icon: Icon(Icons.arrow_back),
+                    label: Text("Previous"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade200,
+                      foregroundColor: Colors.black,
+                      disabledBackgroundColor: Colors.grey.shade100,
+                      disabledForegroundColor: Colors.grey.shade400,
                     ),
                   ),
-                  SizedBox(height: 4),
                   Text(
-                    "Estimated time: ${currentPage.estimatedTime}",
+                    'Page ${currentPageIndex + 1} of ${lessonData!.pages.length}',
                     style: TextStyle(
                       fontSize: 14 * settings.fontSize,
                       color: Colors.grey.shade600,
                       fontFamily: fontFamily,
+                    ),
+                  ),
+                  
+                  ElevatedButton.icon(
+                    onPressed:
+                        currentPageIndex < lessonData!.pages.length - 1
+                            ? goToNextPage
+                            : null,
+                    icon: Icon(Icons.arrow_forward),
+                    label: Text("Next"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBackground,
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor: Colors.grey.shade100,
+                      disabledForegroundColor: Colors.grey.shade400,
                     ),
                   ),
                   SizedBox(height: 16),
@@ -1044,59 +1279,16 @@ class _LessonContentPageState extends State<LessonContentPage> {
                 ],
               ),
             ),
-          ),
+          ],
         ),
 
-        // Navigation controls
-        Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 5,
-                offset: Offset(0, -3),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton.icon(
-                onPressed: currentPageIndex > 0 ? goToPreviousPage : null,
-                icon: Icon(Icons.arrow_back),
-                label: Text("Previous"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade200,
-                  foregroundColor: Colors.black,
-                  disabledBackgroundColor: Colors.grey.shade100,
-                  disabledForegroundColor: Colors.grey.shade400,
-                ),
-              ),
-              Text(
-                'Page ${currentPageIndex + 1} of ${lessonData!.pages.length}',
-                style: TextStyle(
-                  fontSize: 14 * settings.fontSize,
-                  color: Colors.grey.shade600,
-                  fontFamily: fontFamily,
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed:
-                    currentPageIndex < lessonData!.pages.length - 1
-                        ? goToNextPage
-                        : null,
-                icon: Icon(Icons.arrow_forward),
-                label: Text("Next"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBackground,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.grey.shade100,
-                  disabledForegroundColor: Colors.grey.shade400,
-                ),
-              ),
-            ],
+        //Pomodoro Timer
+        Positioned(
+          right: 10,
+          top: MediaQuery.of(context).size.height / 2 - 100,
+          child: PomodoroTimer(
+            fontSize: settings.fontSize,
+            fontFamily: fontFamily,
           ),
         ),
       ],
