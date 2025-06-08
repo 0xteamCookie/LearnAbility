@@ -184,7 +184,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     setState(() => isRunning = true);
   }
 
-  void resetTimer() {
+  void reset() {
     timer?.cancel();
     setState(() {
       isRunning = false;
@@ -207,6 +207,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     });
     startTimer();
   }
+
+  void pauseTimer() {
+  timer?.cancel();
+  setState(() => isRunning = false);
+}
 
   void playSound() async {
     await audioPlayer.play(AssetSource('audio/pomodoro_notif_sound.wav'));
@@ -264,7 +269,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                     children: [
                       IconButton(
                         icon: Icon(isRunning ? Icons.pause : Icons.play_arrow),
-                        onPressed: isRunning ? resetTimer : startTimer,
+                        onPressed: isRunning ? pauseTimer : startTimer,
                         color: isRunning ? Colors.green : Colors.red,
                       ),
                       IconButton(
@@ -330,6 +335,8 @@ class _LessonContentPageState extends State<LessonContentPage> {
   bool _showFocusReminder = false;
   Timer? _inactivityTimer;
   bool _isActive = true;
+
+  final GlobalKey<_PomodoroTimerState> _pomodoroKey = GlobalKey<_PomodoroTimerState>();
 
   @override
   void initState() {
@@ -751,7 +758,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
     if (!isReminders) return;
 
     _inactivityTimer?.cancel();
-    _inactivityTimer = Timer(Duration(minutes: 1), () {
+    _inactivityTimer = Timer(Duration(seconds: 3), () {
       if (mounted && _isActive) {
         _showFocusPopup();
       }
@@ -881,7 +888,8 @@ class _LessonContentPageState extends State<LessonContentPage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              _resetInactivityTimer(); // Reset timer on back button press
+              _resetInactivityTimer();
+              _pomodoroKey.currentState?.reset();
               Navigator.pop(context);
             },
           ),
@@ -1281,6 +1289,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
           right: 10,
           top: MediaQuery.of(context).size.height / 2 - 100,
           child: PomodoroTimer(
+            key: _pomodoroKey,
             fontSize: settings.fontSize,
             fontFamily: fontFamily,
           ),
