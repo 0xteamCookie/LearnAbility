@@ -46,7 +46,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     bool openDyslexic = settings.openDyslexic;
     double speechRate = settings.speechRate;
     bool visualTimers = settings.visualTimers;
-    bool breakReminders = settings.breakReminders;
+    bool breakReminders = settings.reminders;
     int selectedColorIndex = settings.selectedColorIndex;
     bool textToSpeech = settings.textToSpeech;
 
@@ -359,9 +359,9 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               color: Colors.grey.shade100,
                             ),
                             _buildSwitchSetting(
-                              "break_reminders".tr(),
+                              "reminders".tr(),
                               breakReminders,
-                              (value) => settings.setBreakReminders(value),
+                              (value) => settings.setReminders(value),
                               fontSize,
                               fontFamily(),
                               LucideIcons.bellRing,
