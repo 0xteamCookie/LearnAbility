@@ -11,7 +11,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'dart:async';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:vibration/vibration.dart';
 
 
@@ -1270,12 +1270,6 @@ class _LessonContentPageState extends State<LessonContentPage> {
                       disabledForegroundColor: Colors.grey.shade400,
                     ),
                   ),
-                  SizedBox(height: 16),
-
-                  // Page blocks
-                  ...currentPage.blocks
-                      .sorted((a, b) => a.order.compareTo(b.order))
-                      .map((block) => _buildBlock(block, settings, fontFamily)),
                 ],
               ),
             ),
