@@ -225,6 +225,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
           'Content-Type': 'application/json',
         },
       );
+      print("Subjects response: ${response.statusCode} - ${response.body}"); 
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
@@ -242,11 +243,21 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
         }
       } else {
         print("Failed to fetch subjects: ${response.body}");
+        if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch subjects")),
+          );
       }
     } catch (e) {
-      print("Error fetching subjects: $e");
+        if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error fetching subjects: $e")),
+          );
+        print("Error fetching subjects: $e");
     } finally {
-      
+        if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 

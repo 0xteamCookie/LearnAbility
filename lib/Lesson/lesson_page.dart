@@ -559,12 +559,16 @@ class _LessonContentPageState extends State<LessonContentPage> {
   
   void _startFocusReminderTimer() {
   _focusReminderTimer?.cancel();
-  _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) {
+  _focusReminderTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
     if (mounted) {
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(pattern: [0, 500, 100, 500, 100, 500]);
+      }
       setState(() => _showFocusReminder = true);
     }
   });
 }
+
 
 void _stopFocusReminderTimer({bool allowSetState = true}) {
   _focusReminderTimer?.cancel();
@@ -643,6 +647,7 @@ void _dismissFocusReminder() {
       quizSubmitted[questionId] = true;
     });
   }
+  
 
 
   @override
