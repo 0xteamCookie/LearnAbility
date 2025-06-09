@@ -5,6 +5,7 @@ import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
 import "package:my_first_app/accessibility_model.dart";
 import 'package:easy_localization/easy_localization.dart';
+import '../../../generate_content_page.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -180,6 +181,9 @@ class _SignupScreenState extends State<SignupScreen> {
         } else if (item['title'] == 'Visual Impairment'){
           settings.setFontSize(1.25);
           settings.setTextToSpeech(true);
+        } else if(item['title'] == "ADHD" || item['title'] == "Autism" || item['title'] == "Down Syndrome"){
+          settings.setPomodoro(true);
+          settings.setReminders(true);
         }
           isSelected ? selectedNeeds.remove(item['title']) : selectedNeeds.add(item['title']!);
         });
@@ -476,7 +480,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: Text("Sign up"),
                     onPressed: () {
                       signupUser();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GenerateContentPage()),
+                      );
                     },
+                    
                   )
                 ],
               ),
