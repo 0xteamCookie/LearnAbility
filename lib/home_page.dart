@@ -133,8 +133,6 @@ class _HomePageState extends State<HomePage>
   bool _isLoading = true;
   late TabController _tabController;
 
-  // New variables for enhanced UI
-
   @override
   void initState() {
     super.initState();
@@ -344,7 +342,7 @@ class _HomePageState extends State<HomePage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header with gradient background
+                  // Header
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -358,11 +356,11 @@ class _HomePageState extends State<HomePage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Improved greeting section with better layout
+                        // Greeting section
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Username section with better overflow handling
+                            // Username
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

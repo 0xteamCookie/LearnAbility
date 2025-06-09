@@ -55,6 +55,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
         if (messageData["type"] == "function-call" &&
             messageData["functionCall"]["name"] == "navigate") {
           String path = messageData["functionCall"]["parameters"]["path"];
+          print(path);
           _navigateToPage(path);
         }
       } catch (e) {
@@ -96,6 +97,11 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
               },
             },
           ],
+          "tools":[
+            {
+              "type": "endCall"
+            }
+          ]
         },
         "voice": {"provider": "11labs", "voiceId": "paula"},
         "firstMessage":
