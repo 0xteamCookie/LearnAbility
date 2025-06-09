@@ -882,170 +882,171 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
           return Color(0xFF3B82F6);
       }
     }
-
-    return Card(
-      elevation: isSelected ? 4 : 1,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side:
-            isSelected
-                ? BorderSide(color: getSubjectColor(), width: 2)
-                : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            selectedSubjectId = isSelected ? null : subject.id;
-          });
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      return Card(
+    elevation: isSelected ? 4 : 1,
+    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+      side: isSelected 
+          ? BorderSide(color: getSubjectColor(), width: 2)
+          : BorderSide.none,
+    ),
+    child: InkWell(
+      onTap: () {
+        setState(() {
+          selectedSubjectId = isSelected ? null : subject.id;
+        });
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header row (always visible)
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: getSubjectColor().withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.subject,
+                    color: getSubjectColor(),
+                    size: 28,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        subject.name,
+                        style: TextStyle(
+                          fontSize: 18 * settings.fontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: fontFamily(),
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        "${materials.length} materials",
+                        style: TextStyle(
+                          fontSize: 14 * settings.fontSize,
+                          color: Colors.grey.shade600,
+                          fontFamily: fontFamily(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Colors.red.shade400,
+                  ),
+                  onPressed: () => _confirmDeleteSubject(subject.id),
+                ),
+                IconButton(
+                  icon: Icon(
+                    isSelected 
+                        ? Icons.keyboard_arrow_up 
+                        : Icons.keyboard_arrow_down,
+                    color: Colors.grey.shade700,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedSubjectId = isSelected ? null : subject.id;
+                    });
+                  },
+                ),
+              ],
+            ),
+            
+            // Only show the rest if expanded
+            if (isSelected) ...[
+              SizedBox(height: 16),
+              Divider(),
+              SizedBox(height: 8),
               Row(
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: getSubjectColor().withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.subject,
-                      color: getSubjectColor(),
-                      size: 28,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          subject.name,
-                          style: TextStyle(
-                            fontSize: 18 * settings.fontSize,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: fontFamily(),
+                  if (subject.syllabusFileName == null)
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade100,
+                          foregroundColor: Colors.green.shade800,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          "${materials.length} materials",
+                        onPressed: () => uploadSyllabus(subject.id),
+                        icon: const Icon(Icons.book, size: 18),
+                        label: Text(
+                          "Add Syllabus",
                           style: TextStyle(
                             fontSize: 14 * settings.fontSize,
-                            color: Colors.grey.shade600,
                             fontFamily: fontFamily(),
                           ),
                         ),
-                      ],
+                      ),
+                    )
+                  else ...[
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade100,
+                          foregroundColor: Colors.green.shade800,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () => uploadSyllabus(subject.id),
+                        icon: const Icon(Icons.book, size: 18),
+                        label: Text(
+                          "Update Syllabus",
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontFamily: fontFamily(),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: Colors.red.shade400,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF06B6D4).withOpacity(0.2),
+                          foregroundColor: const Color(0xFF06B6D4),
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () => uploadMaterial(subject.id),
+                        icon: const Icon(Icons.upload_file, size: 18),
+                        label: Text(
+                          "Add Material",
+                          style: TextStyle(
+                            fontSize: 14 * settings.fontSize,
+                            fontFamily: fontFamily(),
+                          ),
+                        ),
+                      ),
                     ),
-                    onPressed: () => _confirmDeleteSubject(subject.id),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      isSelected
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
-                      color: Colors.grey.shade700,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedSubjectId = isSelected ? null : subject.id;
-                      });
-                    },
-                  ),
+                  ]
                 ],
               ),
-              if (isSelected) ...[
-                SizedBox(height: 16),
-                Divider(),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    if (subject.syllabusFileName == null)
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade100,
-                            foregroundColor: Colors.green.shade800,
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onPressed: () => uploadSyllabus(subject.id),
-                          icon: const Icon(Icons.book, size: 18),
-                          label: Text(
-                            "Add Syllabus",
-                            style: TextStyle(
-                              fontSize: 14 * settings.fontSize,
-                              fontFamily: fontFamily(),
-                            ),
-                          ),
-                        ),
-                      )
-                    else ...[
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade100,
-                            foregroundColor: Colors.green.shade800,
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onPressed: () => uploadSyllabus(subject.id),
-                          icon: const Icon(Icons.book, size: 18),
-                          label: Text(
-                            "Update Syllabus",
-                            style: TextStyle(
-                              fontSize: 14 * settings.fontSize,
-                              fontFamily: fontFamily(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF06B6D4).withOpacity(0.2),
-                            foregroundColor: const Color(0xFF06B6D4),
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onPressed: () => uploadMaterial(subject.id),
-                          icon: const Icon(Icons.upload_file, size: 18),
-                          label: Text(
-                            "Add Material",
-                            style: TextStyle(
-                              fontSize: 14 * settings.fontSize,
-                              fontFamily: fontFamily(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]
-                  ],
-                )
-              ],
+              
               if (subject.syllabusFileName != null) ...[
                 SizedBox(height: 16),
                 Container(
@@ -1094,6 +1095,7 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                   ),
                 ),
               ],
+              
               SizedBox(height: 16),
               Text(
                 "Materials",
@@ -1134,10 +1136,11 @@ class _GenerateContentPageState extends State<GenerateContentPage> {
                   },
                 ),
             ],
-          ),
+          ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildMaterialItem(Material material) {
