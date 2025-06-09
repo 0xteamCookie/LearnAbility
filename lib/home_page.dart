@@ -814,24 +814,7 @@ class _HomePageState extends State<HomePage>
     AccessibilitySettings settings,
     String fontFamily,
   ) {
-    return GestureDetector(
-      onTap: () {
-        if (_nextLesson != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => LessonContentPage(
-                    lessonId: _nextLesson!.id,
-                    subjectId: _nextLesson!.subjectId,
-                  ),
-            ),
-          ).then((_) {
-            _markLessonAsCompleted(_nextLesson!.id);
-          });
-        }
-      },
-      child: Container(
+    return Container(
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -986,8 +969,7 @@ class _HomePageState extends State<HomePage>
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   // Replace the material item with a simpler version
