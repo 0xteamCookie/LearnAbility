@@ -5,8 +5,6 @@ import 'package:my_first_app/repository/widgets/uihelper.dart';
 import 'package:my_first_app/services/auth_services.dart';
 import "package:my_first_app/accessibility_model.dart";
 import 'package:easy_localization/easy_localization.dart';
-import '../../../generate_content_page.dart';
-
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
