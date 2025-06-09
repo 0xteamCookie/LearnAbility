@@ -416,43 +416,7 @@ class _SubjectsPageState extends State<SubjectsPage> {
                       SizedBox(height: 4),
                       Row(
                         children: [
-                          if (isProcessing) ...[
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade100,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.amber.shade300,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: 12,
-                                    height: 12,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.amber.shade800,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    "Processing",
-                                    style: TextStyle(
-                                      fontSize: 12 * settings.fontSize,
-                                      fontFamily: fontFamily,
-                                      color: Colors.amber.shade800,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ] else ...[
+                          if(!isProcessing)
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 8,
@@ -474,7 +438,6 @@ class _SubjectsPageState extends State<SubjectsPage> {
                                 ),
                               ),
                             ),
-                          ],
                           SizedBox(width: 8),
                           Text(
                             "${subject.materialCount} materials",

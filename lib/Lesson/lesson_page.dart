@@ -1495,11 +1495,18 @@ class _LessonContentPageState extends State<LessonContentPage> {
     String fontFamily,
   ) {
     final content = block.data['content'] ?? "";
+    String markdownContent = content
+      .replaceAll('*', '\\*')
+      .replaceAll('_', '\\_') 
+      .replaceAll('\\*\\*', '**') 
+      .replaceAll('\\_\\_', '__') 
+      .replaceAll('\\*', '*') 
+      .replaceAll('\\_', '_'); 
 
     return Padding(
       padding: EdgeInsets.only(bottom: 16),
       child: MarkdownBody(
-        data: content,
+        data: markdownContent,
         styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
           p: TextStyle(
             fontSize: 16 * settings.fontSize,
