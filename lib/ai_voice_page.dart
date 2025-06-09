@@ -38,6 +38,8 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       try {
         final Map<String, dynamic> messageData = jsonDecode(event.value);
 
+        print(messageData);
+
         if (messageData["type"] == "transcript" &&
             messageData["transcriptType"] == "final") {
           setState(() {
@@ -48,15 +50,24 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           });
         }
 
-        if (messageData["type"] == "function-call") {
-          print("FUNCTION CALLLL");
-          print(event.value);
-        }
-        if (messageData["type"] == "function-call" &&
-            messageData["functionCall"]["name"] == "navigate") {
-          String path = messageData["functionCall"]["parameters"]["path"];
-          print(path);
-          _navigateToPage(path);
+        if (messageData['type'] == 'tool-calls') {
+          final dynamic toolCalls = messageData['toolCalls'];
+          if (toolCalls is List && toolCalls.isNotEmpty) {
+            final dynamic firstToolCall = toolCalls[0];
+            if (firstToolCall is Map &&
+                firstToolCall['type'] == 'function') {
+              final dynamic functionCallDetails = firstToolCall['function'];
+              if (functionCallDetails is Map &&
+                  functionCallDetails['name'] == 'navigate') {
+                final dynamic arguments = functionCallDetails['arguments'];
+                if (arguments is Map && arguments['path'] is String) {
+                  final String path = arguments['path'] as String;
+                  print('Navigating via tool-call to path: $path');
+                  _navigateToPage(path);
+                }
+              }
+            }
+          }
         }
       } catch (e) {
         print("Error decoding event data: $e");
