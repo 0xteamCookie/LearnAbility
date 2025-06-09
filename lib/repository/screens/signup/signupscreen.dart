@@ -60,32 +60,32 @@ class _SignupScreenState extends State<SignupScreen> {
   List<Map<String, dynamic>> accessibilityOptions = [
     {
       'title': 'Visual Impairment',
-      'desc': 'Screen magnification, text-to-speech, high-contrast options',
+      'desc': 'Screen magnification, Text-to-speech',
       'icon': 'visibility',
     },
     {
-      'title': 'Auditory Processing',
-      'desc': 'Visual aids, transcripts, and captions',
+      'title': 'Motor Impairment',
+      'desc': 'Speech-to-speech, Text-to-speech',
       'icon': 'hearing',
     },
     {
       'title': 'Dyslexia',
-      'desc': 'Special fonts, word prediction, color overlays',
+      'desc': 'Special fonts, Screen magnification',
       'icon': 'spellcheck',
     },
     {
       'title': 'ADHD',
-      'desc': 'Visual timers, reminders, distraction-free interfaces',
+      'desc': 'Visual timers, Reminders',
       'icon': 'alarm',
     },
     {
       'title': 'Autism',
-      'desc': 'Predictable routines, sensory adjustments, clear instructions',
+      'desc': 'Visual timers, Reminders',
       'icon': 'emoji_people',
     },
     {
       'title': 'Down Syndrome',
-      'desc': 'Simplified interfaces, visual instructions, adaptive content',
+      'desc': 'Visual timers, Reminders',
       'icon': 'accessibility',
     },
   ];
