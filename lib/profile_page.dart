@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/domain/constants/appcolors.dart';
+import 'accessibility_model.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<AccessibilitySettings>(context);
+    final bool isDyslexic = settings.openDyslexic;
+    String fontFamily() => isDyslexic ? "OpenDyslexic" : "Roboto";
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Account Information"),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        foregroundColor: Colors.black,
-      ),
+        backgroundColor: AppColors.primaryBackground,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title:
+          Text(
+            'Account Information',
+            style: TextStyle(
+              fontSize: 18 * settings.fontSize,
+              color: Colors.white,
+              fontFamily: fontFamily(),
+            ),
+          ),
+          elevation: 2,
+        ),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -33,12 +46,7 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  "Update your personal information",
-                  style: TextStyle(color: Colors.black54),
-                ),
-                const SizedBox(height: 20),
-
+                const SizedBox(height: 28),
                 // Profile Photo
                 const CircleAvatar(
                   radius: 50,
@@ -46,126 +54,158 @@ class ProfilePage extends StatelessWidget {
                   child: Icon(Icons.person, size: 50, color: Colors.white),
                 ),
                 const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Change Photo"),
+
+                Text(
+                  "Sam Johnson",
+                  style: 
+                    TextStyle(
+                      color: Colors.black54,
+                      fontSize: 24 * settings.fontSize,
+                      fontWeight: FontWeight.bold,  
+                    ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // First Name
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("First Name"),
+                  child: Text(
+                    "First Name",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,  
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 4),
-                TextField(
-                  decoration: _inputDecoration("Sam"),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text( 
+                    "Sam",
+                    style: TextStyle(
+                      fontSize: 18 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // Last Name
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Last Name"),
+                  child: Text(
+                    "Last Name",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,  
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 4),
-                TextField(
-                  decoration: _inputDecoration("Johnson"),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text( 
+                    "Johnson",
+                    style: TextStyle(
+                      fontSize: 18 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // Email
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Email"),
+                  child: Text(
+                    "Email",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,  
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 4),
-                TextField(
-                  decoration: _inputDecoration("student@example.com"),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text( 
+                    "samjohnson@gmail.com",
+                    style: TextStyle(
+                      fontSize: 18 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
-                // Change Password
-                const Align(
+                // Class
+                Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Change Password"),
+                  child: Text(
+                    "Class",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,  
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 4),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[200],
-                    foregroundColor: Colors.black,
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text("Change Password"),
+                  child: Text( 
+                    "Class 10",
+                    style: TextStyle(
+                      fontSize: 18 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // Primary Learning Accommodation
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Primary Learning Accommodation"),
-                ),
-                const SizedBox(height: 4),
-                DropdownButtonFormField<String>(
-                  value: "Dyslexia",
-                  decoration: _inputDecoration(""),
-                  items: const [
-                    DropdownMenuItem(
-                      value: "Dyslexia",
-                      child: Text("Dyslexia"),
-                    ),
-                    DropdownMenuItem(
-                      value: "ADHD",
-                      child: Text("ADHD"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Visual Impairment",
-                      child: Text("Visual Impairment"),
-                    ),
-                  ],
-                  onChanged: (value) {},
-                ),
-                const SizedBox(height: 16),
-
-                // About Me
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("About Me (Optional)"),
-                ),
-                const SizedBox(height: 4),
-                TextField(
-                  maxLines: 4,
-                  decoration: _inputDecoration("Tell us a bit about yourself..."),
-                ),
-                const SizedBox(height: 16),
-
-                // Phone
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Phone (Optional)"),
-                ),
-                const SizedBox(height: 4),
-                TextField(
-                  decoration: _inputDecoration("(123) 456-7890"),
-                ),
-                const SizedBox(height: 24),
-
-                // Save Changes
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text(
-                      "Save Changes",
-                      style: TextStyle(fontSize: 16),
+                  child: Text(
+                    "Primary Learning Accomodation",
+                    style: TextStyle(
+                      fontSize: 16 * settings.fontSize,  
                     ),
                   ),
                 ),
+                const SizedBox(height: 4),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text( 
+                    "Dyslexia",
+                    style: TextStyle(
+                      fontSize: 18 * settings.fontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
               ],
             ),
           ),
