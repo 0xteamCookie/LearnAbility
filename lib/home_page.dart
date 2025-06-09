@@ -17,6 +17,7 @@ import 'generate_content_page.dart';
 import 'Lesson/lesson_page.dart';
 import 'Quiz/quizzes_page.dart';
 import 'services/start_service.dart';
+import 'profile_page.dart';
 
 class UserStats {
   final String id;
@@ -132,8 +133,6 @@ class _HomePageState extends State<HomePage>
   List<Material> _materials = [];
   bool _isLoading = true;
   late TabController _tabController;
-
-  // New variables for enhanced UI
 
   @override
   void initState() {
@@ -344,7 +343,7 @@ class _HomePageState extends State<HomePage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header with gradient background
+                  // Header
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -358,11 +357,11 @@ class _HomePageState extends State<HomePage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Improved greeting section with better layout
+                        // Greeting section
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Username section with better overflow handling
+                            // Username
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -419,7 +418,10 @@ class _HomePageState extends State<HomePage>
                                               ),
                                               onTap: () {
                                                 Navigator.pop(context);
-                                                // Navigate to profile page when implemented
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                                                );
                                               },
                                             ),
                                             ListTile(
