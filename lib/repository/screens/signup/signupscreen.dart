@@ -223,12 +223,12 @@ class _SignupScreenState extends State<SignupScreen> {
     final settings = Provider.of<AccessibilitySettings>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: 56, left: 24, bottom: 24, right: 24),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              // Logo and title
               Column(
                 children: [
                   SizedBox(
@@ -267,140 +267,142 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 20),
 
-              // ignore: sized_box_for_whitespace
-              Container(
-                height: 500,
+              // PageView with Expanded
+              Expanded(
                 child: PageView(
                   controller: _pageController,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
                     // Page 1: Basic Information
-                    Form(
-                      key: _page1FormKey,
-                      child: Column(
-                        children: [
-                          // Full Name
-                          TextFormField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(LucideIcons.user),
-                              labelText: "Enter your full name",
+                    SingleChildScrollView(
+                      child: Form(
+                        key: _page1FormKey,
+                        child: Column(
+                          children: [
+                            // Full Name
+                            TextFormField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(LucideIcons.user),
+                                labelText: "Enter your full name",
+                              ),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Name cannot be empty" : null,
                             ),
-                            validator: (value) =>
-                                value!.isEmpty ? "Name cannot be empty" : null,
-                          ),
-                          SizedBox(height: 16),
+                            SizedBox(height: 16),
 
-                          // Email
-                          TextFormField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(LucideIcons.mail),
-                              labelText: "Enter your email",
+                            // Email
+                            TextFormField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(LucideIcons.mail),
+                                labelText: "Enter your email",
+                              ),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Email cannot be empty" : null,
                             ),
-                            validator: (value) =>
-                                value!.isEmpty ? "Email cannot be empty" : null,
-                          ),
-                          SizedBox(height: 16),
+                            SizedBox(height: 16),
 
-                          // Password
-                          TextFormField(
-                            controller: passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(LucideIcons.lock),
-                              labelText: "Enter your password",
-                              suffixIcon: Icon(LucideIcons.eye),
+                            // Password
+                            TextFormField(
+                              controller: passwordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(LucideIcons.lock),
+                                labelText: "Enter your password",
+                                suffixIcon: Icon(LucideIcons.eye),
+                              ),
+                              validator: (value) => value != null && value.length < 6
+                                  ? "Password must be at least 6 characters"
+                                  : null,
                             ),
-                            validator: (value) => value != null && value.length < 6
-                                ? "Password must be at least 6 characters"
-                                : null,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
 
                     // Page 2: Education
-                    Form(
-                      key: _page2FormKey,
-                      child: Column(
-                        children: [
-                          // Standard Dropdown
-                          DropdownButtonFormField<String>(
-                            value: selectedStandard,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(LucideIcons.book),
-                              labelText: "Select your standard",
-                            ),
-                            items: standards.map((String standard) {
-                              return DropdownMenuItem(
-                                value: standard,
-                                child: Text(standard),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedStandard = value;
-                              });
-                            },
-                            validator: (value) =>
-                                value == null ? "Please select your standard" : null,
-                          ),
-                          SizedBox(height: 16),
-
-                          DropdownButtonFormField<String>(
-                            value: selectedLanguage,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(LucideIcons.languages),
-                              labelText: "Select your preferred language",
-                            ),
-                            items: languages.map((String language) {
-                              return DropdownMenuItem(
-                                value: language,
-                                child: Text(language),
-                              );
-                            }).toList(),
-                           onChanged: (value) {
-                              if (value != null) {
+                    SingleChildScrollView(
+                      child: Form(
+                        key: _page2FormKey,
+                        child: Column(
+                          children: [
+                            // Standard Dropdown
+                            DropdownButtonFormField<String>(
+                              value: selectedStandard,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(LucideIcons.book),
+                                labelText: "Select your standard",
+                              ),
+                              items: standards.map((String standard) {
+                                return DropdownMenuItem(
+                                  value: standard,
+                                  child: Text(standard),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
                                 setState(() {
-                                  selectedLanguage = value; // Set selectedLanguage here
-                                  settings.setLanguage(value);
-                                  context.setLocale(value == "English" ? const Locale('en') : const Locale('hi'));
+                                  selectedStandard = value;
                                 });
-                              }
-                            },
-                            validator: (value) =>
-                                value == null ? "Please select your preferred language" : null,
-                          ),
-                          SizedBox(height: 16),
+                              },
+                              validator: (value) =>
+                                  value == null ? "Please select your standard" : null,
+                            ),
+                            SizedBox(height: 16),
 
-                          // Interests Input
-                          TextFormField(
-                            controller: interestController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(LucideIcons.library),
-                              labelText: "Enter your Interests",
-                              suffixIcon: IconButton(
-                                icon: Icon(LucideIcons.plusCircle),
-                                onPressed: addInterest,
+                            DropdownButtonFormField<String>(
+                              value: selectedLanguage,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(LucideIcons.languages),
+                                labelText: "Select your preferred language",
+                              ),
+                              items: languages.map((String language) {
+                                return DropdownMenuItem(
+                                  value: language,
+                                  child: Text(language),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setState(() {
+                                    selectedLanguage = value;
+                                    settings.setLanguage(value);
+                                    context.setLocale(value == "English" ? const Locale('en') : const Locale('hi'));
+                                  });
+                                }
+                              },
+                              validator: (value) =>
+                                  value == null ? "Please select your preferred language" : null,
+                            ),
+                            SizedBox(height: 16),
+
+                            // Interests Input
+                            TextFormField(
+                              controller: interestController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(LucideIcons.library),
+                                labelText: "Enter your Interests",
+                                suffixIcon: IconButton(
+                                  icon: Icon(LucideIcons.plusCircle),
+                                  onPressed: addInterest,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 16),
+                            SizedBox(height: 16),
 
-                          // Display Interests List
-                          Wrap(
-                            spacing: 8,
-                            children: interests.map((interest) {
-                               int index = interests.indexOf(interest);
-                              return Chip(
-                                label: Text(interest),
-                                onDeleted: () => removeInterest(index),
-                              );
-                            }).toList(),
-                          ),
-                          SizedBox(height: 16),
-                        ],
+                            // Display Interests List
+                            Wrap(
+                              spacing: 8,
+                              children: interests.map((interest) {
+                                int index = interests.indexOf(interest);
+                                return Chip(
+                                  label: Text(interest),
+                                  onDeleted: () => removeInterest(index),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -441,53 +443,54 @@ class _SignupScreenState extends State<SignupScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
                   ],
                 ),
               ),
-                  
-              // Navigation Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                if (_currentPage > 0)
-                  TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                      foregroundColor: MaterialStateProperty.all(Colors.blue),
-                    ),
-                    onPressed: _previousPage,
-                    child: Text("Back"),
-                  )
-                else
-                  SizedBox(width: 80),
 
-                if (_currentPage < 2)
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                      foregroundColor: MaterialStateProperty.all(Colors.blue),
-                    ),
-                    onPressed: _nextPage,
-                    child: Text("Next"),
-                  )
-                else
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blue),
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
-                    child: Text("Sign up"),
-                    onPressed: () {
-                      signupUser();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => GenerateContentPage()),
-                      );
-                    },
-                    
-                  )
-                ],
+              // Navigation Buttons
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (_currentPage > 0)
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                          foregroundColor: MaterialStateProperty.all(Colors.blue),
+                        ),
+                        onPressed: _previousPage,
+                        child: Text("Back"),
+                      )
+                    else
+                      SizedBox(width: 80),
+
+                    if (_currentPage < 2)
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                          foregroundColor: MaterialStateProperty.all(Colors.blue),
+                        ),
+                        onPressed: _nextPage,
+                        child: Text("Next"),
+                      )
+                    else
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.blue),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                        ),
+                        child: Text("Sign up"),
+                        onPressed: () {
+                          signupUser();
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => GenerateContentPage()),
+                          // );
+                        },
+                      )
+                  ],
+                ),
               ),
             ],
           ),
