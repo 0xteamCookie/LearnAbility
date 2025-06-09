@@ -169,7 +169,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
   void startTimer() {
     if (isRunning) return;
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
+    timer = Timer.periodic(Duration(minutes: 1), (_) {
       if (remainingTime > 0) {
         setState(() => remainingTime--);
       } else {
@@ -874,6 +874,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
     final bool isReminders = settings.reminders;
     final bool isDyslexic = settings.openDyslexic;
     final bool isTextToSpeech = settings.textToSpeech;
+    
     final String fontFamily = isDyslexic ? "OpenDyslexic" : "Roboto";
 
     return GestureDetector(
@@ -1031,6 +1032,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
     AccessibilitySettings settings,
     String fontFamily,
   ) {
+    final bool isPomodoro = settings.pomodoro;
     if (lessonData == null) return Container();
 
     // Check if pages list is empty
@@ -1094,6 +1096,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
     }
 
     final currentPage = lessonData!.pages[currentPageIndex];
+
 
     return Stack(
       children: [
@@ -1285,15 +1288,16 @@ class _LessonContentPageState extends State<LessonContentPage> {
         ),
 
         //Pomodoro Timer
-        Positioned(
-          right: 10,
-          top: MediaQuery.of(context).size.height / 2 - 100,
-          child: PomodoroTimer(
-            key: _pomodoroKey,
-            fontSize: settings.fontSize,
-            fontFamily: fontFamily,
+        if(isPomodoro)
+          Positioned(
+            right: 10,
+            top: MediaQuery.of(context).size.height / 2 - 100,
+            child: PomodoroTimer(
+              key: _pomodoroKey,
+              fontSize: settings.fontSize,
+              fontFamily: fontFamily,
+            ),
           ),
-        ),
       ],
     );
   }

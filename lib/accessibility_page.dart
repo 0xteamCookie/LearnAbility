@@ -45,7 +45,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
     double fontSize = settings.fontSize;
     bool openDyslexic = settings.openDyslexic;
     double speechRate = settings.speechRate;
-    bool visualTimers = settings.visualTimers;
+    bool pomodoro = settings.pomodoro;
     bool breakReminders = settings.reminders;
     int selectedColorIndex = settings.selectedColorIndex;
     bool textToSpeech = settings.textToSpeech;
@@ -341,14 +341,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                       ),
                       SizedBox(height: 16),
 
-                      // Visual Timers & Break Reminders
+                      // Pomodoro Timers & Break Reminders
                       _buildSettingCard(
                         child: Column(
                           children: [
                             _buildSwitchSetting(
-                              "visual_timers".tr(),
-                              visualTimers,
-                              (value) => settings.setVisualTimers(value),
+                              "pomodoro".tr(),
+                              pomodoro,
+                              (value) => settings.setPomodoro(value),
                               fontSize,
                               fontFamily(),
                               LucideIcons.timer,

@@ -5,7 +5,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _openDyslexic = false;
   double _speechRate = 0.5;
   bool _wordPrediction = false;
-  bool _visualTimers = false;
+  bool _pomodoro = false;
   bool _reminders = false;
   bool _textToSpeech = false;
   int _selectedColorIndex = 0;
@@ -17,7 +17,7 @@ class AccessibilitySettings extends ChangeNotifier {
   double get speechRate => _speechRate;
   bool get wordPrediction => _wordPrediction;
   bool get textToSpeech => _textToSpeech;
-  bool get visualTimers => _visualTimers;
+  bool get pomodoro => _pomodoro;
   bool get reminders => _reminders;
   int get selectedColorIndex => _selectedColorIndex;
   int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
@@ -48,8 +48,8 @@ class AccessibilitySettings extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setVisualTimers(bool value) {
-    _visualTimers = value;
+  void setPomodoro(bool value) {
+    _pomodoro = value;
     notifyListeners();
   }
 
