@@ -112,6 +112,12 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                             index: 6,
                             onTap: () => _navigateTo(VoiceAiChat(), 6),
                           ),
+                          _MenuItem(
+                            icon: LucideIcons.barChart3,
+                            title: 'stats'.tr(),
+                            index: 7,
+                            onTap: () => _navigateTo(StatsPage(), 7),
+                          ),
                         ],
                         settings,
                         fontFamily(),
@@ -126,14 +132,14 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                           _MenuItem(
                             icon: LucideIcons.video,
                             title: 'videos'.tr(),
-                            index: 7,
-                            onTap: () => _navigateTo(VideosPage(), 7),
+                            index: 8,
+                            onTap: () => _navigateTo(VideosPage(), 8),
                           ),
                           _MenuItem(
                             icon: LucideIcons.fileText,
                             title: 'articles'.tr(),
-                            index: 8,
-                            onTap: () => _navigateTo(ArticlesPage(), 8),
+                            index: 9,
+                            onTap: () => _navigateTo(ArticlesPage(), 9),
                           ),
                         ],
                         settings,
@@ -221,20 +227,20 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             settings: settings,
             fontFamily: fontFamily,
           ),
-          _buildNavItem(
-            icon: LucideIcons.barChart,
-            label: 'stats'.tr(),
-            isSelected: currentIndex == 1,
-            onTap: () {
-              settings.setSelectedIndex(1);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StatsPage()),
-              );
-            },
-            settings: settings,
-            fontFamily: fontFamily,
-          ),
+          // _buildNavItem(
+          //   icon: LucideIcons.barChart,
+          //   label: 'stats'.tr(),
+          //   isSelected: currentIndex == 1,
+          //   onTap: () {
+          //     settings.setSelectedIndex(1);
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => StatsPage()),
+          //     );
+          //   },
+          //   settings: settings,
+          //   fontFamily: fontFamily,
+          // ),
           _buildNavItem(
             icon: LucideIcons.home,
             label: 'home'.tr(),
