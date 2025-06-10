@@ -93,7 +93,17 @@
     "fast": "Fast",
     "dyslexia_friendly_font": "Dyslexia friendly font",
     "focus_and_timers": "Focus & Timers",
+    "voice_assisstant_on_all_pages": "Voice Assisstant on all pages",
     "reminders": "Reminders",
+
+    "account_information": "Account Information",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "class": "class",
+    "not_specified": "Not specified",
+    "primary_learning_accomodation": "Primary Learning Accomodation",
+    
   
     "quizzes": "Quizzes",
     "questions": "Questions",

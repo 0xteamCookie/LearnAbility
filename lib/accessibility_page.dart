@@ -44,6 +44,7 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
 
     double fontSize = settings.fontSize;
     bool openDyslexic = settings.openDyslexic;
+    bool voiceAssisstant = settings.voiceAssisstant;
     double speechRate = settings.speechRate;
     bool pomodoro = settings.pomodoro;
     bool breakReminders = settings.reminders;
@@ -310,6 +311,14 @@ class _AccessibilityPageState extends State<AccessibilityPage> {
                               "dyslexia_friendly_font".tr(),
                               openDyslexic,
                               (value) => settings.setDyslexic(value),
+                              fontSize,
+                              fontFamily(),
+                              LucideIcons.textSelect,
+                            ),
+                            _buildSwitchSetting(
+                              "voice_assistant_on_all_pages".tr(),
+                              voiceAssisstant,
+                              (value) => settings.setVoiceAssisstant(value),
                               fontSize,
                               fontFamily(),
                               LucideIcons.textSelect,
