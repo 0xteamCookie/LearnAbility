@@ -48,7 +48,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
       backgroundColor: Colors.white,
       key: _scaffoldKey,
 
-      // NAVIGATION MENU - Modern, clean design with requested color scheme
       endDrawer: Drawer(
         elevation: 0,
         width: MediaQuery.of(context).size.width * 0.75,
@@ -58,7 +57,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             bottomLeft: Radius.circular(20),
           ),
         ),
-        // Wrap the SafeArea with a Container that has the gradient
+        // SafeArea with gradient
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -190,6 +189,37 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
   ) {
     final currentIndex = settings.selectedIndexBottomNavBar;
 
+    // If the user has selected blindness
+  if (/*blind*/ settings.pomodoro) {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: 0.0),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 250,
+          minHeight: 70,
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            // AI Voice chat function
+          },
+          backgroundColor: Color(0xFF6366F1),
+          foregroundColor: Colors.white,
+          icon: Icon(Icons.mic, size: 28),
+          label: Text(
+            'Voice Assistant',
+            style: TextStyle(
+              fontSize: 16 * settings.fontSize,
+              fontFamily: fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
     return Container(
       height: 64,
       decoration: BoxDecoration(
