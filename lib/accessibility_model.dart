@@ -8,6 +8,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _pomodoro = false;
   bool _reminders = false;
   bool _textToSpeech = false;
+  bool _voiceAssisstant = false;
   int _selectedColorIndex = 0;
   int _selectedIndexBottomNavBar = 2;
   String _language = 'English';
@@ -19,6 +20,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool get textToSpeech => _textToSpeech;
   bool get pomodoro => _pomodoro;
   bool get reminders => _reminders;
+  bool get voiceAssisstant => _voiceAssisstant;
   int get selectedColorIndex => _selectedColorIndex;
   int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
   String get language => _language;
@@ -50,6 +52,11 @@ class AccessibilitySettings extends ChangeNotifier {
 
   void setPomodoro(bool value) {
     _pomodoro = value;
+    notifyListeners();
+  }
+
+  void setVoiceAssisstant(bool value) {
+    _voiceAssisstant = value;
     notifyListeners();
   }
 

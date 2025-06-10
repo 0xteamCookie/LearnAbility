@@ -190,7 +190,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
     final currentIndex = settings.selectedIndexBottomNavBar;
 
     // If the user has selected blindness
-  if (/*blind*/ settings.pomodoro) {
+  if (settings.voiceAssisstant) {
   return Align(
     alignment: Alignment.bottomCenter,
     child: Padding(
@@ -208,7 +208,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           foregroundColor: Colors.white,
           icon: Icon(Icons.mic, size: 28),
           label: Text(
-            'Voice Assistant',
+            'ai_voice_assistant'.tr(),
             style: TextStyle(
               fontSize: 16 * settings.fontSize,
               fontFamily: fontFamily,
