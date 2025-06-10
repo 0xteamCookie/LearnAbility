@@ -96,7 +96,6 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
 
   _VoiceAiChatState() {
     vapi.onEvent.listen((event) {
-      final settings = Provider.of<AccessibilitySettings>(context, listen: false);
       try {
         final Map<String, dynamic> messageData = jsonDecode(event.value);
 
@@ -104,6 +103,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
 
         if (messageData["status"] == "ended") {
         setState(() {
+          final settings = Provider.of<AccessibilitySettings>(context, listen: false);
           isCallStarted = false;
           settings.setCallStatus(false);   //passing props to lesson page
           buttonText = 'Start Talking';

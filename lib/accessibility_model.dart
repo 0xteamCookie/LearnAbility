@@ -9,7 +9,7 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _reminders = false;
   bool _textToSpeech = false;
   bool _voiceAssisstant = false;
-  bool _callStatus = false;
+  bool _callStatus = true;
   int _selectedColorIndex = 0;
   int _selectedIndexBottomNavBar = 2;
   String _language = 'English';
