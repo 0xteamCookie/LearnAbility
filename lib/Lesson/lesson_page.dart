@@ -338,13 +338,25 @@ class _LessonContentPageState extends State<LessonContentPage> {
 
   final GlobalKey<_PomodoroTimerState> _pomodoroKey = GlobalKey<_PomodoroTimerState>();
 
-  @override
-  void initState() {
-    super.initState();
-    initTts();
-    fetchLessonData();
-    _startTimers();
-  }
+ @override
+void initState() {
+  super.initState();
+  initTts();
+  fetchLessonData().then((_) {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+    final bool callStatus = settings.callStatus;
+    final bool textToSpeech = settings.textToSpeech;
+    
+    if (!callStatus && textToSpeech) {
+      Future.delayed(Duration(milliseconds: 500), () {
+        if (mounted) {
+          _readCurrentPageContent();
+        }
+      });
+    }
+  });
+  _startTimers();
+}
 
   Widget _buildHighlightedCode(String code, String language, double fontSize) {
     // This is a simple fallback if flutter_highlight is not available
@@ -1327,6 +1339,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
   Future<void> _speak(String text) async {
     final settings = Provider.of<AccessibilitySettings>(context, listen: false);
     final double speechRate = settings.speechRate;
+    final bool callStatus = settings.callStatus;
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setPitch(pitch);
@@ -1342,6 +1355,7 @@ class _LessonContentPageState extends State<LessonContentPage> {
   }
 
   void _readCurrentPageContent() {
+
     if (lessonData == null || lessonData!.pages.isEmpty) return;
 
     final currentPage = lessonData!.pages[currentPageIndex];
