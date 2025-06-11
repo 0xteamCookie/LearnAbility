@@ -71,6 +71,11 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   final Vapi vapi = Vapi(VAPI_PUBLIC_KEY);
   final List<Map<String, dynamic>> _chatHistory = [];
 
+  // Key for LessonContentPageState
+  final GlobalKey<LessonContentPageState> _lessonContentPageKey = GlobalKey<LessonContentPageState>();
+  bool _isLessonPageActive = false; // To track if LessonContentPage is active
+  bool _isFlutterTtsReading = false; // New state variable
+
   final Map<String, Widget Function(BuildContext)> routeMap = {
     "/settings": (context) => SettingsPage(),
     // Adding new routes
@@ -99,7 +104,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       try {
         final Map<String, dynamic> messageData = jsonDecode(event.value);
 
-        print(messageData);
+        // print(messageData); // Keep for debugging if necessary
 
         if (messageData["status"] == "ended") {
         setState(() {
@@ -108,9 +113,21 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           settings.setCallStatus(false);   //passing props to lesson page
           buttonText = 'Start Talking';
           isLoading = false;
+          _isLessonPageActive = false;
+          _isFlutterTtsReading = false; // Reset on call end
         });
         return;
       }
+
+        // Handle assistant speech suppression while FlutterTTS is reading
+        if (messageData["type"] == "transcript" &&
+            messageData["role"] == "assistant" &&
+            messageData["transcriptType"] == "final" &&
+            _isFlutterTtsReading) {
+          print("Suppressing Vapi assistant message while FlutterTTS is reading: ${messageData["transcript"]}");
+          // Do not add to _chatHistory or process further if FlutterTTS is active
+          return; 
+        }
 
         if (messageData["type"] == "transcript" &&
             messageData["transcriptType"] == "final") {
@@ -146,6 +163,12 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
                   final String? subjectName = arguments['subjectName'] as String?;
                   print('Navigating via tool-call to lesson content: $lessonName in subject: $subjectName');
                   _handleNavigateToLessonContent(lessonName, subjectName);
+                } else if (functionName == 'readLessonPageContent') {
+                  print('Tool call: readLessonPageContent');
+                  _readLessonContent();
+                } else if (functionName == 'stopReadingLessonPageContent') {
+                  print('Tool call: stopReadingLessonPageContent');
+                  _stopReadingLessonContent();
                 }
               }
             }
@@ -155,6 +178,63 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
         print("Error decoding event data: $e");
       }
     });
+  }
+
+  // Callback for when LessonContentPage starts reading
+  void _handleFlutterTtsStarted() {
+    if (mounted) {
+      setState(() {
+        _isFlutterTtsReading = true;
+      });
+      print("FlutterTTS started reading. Vapi should be quiet.");
+    }
+  }
+
+  // Callback for when LessonContentPage stops or finishes reading
+  void _handleFlutterTtsCompleted() {
+    if (mounted) {
+      setState(() {
+        _isFlutterTtsReading = false;
+      });
+      print("FlutterTTS finished/stopped reading. Vapi can resume interaction.");
+      // Note: Miss Williams will not automatically speak here.
+      // User needs to initiate next interaction or have used "stop reading" command.
+    }
+  }
+
+  void _readLessonContent() {
+    if (_isLessonPageActive && _lessonContentPageKey.currentState != null) {
+      // Miss Williams should have already said her piece based on the prompt.
+      // Now, just start the Flutter TTS.
+      _lessonContentPageKey.currentState!.startReadingPage();
+      // No setState or chat history addition here, as Miss Williams' confirmation comes from the LLM prompt.
+    } else {
+      if (mounted) {
+        setState(() {
+          _chatHistory.add({
+            'role': 'assistant',
+            'message': "It seems you are not on a lesson page, or the content isn't ready. Please navigate to a lesson first.",
+          });
+        });
+      }
+    }
+  }
+
+  void _stopReadingLessonContent() {
+    if (_isLessonPageActive && _lessonContentPageKey.currentState != null) {
+      _lessonContentPageKey.currentState!.stopReadingPage(); // This will trigger _handleFlutterTtsCompleted
+      // Miss Williams' confirmation ("Okay, I've stopped reading. What's next?")
+      // will come from the LLM based on the prompt for 'stopReadingLessonPageContent'.
+    } else {
+      if (mounted) {
+        setState(() {
+           _chatHistory.add({
+            'role': 'assistant',
+            'message': "There's nothing to stop reading. Are you on a lesson page?",
+          });
+        });
+      }
+    }
   }
 
   Future<void> _handleMicPress() async {
@@ -175,14 +255,19 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           "temperature": 0.7,
           "systemPrompt":
               "You are Miss Williams, a knowledgeable and friendly teacher. Your primary role is to help users navigate the LearnAbility app using voice commands. \\n" +
-              "1. Use the 'navigate' function for general page navigation (e.g., '/home', '/settings'). \\n" +
-              "2. If the user asks to 'continue learning' or 'open next lesson', use the path '/lesson/next' with the 'navigate' function. \\n" +
-              "3. To show lessons for a specific subject (e.g., 'Show lessons for Mathematics'), use the 'navigateToSubjectLessons' function with the 'subjectName'. \\n" +
-              "4. To open a specific lesson's content (e.g., 'Open Introduction to Algebra in Mathematics'), use the 'navigateToLessonContent' function with 'lessonName' and 'subjectName'. If subjectName is not provided for a lesson, ask for it, or use the subject context if a subject's lessons are already being viewed. \\n" +
-              "Be clear and confirm actions if a request is ambiguous. \\n" +
-              "Available general page paths: /home, /settings, /profile, /stats (or /progress), /accessibility, /subjects (or /courses), /materials (or /my-materials), /quizzes, /ai-assistant (or /chat-assistant), /voice-assistant, /videos, /articles.\\n" +
-              "IMPORTANT: Use the following list of available subjects and lessons to guide the user and confirm names. If a user mentions a subject or lesson not in this list, inform them it's not available or ask for clarification.\\n" +
-              dynamicPromptInfo, // Appended dynamic data
+              "1. General Navigation: Use 'navigate' (e.g., '/home', '/settings'). For 'continue learning' or 'next lesson', use 'navigate' with path '/lesson/next'.\\n" +
+              "2. Subject Lessons: To show lessons for a subject (e.g., 'Show Math lessons'), use 'navigateToSubjectLessons' with 'subjectName'.\\n" +
+              "3. Lesson Content: To open a specific lesson (e.g., 'Open Intro to Algebra in Math'), use 'navigateToLessonContent' with 'lessonName' and 'subjectName'.\\n" +
+              "4. Read Lesson Page: If on a lesson page and asked to 'read the page' or 'start reading':\\n" +
+              "   - Respond with a short confirmation like: 'Okay, the app will read the content for you now.' OR 'Certainly, I'll have the app read that out.' \\n" +
+              "   - Then, call the 'readLessonPageContent' function. \\n" +
+              "   - After calling the function, DO NOT say anything further. Wait for the user's next command (e.g., 'stop reading' or a new query after reading completes).\\n" +
+              "5. Stop Reading Lesson Page: If asked to 'stop reading':\\n" +
+              "   - Respond with: 'Alright, reading has been stopped. What would you like to do next?' OR 'Okay, I've stopped the reading. What's next?' \\n" +
+              "   - Then, call the 'stopReadingLessonPageContent' function.\\n" +
+              "Be clear. Confirm ambiguous requests. Use the provided list of subjects/lessons for guidance. If not in list, inform user or ask for clarification.\\n" +
+              "Available pages: /home, /settings, /profile, /stats, /accessibility, /subjects, /materials, /quizzes, /ai-assistant, /voice-assistant, /videos, /articles.\\n" +
+              "Dynamic Subject/Lesson List:\\n$dynamicPromptInfo",
           "functions": [
             {
               "name": "navigate",
@@ -233,6 +318,16 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
                 },
                 "required": ["lessonName", "subjectName"],
               },
+            },
+            {
+              "name": "readLessonPageContent",
+              "async": false,
+              "description": "Starts reading the content of the current lesson page if a lesson page is active."
+            },
+            {
+              "name": "stopReadingLessonPageContent",
+              "async": false,
+              "description": "Stops reading the content of the current lesson page if TTS is active."
             }
           ],
           "tools":[
@@ -330,6 +425,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   }
 
   void _navigateToPage(String path) {
+    _isLessonPageActive = false; // Reset by default
     if (path == "/lesson/next") {
       _navigateToNextLesson();
       return;
@@ -424,11 +520,18 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => LessonContentPage(
+                    key: _lessonContentPageKey,
                     lessonId: nextLesson.id,
                     subjectId: nextLesson.subjectId,
+                    onReadingStarted: _handleFlutterTtsStarted, // Pass callback
+                    onReadingCompleted: _handleFlutterTtsCompleted, // Pass callback
                   ),
                 ),
-              );
+              ).then((_) {
+                _isLessonPageActive = false;
+                _isFlutterTtsReading = false; // Ensure reset if page is popped
+              });
+              _isLessonPageActive = true;
             } else {
               print("No lessons found for subject $subjectId");
                setState(() {
@@ -516,7 +619,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
                 subjectName: foundSubject['name'],
               ),
             ),
-          );
+          ).then((_) => _isLessonPageActive = false); // Reset if navigating away from a potential lesson page
         } else {
           _showError("I couldn't find a subject named '$subjectName'.");
         }
@@ -603,11 +706,18 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
             context,
             MaterialPageRoute(
               builder: (context) => LessonContentPage(
+                key: _lessonContentPageKey,
                 lessonId: foundLesson['id'],
-                subjectId: targetSubjectId!, // Already confirmed targetSubjectId is not null
+                subjectId: targetSubjectId!,
+                onReadingStarted: _handleFlutterTtsStarted, // Pass callback
+                onReadingCompleted: _handleFlutterTtsCompleted, // Pass callback
               ),
             ),
-          );
+          ).then((_) {
+            _isLessonPageActive = false;
+            _isFlutterTtsReading = false; // Ensure reset if page is popped
+          });
+           _isLessonPageActive = true;
         } else {
           _showError("I couldn't find a lesson named '$lessonName' in the subject '$actualSubjectName'.");
         }

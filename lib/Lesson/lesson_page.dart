@@ -313,18 +313,22 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 class LessonContentPage extends StatefulWidget {
   final String lessonId;
   final String subjectId;
+  final VoidCallback? onReadingStarted;
+  final VoidCallback? onReadingCompleted;
 
   const LessonContentPage({
     super.key,
     required this.lessonId,
     required this.subjectId,
+    this.onReadingStarted,
+    this.onReadingCompleted,
   });
 
   @override
-  State<LessonContentPage> createState() => _LessonContentPageState();
+  State<LessonContentPage> createState() => LessonContentPageState();
 }
 
-class _LessonContentPageState extends State<LessonContentPage> {
+class LessonContentPageState extends State<LessonContentPage> {
   late FlutterTts flutterTts;
   TtsState ttsState = TtsState.stopped;
   double volume = 0.8;
@@ -1321,25 +1325,27 @@ void initState() {
       setState(() {
         ttsState = TtsState.playing;
       });
+      widget.onReadingStarted?.call();
     });
 
     flutterTts.setCompletionHandler(() {
       setState(() {
         ttsState = TtsState.stopped;
       });
+      widget.onReadingCompleted?.call();
     });
 
     flutterTts.setErrorHandler((msg) {
       setState(() {
         ttsState = TtsState.stopped;
       });
+      widget.onReadingCompleted?.call();
     });
   }
 
   Future<void> _speak(String text) async {
     final settings = Provider.of<AccessibilitySettings>(context, listen: false);
     final double speechRate = settings.speechRate;
-    final bool callStatus = settings.callStatus;
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setPitch(pitch);
@@ -1350,12 +1356,21 @@ void initState() {
   }
 
   Future<void> _stop() async {
+    final bool wasPlaying = ttsState == TtsState.playing;
     await flutterTts.stop();
-    setState(() => ttsState = TtsState.stopped);
+    if (!wasPlaying) {
+      if (mounted) {
+        setState(() => ttsState = TtsState.stopped);
+      }
+      widget.onReadingCompleted?.call();
+    } else {
+      if (mounted) {
+        setState(() => ttsState = TtsState.stopped);
+      }
+    }
   }
 
   void _readCurrentPageContent() {
-
     if (lessonData == null || lessonData!.pages.isEmpty) return;
 
     final currentPage = lessonData!.pages[currentPageIndex];
@@ -2468,5 +2483,17 @@ void initState() {
     _stopTimers();// tops timer
     flutterTts.stop(); // Stops any ongoing speech
     super.dispose();
+  }
+
+  void startReadingPage() {
+    if (mounted) {
+      _readCurrentPageContent();
+    }
+  }
+
+  void stopReadingPage() {
+    if (mounted) {
+      _stop();
+    }
   }
 }
