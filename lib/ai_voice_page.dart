@@ -101,6 +101,17 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
 
         print(messageData);
 
+        if (messageData["status"] == "ended") {
+        setState(() {
+          final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+          isCallStarted = false;
+          settings.setCallStatus(false);   //passing props to lesson page
+          buttonText = 'Start Talking';
+          isLoading = false;
+        });
+        return;
+      }
+
         if (messageData["type"] == "transcript" &&
             messageData["transcriptType"] == "final") {
           setState(() {

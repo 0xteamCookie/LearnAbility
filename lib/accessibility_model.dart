@@ -9,11 +9,13 @@ class AccessibilitySettings extends ChangeNotifier {
   bool _reminders = false;
   bool _textToSpeech = false;
   bool _voiceAssisstant = false;
+  bool _callStatus = true;
   int _selectedColorIndex = 0;
   int _selectedIndexBottomNavBar = 2;
   String _language = 'English';
 
   double get fontSize => _fontSize;
+  bool get callStatus => _callStatus;
   bool get openDyslexic => _openDyslexic;
   double get speechRate => _speechRate;
   bool get wordPrediction => _wordPrediction;
@@ -25,6 +27,11 @@ class AccessibilitySettings extends ChangeNotifier {
   int get selectedIndexBottomNavBar => _selectedIndexBottomNavBar;
   String get language => _language;
 
+  void setCallStatus(bool value){
+    _callStatus = value;
+    notifyListeners();
+  }
+  
   void setFontSize(double value) {
     _fontSize = value;
     notifyListeners();
