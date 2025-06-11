@@ -8,11 +8,12 @@ import '../../accessibility_model.dart';
 import '../../accessibility_page.dart';
 import '../../ai_assistant_page.dart';
 import '../../articles_page.dart';
+import '../../stats_page.dart';
 import '../../generate_content_page.dart';
 import '../../home_page.dart';
 import '../../settings_page.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../stats_page.dart';
+import '../../profile_page.dart';
 import '../../subjects.dart';
 
 class GlobalNavBar extends StatefulWidget {
@@ -257,20 +258,20 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             settings: settings,
             fontFamily: fontFamily,
           ),
-          // _buildNavItem(
-          //   icon: LucideIcons.barChart,
-          //   label: 'stats'.tr(),
-          //   isSelected: currentIndex == 1,
-          //   onTap: () {
-          //     settings.setSelectedIndex(1);
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => StatsPage()),
-          //     );
-          //   },
-          //   settings: settings,
-          //   fontFamily: fontFamily,
-          // ),
+          _buildNavItem(
+            icon: LucideIcons.user,
+            label: 'profile'.tr(),
+            isSelected: currentIndex == 1,
+            onTap: () {
+              settings.setSelectedIndex(1);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+            settings: settings,
+            fontFamily: fontFamily,
+          ),
           _buildNavItem(
             icon: LucideIcons.home,
             label: 'home'.tr(),
