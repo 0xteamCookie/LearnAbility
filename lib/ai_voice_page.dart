@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,29 +9,26 @@ import 'package:vapinew/vapinew.dart';
 import 'accessibility_model.dart';
 import 'domain/constants/appcolors.dart';
 
-// Imports for additional pages and utilities
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:my_first_app/utils/constants.dart'; 
+import 'package:my_first_app/utils/constants.dart';
 import 'package:my_first_app/repository/screens/login/loginscreen.dart';
 import 'package:my_first_app/repository/screens/signup/signupscreen.dart';
-import 'package:my_first_app/home_page.dart'; // For HomePage itself
+import 'package:my_first_app/home_page.dart';
 import 'package:my_first_app/stats_page.dart';
 import 'package:my_first_app/accessibility_page.dart';
-import 'package:my_first_app/subjects.dart'; // SubjectsPage
-import 'package:my_first_app/generate_content_page.dart'; // GenerateContentPage (My Materials)
-import 'package:my_first_app/Quiz/quizzes_page.dart'; // QuizzesPage
-import 'package:my_first_app/ai_assistant_page.dart'; // AIAssistantPage
+import 'package:my_first_app/subjects.dart';
+import 'package:my_first_app/generate_content_page.dart';
+import 'package:my_first_app/Quiz/quizzes_page.dart';
+import 'package:my_first_app/ai_assistant_page.dart';
 import 'package:my_first_app/videos_page.dart';
 import 'package:my_first_app/articles_page.dart';
 import 'package:my_first_app/profile_page.dart';
-import 'package:my_first_app/Lesson/lesson_page.dart'; // For LessonContentPage
-import 'package:my_first_app/Lesson/lessons_page.dart'; // For LessonsPage
+import 'package:my_first_app/Lesson/lesson_page.dart';
+import 'package:my_first_app/Lesson/lessons_page.dart';
 
-// ignore: constant_identifier_names
 const VAPI_PUBLIC_KEY = '012585dc-1191-46c5-abe6-8daf08aa841d';
 
-// Duplicated NextLesson class definition from home_page.dart for simplicity
 class NextLesson {
   final String id;
   final String title;
@@ -60,7 +59,6 @@ class VoiceAiChat extends StatefulWidget {
   const VoiceAiChat({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _VoiceAiChatState createState() => _VoiceAiChatState();
 }
 
@@ -71,32 +69,32 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   final Vapi vapi = Vapi(VAPI_PUBLIC_KEY);
   final List<Map<String, dynamic>> _chatHistory = [];
 
-  // Key for LessonContentPageState
-  final GlobalKey<LessonContentPageState> _lessonContentPageKey = GlobalKey<LessonContentPageState>();
-  bool _isLessonPageActive = false; // To track if LessonContentPage is active
-  bool _isFlutterTtsReading = false; // New state variable
+  final GlobalKey<LessonContentPageState> _lessonContentPageKey =
+      GlobalKey<LessonContentPageState>();
+  bool _isLessonPageActive = false;
+  bool _isFlutterTtsReading = false;
+  bool _wasCallActiveBeforeTTS = false;
 
   final Map<String, Widget Function(BuildContext)> routeMap = {
     "/settings": (context) => SettingsPage(),
-    // Adding new routes
+
     "/login": (context) => LoginScreen(),
     "/signup": (context) => SignupScreen(),
     "/home": (context) => HomePage(),
     "/stats": (context) => StatsPage(),
-    "/progress": (context) => StatsPage(), // Alias for stats
+    "/progress": (context) => StatsPage(),
     "/accessibility": (context) => AccessibilityPage(),
     "/subjects": (context) => SubjectsPage(),
-    "/courses": (context) => SubjectsPage(), // Alias for subjects
+    "/courses": (context) => SubjectsPage(),
     "/materials": (context) => GenerateContentPage(),
-    "/my-materials": (context) => GenerateContentPage(), // Alias for materials
+    "/my-materials": (context) => GenerateContentPage(),
     "/quizzes": (context) => QuizzesPage(),
     "/ai-assistant": (context) => AIAssistantPage(),
-    "/chat-assistant": (context) => AIAssistantPage(), // Alias for ai-assistant
-    "/voice-assistant": (context) => VoiceAiChat(), // Current page
+    "/chat-assistant": (context) => AIAssistantPage(),
+    "/voice-assistant": (context) => VoiceAiChat(),
     "/videos": (context) => VideosPage(),
     "/articles": (context) => ArticlesPage(),
     "/profile": (context) => ProfilePage(),
-    // LessonContentPage will be handled via _navigateToNextLesson or specific lesson IDs if ever needed
   };
 
   _VoiceAiChatState() {
@@ -104,29 +102,69 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       try {
         final Map<String, dynamic> messageData = jsonDecode(event.value);
 
-        // print(messageData); // Keep for debugging if necessary
+        if (messageData.containsKey('status')) {
+          final status = messageData['status'];
+          if (status == 'started') {
+            if (mounted) {
+              setState(() {
+                final settings = Provider.of<AccessibilitySettings>(
+                  context,
+                  listen: false,
+                );
+                isCallStarted = true;
+                settings.setCallStatus(true);
+                buttonText = 'Stop Talking';
+                isLoading = false;
+              });
+              print(
+                "[VAPI EVENT] Call officially STARTED. isCallStarted=$isCallStarted, isLoading=$isLoading",
+              );
+            }
+            return;
+          } else if (status == 'ended') {
+            if (mounted) {
+              final bool ttsIsCurrentlyReading = _isFlutterTtsReading;
+              print(
+                "[VAPI EVENT] Call ENDED. Captured ttsIsCurrentlyReading: $ttsIsCurrentlyReading. _wasCallActiveBeforeTTS before logic: $_wasCallActiveBeforeTTS",
+              );
 
-        if (messageData["status"] == "ended") {
-        setState(() {
-          final settings = Provider.of<AccessibilitySettings>(context, listen: false);
-          isCallStarted = false;
-          settings.setCallStatus(false);   //passing props to lesson page
-          buttonText = 'Start Talking';
-          isLoading = false;
-          _isLessonPageActive = false;
-          _isFlutterTtsReading = false; // Reset on call end
-        });
-        return;
-      }
+              setState(() {
+                final settings = Provider.of<AccessibilitySettings>(
+                  context,
+                  listen: false,
+                );
+                isCallStarted = false;
+                settings.setCallStatus(false);
+                buttonText = 'Start Talking';
+                isLoading = false;
+                if (!ttsIsCurrentlyReading) {
+                  _wasCallActiveBeforeTTS = false;
+                  print(
+                    "[VAPI EVENT] Call ENDED: TTS not reading, so _wasCallActiveBeforeTTS reset to false.",
+                  );
+                } else {
+                  print(
+                    "[VAPI EVENT] Call ENDED: TTS is reading, _wasCallActiveBeforeTTS preserved as $_wasCallActiveBeforeTTS.",
+                  );
+                }
+              });
+              print(
+                "[VAPI EVENT] Call ENDED: After setState. isCallStarted=$isCallStarted, isLoading=$isLoading, _wasCallActiveBeforeTTS=$_wasCallActiveBeforeTTS",
+              );
+            }
+            return;
+          }
+        }
 
-        // Handle assistant speech suppression while FlutterTTS is reading
         if (messageData["type"] == "transcript" &&
             messageData["role"] == "assistant" &&
             messageData["transcriptType"] == "final" &&
             _isFlutterTtsReading) {
-          print("Suppressing Vapi assistant message while FlutterTTS is reading: ${messageData["transcript"]}");
-          // Do not add to _chatHistory or process further if FlutterTTS is active
-          return; 
+          print(
+            "Suppressing Vapi assistant message while FlutterTTS is reading: ${messageData["transcript"]}",
+          );
+
+          return;
         }
 
         if (messageData["type"] == "transcript" &&
@@ -143,25 +181,36 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           final dynamic toolCalls = messageData['toolCalls'];
           if (toolCalls is List && toolCalls.isNotEmpty) {
             final dynamic firstToolCall = toolCalls[0];
-            if (firstToolCall is Map &&
-                firstToolCall['type'] == 'function') {
+            if (firstToolCall is Map && firstToolCall['type'] == 'function') {
               final dynamic functionCallDetails = firstToolCall['function'];
               if (functionCallDetails is Map) {
-                final String functionName = functionCallDetails['name'] as String;
+                final String functionName =
+                    functionCallDetails['name'] as String;
                 final dynamic arguments = functionCallDetails['arguments'];
 
-                if (functionName == 'navigate' && arguments is Map && arguments['path'] is String) {
+                if (functionName == 'navigate' &&
+                    arguments is Map &&
+                    arguments['path'] is String) {
                   final String path = arguments['path'] as String;
                   print('Navigating via tool-call to path: $path');
                   _navigateToPage(path);
-                } else if (functionName == 'navigateToSubjectLessons' && arguments is Map && arguments['subjectName'] is String) {
+                } else if (functionName == 'navigateToSubjectLessons' &&
+                    arguments is Map &&
+                    arguments['subjectName'] is String) {
                   final String subjectName = arguments['subjectName'] as String;
-                  print('Navigating via tool-call to lessons for subject: $subjectName');
+                  print(
+                    'Navigating via tool-call to lessons for subject: $subjectName',
+                  );
                   _handleNavigateToSubjectLessons(subjectName);
-                } else if (functionName == 'navigateToLessonContent' && arguments is Map && arguments['lessonName'] is String) {
+                } else if (functionName == 'navigateToLessonContent' &&
+                    arguments is Map &&
+                    arguments['lessonName'] is String) {
                   final String lessonName = arguments['lessonName'] as String;
-                  final String? subjectName = arguments['subjectName'] as String?;
-                  print('Navigating via tool-call to lesson content: $lessonName in subject: $subjectName');
+                  final String? subjectName =
+                      arguments['subjectName'] as String?;
+                  print(
+                    'Navigating via tool-call to lesson content: $lessonName in subject: $subjectName',
+                  );
                   _handleNavigateToLessonContent(lessonName, subjectName);
                 } else if (functionName == 'readLessonPageContent') {
                   print('Tool call: readLessonPageContent');
@@ -180,40 +229,88 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
     });
   }
 
-  // Callback for when LessonContentPage starts reading
   void _handleFlutterTtsStarted() {
     if (mounted) {
+      final bool callWasActiveWhenTTSStarted = isCallStarted;
+      print(
+        "Enter _handleFlutterTtsStarted. Initial state: isCallStarted=$callWasActiveWhenTTSStarted, _isFlutterTtsReading=$_isFlutterTtsReading, _wasCallActiveBeforeTTS=$_wasCallActiveBeforeTTS",
+      );
+
       setState(() {
         _isFlutterTtsReading = true;
+
+        if (callWasActiveWhenTTSStarted) {
+          _wasCallActiveBeforeTTS = true;
+        }
       });
-      print("FlutterTTS started reading. Vapi should be quiet.");
+
+      print(
+        "_handleFlutterTtsStarted: After setState. _isFlutterTtsReading='$_isFlutterTtsReading', _wasCallActiveBeforeTTS='$_wasCallActiveBeforeTTS'.",
+      );
+
+      if (callWasActiveWhenTTSStarted) {
+        print(
+          "_handleFlutterTtsStarted: TTS is starting and Vapi WAS active. Stopping Vapi call now.",
+        );
+        vapi.stop();
+      } else {
+        print(
+          "_handleFlutterTtsStarted: TTS started. Vapi was NOT active, no Vapi action needed.",
+        );
+      }
     }
   }
 
-  // Callback for when LessonContentPage stops or finishes reading
   void _handleFlutterTtsCompleted() {
     if (mounted) {
+      print(
+        "Enter _handleFlutterTtsCompleted. State: isCallStarted=$isCallStarted, _isFlutterTtsReading=$_isFlutterTtsReading (should be true), _wasCallActiveBeforeTTS=$_wasCallActiveBeforeTTS",
+      );
+
+      bool shouldRestartVapi = _wasCallActiveBeforeTTS;
+
       setState(() {
         _isFlutterTtsReading = false;
+        _wasCallActiveBeforeTTS = false;
       });
-      print("FlutterTTS finished/stopped reading. Vapi can resume interaction.");
-      // Note: Miss Williams will not automatically speak here.
-      // User needs to initiate next interaction or have used "stop reading" command.
+
+      print(
+        "_handleFlutterTtsCompleted: After setState. _isFlutterTtsReading is now '$_isFlutterTtsReading'. _wasCallActiveBeforeTTS reset to false. ShouldRestartVapi=$shouldRestartVapi",
+      );
+
+      if (shouldRestartVapi) {
+        print(
+          "CONDITIONS MET for Vapi restart. Scheduling silent Vapi restart with a 1000ms delay.",
+        );
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          if (mounted) {
+            print("Delayed task: Attempting to start Vapi silently now. Current state: isCallStarted=$isCallStarted, isLoading=$isLoading");
+            _startVapiSilently();
+          } else {
+            print("Delayed task: Widget unmounted, skipping Vapi silent start.");
+          }
+        });
+      } else {
+        print(
+          "CONDITIONS NOT MET for Vapi restart: Previous flag _wasCallActiveBeforeTTS was false.",
+        );
+      }
+      print(
+        "_handleFlutterTtsCompleted: Exiting (Vapi restart may be scheduled).",
+      );
     }
   }
 
   void _readLessonContent() {
     if (_isLessonPageActive && _lessonContentPageKey.currentState != null) {
-      // Miss Williams should have already said her piece based on the prompt.
-      // Now, just start the Flutter TTS.
       _lessonContentPageKey.currentState!.startReadingPage();
-      // No setState or chat history addition here, as Miss Williams' confirmation comes from the LLM prompt.
     } else {
       if (mounted) {
         setState(() {
           _chatHistory.add({
             'role': 'assistant',
-            'message': "It seems you are not on a lesson page, or the content isn't ready. Please navigate to a lesson first.",
+            'message':
+                "It seems you are not on a lesson page, or the content isn't ready. Please navigate to a lesson first.",
           });
         });
       }
@@ -222,130 +319,208 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
 
   void _stopReadingLessonContent() {
     if (_isLessonPageActive && _lessonContentPageKey.currentState != null) {
-      _lessonContentPageKey.currentState!.stopReadingPage(); // This will trigger _handleFlutterTtsCompleted
-      // Miss Williams' confirmation ("Okay, I've stopped reading. What's next?")
-      // will come from the LLM based on the prompt for 'stopReadingLessonPageContent'.
+      _lessonContentPageKey.currentState!.stopReadingPage();
     } else {
       if (mounted) {
         setState(() {
-           _chatHistory.add({
+          _chatHistory.add({
             'role': 'assistant',
-            'message': "There's nothing to stop reading. Are you on a lesson page?",
+            'message':
+                "There's nothing to stop reading. Are you on a lesson page?",
           });
         });
       }
     }
   }
 
+  Map<String, dynamic> _getAssistantConfig(
+    String dynamicPromptInfo, {
+    String? firstMessageOverride,
+  }) {
+    return {
+      "name": "miss-williams",
+      "model": {
+        "provider": "openai",
+        "model": "gpt-3.5-turbo",
+        "temperature": 0.7,
+        "systemPrompt":
+            "You are Miss Williams, a knowledgeable and friendly teacher. Your primary role is to help users navigate the LearnAbility app using voice commands. \\n" +
+            "1. General Navigation: Use 'navigate' (e.g., '/home', '/settings'). For 'continue learning' or 'next lesson', use 'navigate' with path '/lesson/next'.\\n" +
+            "2. Subject Lessons: To show lessons for a subject (e.g., 'Show Math lessons'), use 'navigateToSubjectLessons' with 'subjectName'.\\n" +
+            "3. Lesson Content: To open a specific lesson (e.g., 'Open Intro to Algebra in Math'), use 'navigateToLessonContent' with 'lessonName' and 'subjectName'.\\n" +
+            "4. Read Lesson Page: If on a lesson page and asked to 'read the page' or 'start reading':\\n" +
+            "   - Respond with a short confirmation like: 'Okay, the app will read the content for you now.' OR 'Certainly, I'll have the app read that out.' \\n" +
+            "   - Then, call the 'readLessonPageContent' function. \\n" +
+            "   - After calling the function, DO NOT say anything further. Wait for the user's next command (e.g., 'stop reading' or a new query after reading completes).\\n" +
+            "5. Stop Reading Lesson Page: If asked to 'stop reading':\\n" +
+            "   - Respond with: 'Alright, reading has been stopped. What would you like to do next?' OR 'Okay, I've stopped the reading. What's next?' \\n" +
+            "   - Then, call the 'stopReadingLessonPageContent' function.\\n" +
+            "Be clear. Confirm ambiguous requests. Use the provided list of subjects/lessons for guidance. If not in list, inform user or ask for clarification.\\n" +
+            "Available pages: /home, /settings, /profile, /stats, /accessibility, /subjects, /materials, /quizzes, /ai-assistant, /voice-assistant, /videos, /articles.\\n" +
+            "Dynamic Subject/Lesson List:\\n$dynamicPromptInfo",
+        "functions": [
+          {
+            "name": "navigate",
+            "async": true,
+            "description":
+                "Navigate to a general predefined page path in the app or to the next lesson.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description":
+                      "The predefined route path (e.g., '/home', '/settings') or '/lesson/next' for the next lesson.",
+                },
+              },
+              "required": ["path"],
+            },
+          },
+          {
+            "name": "navigateToSubjectLessons",
+            "async": true,
+            "description":
+                "Navigate to the list of lessons for a specific subject.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "subjectName": {
+                  "type": "string",
+                  "description":
+                      "The name of the subject to show lessons for (e.g., 'Mathematics', 'Science').",
+                },
+              },
+              "required": ["subjectName"],
+            },
+          },
+          {
+            "name": "navigateToLessonContent",
+            "async": true,
+            "description":
+                "Navigate to the content page of a specific lesson within a subject.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "lessonName": {
+                  "type": "string",
+                  "description":
+                      "The name/title of the lesson to open (e.g., 'Introduction to Algebra', 'Cell Structure').",
+                },
+                "subjectName": {
+                  "type": "string",
+                  "description":
+                      "The name of the subject that the lesson belongs to (e.g., 'Mathematics', 'Biology'). This helps disambiguate if lesson names are similar across subjects.",
+                },
+              },
+              "required": ["lessonName", "subjectName"],
+            },
+          },
+          {
+            "name": "readLessonPageContent",
+            "async": false,
+            "description":
+                "Starts reading the content of the current lesson page if a lesson page is active.",
+          },
+          {
+            "name": "stopReadingLessonPageContent",
+            "async": false,
+            "description":
+                "Stops reading the content of the current lesson page if TTS is active.",
+          },
+        ],
+        "tools": [
+          {"type": "endCall"},
+        ],
+      },
+      "voice": {"provider": "11labs", "voiceId": "paula"},
+      "firstMessage":
+          firstMessageOverride ??
+          "Hello! I'm Miss Williams. Ask me anything—I'm here to help! You can ask me to navigate to pages like home, settings, or your subjects.",
+      "serverUrl": "https://08ae-202-43-120-244.ngrok-free.app/api/webhook",
+    };
+  }
+
   Future<void> _handleMicPress() async {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
     setState(() {
       isLoading = true;
       buttonText = isCallStarted ? 'Ending Call...' : 'Starting Call...';
     });
 
     if (!isCallStarted) {
-      // Fetch dynamic data for the prompt
-      String dynamicPromptInfo = await _getDynamicPromptData();
+      try {
+        String dynamicPromptInfo = await _getDynamicPromptData();
+        final assistantConfig = _getAssistantConfig(dynamicPromptInfo);
 
-      final assistantConfig = {
-        "name": "miss-williams",
-        "model": {
-          "provider": "openai",
-          "model": "gpt-3.5-turbo",
-          "temperature": 0.7,
-          "systemPrompt":
-              "You are Miss Williams, a knowledgeable and friendly teacher. Your primary role is to help users navigate the LearnAbility app using voice commands. \\n" +
-              "1. General Navigation: Use 'navigate' (e.g., '/home', '/settings'). For 'continue learning' or 'next lesson', use 'navigate' with path '/lesson/next'.\\n" +
-              "2. Subject Lessons: To show lessons for a subject (e.g., 'Show Math lessons'), use 'navigateToSubjectLessons' with 'subjectName'.\\n" +
-              "3. Lesson Content: To open a specific lesson (e.g., 'Open Intro to Algebra in Math'), use 'navigateToLessonContent' with 'lessonName' and 'subjectName'.\\n" +
-              "4. Read Lesson Page: If on a lesson page and asked to 'read the page' or 'start reading':\\n" +
-              "   - Respond with a short confirmation like: 'Okay, the app will read the content for you now.' OR 'Certainly, I'll have the app read that out.' \\n" +
-              "   - Then, call the 'readLessonPageContent' function. \\n" +
-              "   - After calling the function, DO NOT say anything further. Wait for the user's next command (e.g., 'stop reading' or a new query after reading completes).\\n" +
-              "5. Stop Reading Lesson Page: If asked to 'stop reading':\\n" +
-              "   - Respond with: 'Alright, reading has been stopped. What would you like to do next?' OR 'Okay, I've stopped the reading. What's next?' \\n" +
-              "   - Then, call the 'stopReadingLessonPageContent' function.\\n" +
-              "Be clear. Confirm ambiguous requests. Use the provided list of subjects/lessons for guidance. If not in list, inform user or ask for clarification.\\n" +
-              "Available pages: /home, /settings, /profile, /stats, /accessibility, /subjects, /materials, /quizzes, /ai-assistant, /voice-assistant, /videos, /articles.\\n" +
-              "Dynamic Subject/Lesson List:\\n$dynamicPromptInfo",
-          "functions": [
-            {
-              "name": "navigate",
-              "async": true,
-              "description": "Navigate to a general predefined page path in the app or to the next lesson.",
-              "parameters": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "string",
-                    "description":
-                        "The predefined route path (e.g., '/home', '/settings') or '/lesson/next' for the next lesson.",
-                  },
-                },
-                "required": ["path"],
-              },
-            },
-            {
-              "name": "navigateToSubjectLessons",
-              "async": true,
-              "description": "Navigate to the list of lessons for a specific subject.",
-              "parameters": {
-                "type": "object",
-                "properties": {
-                  "subjectName": {
-                    "type": "string",
-                    "description": "The name of the subject to show lessons for (e.g., 'Mathematics', 'Science').",
-                  },
-                },
-                "required": ["subjectName"],
-              },
-            },
-            {
-              "name": "navigateToLessonContent",
-              "async": true,
-              "description": "Navigate to the content page of a specific lesson within a subject.",
-              "parameters": {
-                "type": "object",
-                "properties": {
-                  "lessonName": {
-                    "type": "string",
-                    "description": "The name/title of the lesson to open (e.g., 'Introduction to Algebra', 'Cell Structure').",
-                  },
-                  "subjectName": {
-                    "type": "string",
-                    "description": "The name of the subject that the lesson belongs to (e.g., 'Mathematics', 'Biology'). This helps disambiguate if lesson names are similar across subjects.",
-                  },
-                },
-                "required": ["lessonName", "subjectName"],
-              },
-            },
-            {
-              "name": "readLessonPageContent",
-              "async": false,
-              "description": "Starts reading the content of the current lesson page if a lesson page is active."
-            },
-            {
-              "name": "stopReadingLessonPageContent",
-              "async": false,
-              "description": "Stops reading the content of the current lesson page if TTS is active."
-            }
-          ],
-          "tools":[
-            {
-              "type": "endCall"
-            }
-          ]
-        },
-        "voice": {"provider": "11labs", "voiceId": "paula"},
-        "firstMessage":
-            "Hello! I'm Miss Williams. Ask me anything—I'm here to help! You can ask me to navigate to pages like home, settings, or your subjects.",
-        "serverUrl": "https://08ae-202-43-120-244.ngrok-free.app/api/webhook",
-      };
+        print("Starting AI Voice Assistant normally...");
+        await vapi.start(assistant: assistantConfig);
 
-      await vapi.start(assistant: assistantConfig);
+        if (mounted) {
+          setState(() {
+            isCallStarted = true;
+            settings.setCallStatus(true);
+            buttonText = 'Stop Talking';
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        print("Error starting Vapi call: $e");
+        if (mounted) {
+          setState(() {
+            _chatHistory.add({
+              'role': 'assistant',
+              'message':
+                  'Sorry, I couldn\'t start the voice assistant. Please try again.',
+            });
+            isCallStarted = false;
+            settings.setCallStatus(false);
+            buttonText = 'Start Talking';
+            isLoading = false;
+          });
+        }
+      }
     } else {
-      print("Ending AI Voice Assistant...");
+      print("Ending AI Voice Assistant via button press...");
       await vapi.stop();
+    }
+  }
+
+  Future<void> _startVapiSilently() async {
+    final settings = Provider.of<AccessibilitySettings>(context, listen: false);
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      String dynamicPromptInfo = await _getDynamicPromptData();
+      final assistantConfig = _getAssistantConfig(
+        dynamicPromptInfo,
+        firstMessageOverride: "",
+      );
+
+      print("Starting AI Voice Assistant silently...");
+      await vapi.start(assistant: assistantConfig);
+
+      if (mounted) {
+        setState(() {
+          isCallStarted = true;
+          settings.setCallStatus(true);
+          buttonText = 'Stop Talking';
+          isLoading = false;
+        });
+        print("Vapi restarted silently.");
+      }
+    } catch (e) {
+      print("Error starting Vapi call silently: $e");
+      if (mounted) {
+        setState(() {
+          isCallStarted = false;
+          settings.setCallStatus(false);
+          buttonText = 'Start Talking';
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -360,7 +535,6 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
     bool dataFetched = false;
 
     try {
-      // Fetch Subjects
       final subjectsResponse = await http.get(
         Uri.parse('${Constants.uri}/api/v1/pyos/subjects'),
         headers: {
@@ -370,7 +544,9 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       );
 
       if (subjectsResponse.statusCode == 200) {
-        final Map<String, dynamic> subjectsData = jsonDecode(subjectsResponse.body);
+        final Map<String, dynamic> subjectsData = jsonDecode(
+          subjectsResponse.body,
+        );
         final List allSubjects = subjectsData['subjects'];
 
         if (allSubjects.isEmpty) {
@@ -382,17 +558,20 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
             String subjectName = subject['name'];
             promptData.writeln("- Subject: $subjectName");
 
-            // Fetch Lessons for this Subject
             try {
               final lessonsResponse = await http.get(
-                Uri.parse('${Constants.uri}/api/v1/pyos/subjects/$subjectId/lessons'),
+                Uri.parse(
+                  '${Constants.uri}/api/v1/pyos/subjects/$subjectId/lessons',
+                ),
                 headers: {
                   'Authorization': 'Bearer $token',
                   'Content-Type': 'application/json',
                 },
               );
               if (lessonsResponse.statusCode == 200) {
-                final Map<String, dynamic> lessonsData = jsonDecode(lessonsResponse.body);
+                final Map<String, dynamic> lessonsData = jsonDecode(
+                  lessonsResponse.body,
+                );
                 final List subjectLessons = lessonsData['lessons'];
                 if (subjectLessons.isNotEmpty) {
                   for (var lesson in subjectLessons) {
@@ -403,29 +582,36 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
                   promptData.writeln("    (No lessons found for this subject)");
                 }
               } else {
-                promptData.writeln("    (Could not fetch lessons for this subject: Error ${lessonsResponse.statusCode})");
+                promptData.writeln(
+                  "    (Could not fetch lessons for this subject: Error ${lessonsResponse.statusCode})",
+                );
               }
             } catch (e) {
-              promptData.writeln("    (Error fetching lessons for this subject: $e)");
+              promptData.writeln(
+                "    (Error fetching lessons for this subject: $e)",
+              );
             }
           }
-           promptData.writeln(); // Add a newline at the end of the list
+          promptData.writeln();
         }
       } else {
-        promptData.writeln("Could not fetch subjects: Error ${subjectsResponse.statusCode}\n");
+        promptData.writeln(
+          "Could not fetch subjects: Error ${subjectsResponse.statusCode}\n",
+        );
       }
     } catch (e) {
       promptData.writeln("Error fetching dynamic prompt data: $e\n");
     }
-    if (!dataFetched && promptData.length == StringBuffer("Current Subjects and Lessons:\n").length){
-        // This means no subjects were found or an initial error occurred before any subject processing
-        return "Could not retrieve a list of subjects and lessons at this time.\n";
+    if (!dataFetched &&
+        promptData.length ==
+            StringBuffer("Current Subjects and Lessons:\n").length) {
+      return "Could not retrieve a list of subjects and lessons at this time.\n";
     }
     return promptData.toString();
   }
 
   void _navigateToPage(String path) {
-    _isLessonPageActive = false; // Reset by default
+    _isLessonPageActive = false;
     if (path == "/lesson/next") {
       _navigateToNextLesson();
       return;
@@ -436,7 +622,7 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       Navigator.push(context, MaterialPageRoute(builder: navigateTo));
     } else {
       print("Unknown route: $path");
-      // Optionally, provide feedback to the user if a route is unknown via chat
+
       setState(() {
         _chatHistory.add({
           'role': 'assistant',
@@ -447,11 +633,8 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   }
 
   Future<void> _navigateToNextLesson() async {
-    // This logic is inspired by HomePage._fetchNextLesson()
-    // Ensure you have internet permission and necessary dependencies (http, shared_preferences)
-    // Also ensure Constants.uri is correctly defined in your project
     setState(() {
-      isLoading = true; // Show loading indicator if you have one for navigation
+      isLoading = true;
     });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -462,7 +645,8 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       setState(() {
         _chatHistory.add({
           'role': 'assistant',
-          'message': "I couldn't fetch your next lesson because you're not logged in.",
+          'message':
+              "I couldn't fetch your next lesson because you're not logged in.",
         });
         isLoading = false;
       });
@@ -470,7 +654,6 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
     }
 
     try {
-      // First fetch subjects
       final subjectsResponse = await http.get(
         Uri.parse('${Constants.uri}/api/v1/pyos/subjects'),
         headers: {
@@ -480,18 +663,19 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       );
 
       if (subjectsResponse.statusCode == 200) {
-        final Map<String, dynamic> subjectsData = jsonDecode(subjectsResponse.body);
+        final Map<String, dynamic> subjectsData = jsonDecode(
+          subjectsResponse.body,
+        );
         final List subjects = subjectsData['subjects'];
 
         if (subjects.isNotEmpty) {
-          // Get the first subject for simplicity, or implement more sophisticated logic
           final subject = subjects[0];
           final String subjectId = subject['id'];
-          // final String subjectName = subject['name']; // Not needed directly for NextLesson constructor here
 
-          // Fetch lessons for this subject
           final lessonsResponse = await http.get(
-            Uri.parse('${Constants.uri}/api/v1/pyos/subjects/$subjectId/lessons'),
+            Uri.parse(
+              '${Constants.uri}/api/v1/pyos/subjects/$subjectId/lessons',
+            ),
             headers: {
               'Authorization': 'Bearer $token',
               'Content-Type': 'application/json',
@@ -499,16 +683,17 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           );
 
           if (lessonsResponse.statusCode == 200) {
-            final Map<String, dynamic> lessonsData = jsonDecode(lessonsResponse.body);
+            final Map<String, dynamic> lessonsData = jsonDecode(
+              lessonsResponse.body,
+            );
             final List lessons = lessonsData['lessons'];
 
             if (lessons.isNotEmpty) {
-              // Get the first lesson as the "next lesson"
               final lesson = lessons[0];
               final nextLesson = NextLesson(
                 id: lesson['id'],
                 title: lesson['title'],
-                subjectName: subject['name'], // Use fetched subjectName
+                subjectName: subject['name'],
                 subjectId: subjectId,
                 description: lesson['description'],
                 duration: lesson['duration'],
@@ -519,43 +704,47 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LessonContentPage(
-                    key: _lessonContentPageKey,
-                    lessonId: nextLesson.id,
-                    subjectId: nextLesson.subjectId,
-                    onReadingStarted: _handleFlutterTtsStarted, // Pass callback
-                    onReadingCompleted: _handleFlutterTtsCompleted, // Pass callback
-                  ),
+                  builder:
+                      (context) => LessonContentPage(
+                        key: _lessonContentPageKey,
+                        lessonId: nextLesson.id,
+                        subjectId: nextLesson.subjectId,
+                        onReadingStarted: _handleFlutterTtsStarted,
+                        onReadingCompleted: _handleFlutterTtsCompleted,
+                      ),
                 ),
               ).then((_) {
                 _isLessonPageActive = false;
-                _isFlutterTtsReading = false; // Ensure reset if page is popped
+                _isFlutterTtsReading = false;
               });
               _isLessonPageActive = true;
             } else {
               print("No lessons found for subject $subjectId");
-               setState(() {
+              setState(() {
                 _chatHistory.add({
                   'role': 'assistant',
-                  'message': "I couldn't find any lessons for your first subject.",
+                  'message':
+                      "I couldn't find any lessons for your first subject.",
                 });
               });
             }
           } else {
             print("Failed to fetch lessons: ${lessonsResponse.statusCode}");
-             setState(() {
-                _chatHistory.add({
-                  'role': 'assistant',
-                  'message': "I had trouble fetching your lessons. Please try again.",
-                });
+            setState(() {
+              _chatHistory.add({
+                'role': 'assistant',
+                'message':
+                    "I had trouble fetching your lessons. Please try again.",
               });
+            });
           }
         } else {
           print("No subjects found.");
-           setState(() {
+          setState(() {
             _chatHistory.add({
               'role': 'assistant',
-              'message': "You don't seem to have any subjects. Please add some first.",
+              'message':
+                  "You don't seem to have any subjects. Please add some first.",
             });
           });
         }
@@ -564,13 +753,14 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
         setState(() {
           _chatHistory.add({
             'role': 'assistant',
-            'message': "I had trouble fetching your subjects. Please try again.",
+            'message':
+                "I had trouble fetching your subjects. Please try again.",
           });
         });
       }
     } catch (e) {
       print("Error fetching next lesson: $e");
-       setState(() {
+      setState(() {
         _chatHistory.add({
           'role': 'assistant',
           'message': "An error occurred while trying to find your next lesson.",
@@ -584,7 +774,9 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   }
 
   Future<void> _handleNavigateToSubjectLessons(String subjectName) async {
-    setState(() { isLoading = true; });
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('jwt_token');
 
@@ -606,7 +798,8 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
         final Map<String, dynamic> data = jsonDecode(response.body);
         final List allSubjects = data['subjects'];
         final foundSubject = allSubjects.firstWhere(
-          (s) => (s['name'] as String).toLowerCase() == subjectName.toLowerCase(),
+          (s) =>
+              (s['name'] as String).toLowerCase() == subjectName.toLowerCase(),
           orElse: () => null,
         );
 
@@ -614,12 +807,13 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LessonsPage(
-                subjectId: foundSubject['id'],
-                subjectName: foundSubject['name'],
-              ),
+              builder:
+                  (context) => LessonsPage(
+                    subjectId: foundSubject['id'],
+                    subjectName: foundSubject['name'],
+                  ),
             ),
-          ).then((_) => _isLessonPageActive = false); // Reset if navigating away from a potential lesson page
+          ).then((_) => _isLessonPageActive = false);
         } else {
           _showError("I couldn't find a subject named '$subjectName'.");
         }
@@ -630,12 +824,19 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       print("Error in _handleNavigateToSubjectLessons: $e");
       _showError("An error occurred while trying to find subjects.");
     } finally {
-      setState(() { isLoading = false; });
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-  Future<void> _handleNavigateToLessonContent(String lessonName, String? subjectName) async {
-    setState(() { isLoading = true; });
+  Future<void> _handleNavigateToLessonContent(
+    String lessonName,
+    String? subjectName,
+  ) async {
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('jwt_token');
 
@@ -645,13 +846,16 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
     }
 
     if (subjectName == null || subjectName.isEmpty) {
-        _showError("Please specify which subject the lesson '$lessonName' belongs to.");
-        setState(() { isLoading = false; });
-        return;
+      _showError(
+        "Please specify which subject the lesson '$lessonName' belongs to.",
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
     }
 
     try {
-      // 1. Find Subject ID from subjectName
       final subjectsResponse = await http.get(
         Uri.parse('${Constants.uri}/api/v1/pyos/subjects'),
         headers: {
@@ -664,10 +868,13 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       String? actualSubjectName;
 
       if (subjectsResponse.statusCode == 200) {
-        final Map<String, dynamic> subjectsData = jsonDecode(subjectsResponse.body);
+        final Map<String, dynamic> subjectsData = jsonDecode(
+          subjectsResponse.body,
+        );
         final List allSubjects = subjectsData['subjects'];
         final foundSubject = allSubjects.firstWhere(
-          (s) => (s['name'] as String).toLowerCase() == subjectName.toLowerCase(),
+          (s) =>
+              (s['name'] as String).toLowerCase() == subjectName.toLowerCase(),
           orElse: () => null,
         );
         if (foundSubject != null) {
@@ -675,18 +882,23 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           actualSubjectName = foundSubject['name'];
         } else {
           _showError("I couldn't find the subject '$subjectName'.");
-          setState(() { isLoading = false; });
+          setState(() {
+            isLoading = false;
+          });
           return;
         }
       } else {
         _showError("Failed to fetch subjects to find '$subjectName'.");
-        setState(() { isLoading = false; });
+        setState(() {
+          isLoading = false;
+        });
         return;
       }
 
-      // 2. Fetch lessons for that subjectId
       final lessonsResponse = await http.get(
-        Uri.parse('${Constants.uri}/api/v1/pyos/subjects/$targetSubjectId/lessons'),
+        Uri.parse(
+          '${Constants.uri}/api/v1/pyos/subjects/$targetSubjectId/lessons',
+        ),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -694,10 +906,13 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
       );
 
       if (lessonsResponse.statusCode == 200) {
-        final Map<String, dynamic> lessonsData = jsonDecode(lessonsResponse.body);
+        final Map<String, dynamic> lessonsData = jsonDecode(
+          lessonsResponse.body,
+        );
         final List subjectLessons = lessonsData['lessons'];
         final foundLesson = subjectLessons.firstWhere(
-          (l) => (l['title'] as String).toLowerCase() == lessonName.toLowerCase(),
+          (l) =>
+              (l['title'] as String).toLowerCase() == lessonName.toLowerCase(),
           orElse: () => null,
         );
 
@@ -705,42 +920,46 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LessonContentPage(
-                key: _lessonContentPageKey,
-                lessonId: foundLesson['id'],
-                subjectId: targetSubjectId!,
-                onReadingStarted: _handleFlutterTtsStarted, // Pass callback
-                onReadingCompleted: _handleFlutterTtsCompleted, // Pass callback
-              ),
+              builder:
+                  (context) => LessonContentPage(
+                    key: _lessonContentPageKey,
+                    lessonId: foundLesson['id'],
+                    subjectId: targetSubjectId!,
+                    onReadingStarted: _handleFlutterTtsStarted,
+                    onReadingCompleted: _handleFlutterTtsCompleted,
+                  ),
             ),
           ).then((_) {
             _isLessonPageActive = false;
-            _isFlutterTtsReading = false; // Ensure reset if page is popped
+            _isFlutterTtsReading = false;
           });
-           _isLessonPageActive = true;
+          _isLessonPageActive = true;
         } else {
-          _showError("I couldn't find a lesson named '$lessonName' in the subject '$actualSubjectName'.");
+          _showError(
+            "I couldn't find a lesson named '$lessonName' in the subject '$actualSubjectName'.",
+          );
         }
       } else {
-        _showError("Failed to fetch lessons for the subject '$actualSubjectName'.");
+        _showError(
+          "Failed to fetch lessons for the subject '$actualSubjectName'.",
+        );
       }
     } catch (e) {
       print("Error in _handleNavigateToLessonContent: $e");
       _showError("An error occurred while trying to find the lesson.");
     } finally {
-      setState(() { isLoading = false; });
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   void _showError(String message) {
-     print("VoiceAI Error: $message");
-     setState(() {
-        _chatHistory.add({
-          'role': 'assistant',
-          'message': message,
-        });
-        isLoading = false;
-      });
+    print("VoiceAI Error: $message");
+    setState(() {
+      _chatHistory.add({'role': 'assistant', 'message': message});
+      isLoading = false;
+    });
   }
 
   @override
