@@ -58,7 +58,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
             bottomLeft: Radius.circular(20),
           ),
         ),
-        // SafeArea with gradient
+
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -78,7 +78,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                   child: ListView(
                     padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                     children: [
-                      // Main menu section
                       _buildMenuSection(
                         'Main Menu',
                         [
@@ -125,7 +124,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
 
                       SizedBox(height: 24),
 
-                      // Study Materials section
                       _buildMenuSection(
                         'Study Materials',
                         [
@@ -149,7 +147,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                   ),
                 ),
 
-                // Version info at bottom
                 Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
@@ -169,10 +166,8 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
 
       body: Stack(
         children: [
-          // Main content
           widget.body,
 
-          // Floating bottom navigation bar
           Positioned(
             bottom: 0,
             left: 0,
@@ -189,44 +184,44 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
     );
   }
 
-  // Modern floating bottom navigation bar
   Widget _buildFloatingNavBar(
     AccessibilitySettings settings,
     String fontFamily,
   ) {
     final currentIndex = settings.selectedIndexBottomNavBar;
 
-    // If the user has selected blindness
-  if (settings.voiceAssisstant) {
-  return Align(
-    alignment: Alignment.bottomCenter,
-    child: Padding(
-      padding: const EdgeInsets.only(bottom: 0.0),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 250,
-          minHeight: 70,
-        ),
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            // AI Voice chat function
-          },
-          backgroundColor: Color(0xFF6366F1),
-          foregroundColor: Colors.white,
-          icon: Icon(Icons.mic, size: 28),
-          label: Text(
-            'ai_voice_assistant'.tr(),
-            style: TextStyle(
-              fontSize: 16 * settings.fontSize,
-              fontFamily: fontFamily,
-              fontWeight: FontWeight.w600,
+    if (settings.voiceAssisstant) {
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 70,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VoiceAiChat()),
+                );
+              },
+              backgroundColor: Color(0xFF6366F1),
+              foregroundColor: Colors.white,
+              icon: Icon(Icons.mic, size: 28),
+              label: Text(
+                'ai_voice_assistant'.tr(),
+                style: TextStyle(
+                  fontSize: 16 * settings.fontSize,
+                  fontFamily: fontFamily,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             ),
           ),
         ),
-      ),
-    ),
-  );
-}
+      );
+    }
     return Container(
       height: 64,
       decoration: BoxDecoration(
@@ -316,7 +311,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
     );
   }
 
-  // Individual navigation item with indicator for selected state
   Widget _buildNavItem({
     required IconData icon,
     required String label,
@@ -333,7 +327,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icon with indicator dot for selected state
             Stack(
               alignment: Alignment.center,
               children: [
@@ -357,7 +350,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
               ],
             ),
             SizedBox(height: 4),
-            // Label
+
             Text(
               label,
               style: TextStyle(
@@ -373,7 +366,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
     );
   }
 
-  // New modern menu section builder
   Widget _buildMenuSection(
     String title,
     List<_MenuItem> items,
@@ -383,7 +375,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section title
         Padding(
           padding: const EdgeInsets.only(left: 8, bottom: 12),
           child: Text(
@@ -398,7 +389,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
           ),
         ),
 
-        // Menu items with modern styling
         Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.1),
@@ -413,7 +403,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
 
                   return Column(
                     children: [
-                      // Menu item
                       InkWell(
                         onTap: item.onTap,
                         child: Container(
@@ -430,7 +419,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                           ),
                           child: Row(
                             children: [
-                              // Icon
                               Container(
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
@@ -447,7 +435,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                                 ),
                               ),
                               SizedBox(width: 12),
-                              // Title
+
                               Expanded(
                                 child: Text(
                                   item.title,
@@ -462,7 +450,7 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                                   ),
                                 ),
                               ),
-                              // Indicator for selected item
+
                               if (isSelected)
                                 Container(
                                   width: 6,
@@ -477,7 +465,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
                         ),
                       ),
 
-                      // Divider between items (except for the last one)
                       if (index < items.length - 1)
                         Divider(
                           height: 1,
@@ -504,7 +491,6 @@ class _GlobalNavBarState extends State<GlobalNavBar> {
   }
 }
 
-// Helper class for menu items
 class _MenuItem {
   final IconData icon;
   final String title;

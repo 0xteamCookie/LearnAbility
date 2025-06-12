@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -284,10 +282,14 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
         );
         Future.delayed(const Duration(milliseconds: 1000), () {
           if (mounted) {
-            print("Delayed task: Attempting to start Vapi silently now. Current state: isCallStarted=$isCallStarted, isLoading=$isLoading");
+            print(
+              "Delayed task: Attempting to start Vapi silently now. Current state: isCallStarted=$isCallStarted, isLoading=$isLoading",
+            );
             _startVapiSilently();
           } else {
-            print("Delayed task: Widget unmounted, skipping Vapi silent start.");
+            print(
+              "Delayed task: Widget unmounted, skipping Vapi silent start.",
+            );
           }
         });
       } else {
@@ -1109,12 +1111,21 @@ class _VoiceAiChatState extends State<VoiceAiChat> {
   Widget _buildMicButton() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: FloatingActionButton(
-        onPressed: isLoading ? null : _handleMicPress,
-        backgroundColor: AppColors.primaryBackground,
-        child: Icon(
-          isCallStarted ? Icons.mic_off : Icons.mic,
-          color: Colors.white,
+      child: SizedBox(
+        width: double.infinity,
+        height: 56,
+        child: FloatingActionButton.extended(
+          onPressed: isLoading ? null : _handleMicPress,
+          backgroundColor: AppColors.primaryBackground,
+          icon: Icon(
+            isCallStarted ? Icons.mic_off : Icons.mic,
+            color: Colors.white,
+          ),
+          label: Text(
+            isCallStarted ? "Stop Talking" : "Start Talking",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
     );
