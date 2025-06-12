@@ -41,7 +41,7 @@ We aim to provide an equitable and engaging learning experience for every studen
 
 ### 🎥 Video Demo
  
-➡️ [**Watch on YouTube**](https://youtu.be/yxvSMyIkjQY)
+➡️ [**Watch on YouTube**](https://youtu.be/dGgB7XxqR2M)
 
 ---
 
